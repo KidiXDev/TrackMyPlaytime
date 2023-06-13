@@ -1,0 +1,24 @@
+﻿<Page x:Class="TMPUninstaller.GUI.ContentPage.ConfirmationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TMPUninstaller.GUI.ContentPage"
+      mc:Ignorable="d" 
+      d:DesignHeight="320" d:DesignWidth="500"
+      Title="ConfirmationPage">
+
+    <Grid>
+        <Grid HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="480">
+            <Button x:Name="btnUninstall" Click="btnUninstall_Click" Content="Uninstall" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderThickness="0" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=ButtonBasic}" Height="22" Margin="387,268,0,0" VerticalAlignment="Top" Width="83"/>
+            <Button x:Name="btnCancel" Click="btnCancel_Click" Content="Cancel" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderThickness="0" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=ButtonBasic}" Height="22" Margin="294,268,0,0" VerticalAlignment="Top" Width="84"/>
+            <Label Content="Uninstall Track My Playtime?" Foreground="White" FontFamily="{StaticResource GlobalFont}" FontSize="16" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top"/>
+            <Separator HorizontalAlignment="Center" Margin="0,44,0,0" VerticalAlignment="Top" Height="13" Width="460"/>
+            <Grid HorizontalAlignment="Center" Height="113" Margin="0,76,0,0" VerticalAlignment="Top" Width="460">
+                <CheckBox x:Name="cboxSaveGameList" Content="Keep game list"  IsChecked="False" BorderThickness="0" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <CheckBox x:Name="cboxSaveConfig" Content="Keep configuration setting"  IsChecked="False" BorderThickness="0" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top"/>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Page>

@@ -1,0 +1,23 @@
+﻿<Page x:Class="TMPUninstaller.GUI.ContentPage.UninstallProgress"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TMPUninstaller.GUI.ContentPage"
+      mc:Ignorable="d" 
+      d:DesignHeight="320" d:DesignWidth="500"
+      Title="UninstallProgress">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="47*"/>
+            <RowDefinition Height="17*"/>
+        </Grid.RowDefinitions>
+        <Grid HorizontalAlignment="Center" Height="300" VerticalAlignment="Top" Width="480" Margin="0,10,0,0" Grid.RowSpan="2">
+            <ProgressBar x:Name="pbProgress" Style="{StaticResource ResourceKey=RoundedBorder}" HorizontalAlignment="Center" Height="22" Margin="0,268,0,0" VerticalAlignment="Top" Width="460"/>
+            <Label Content="Uninstalling..." Foreground="White" FontFamily="{StaticResource GlobalFont}" FontSize="18" HorizontalAlignment="Center" Margin="0,232,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="labelPercent" Content="99%" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Margin="436,244,0,0" VerticalAlignment="Top"/>
+        </Grid>
+
+    </Grid>
+</Page>
