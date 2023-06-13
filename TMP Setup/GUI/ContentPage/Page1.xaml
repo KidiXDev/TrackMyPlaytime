@@ -1,0 +1,24 @@
+﻿<Page x:Class="TMP_Setup.GUI.ContentPage.Page1"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TMP_Setup.GUI.ContentPage"
+      mc:Ignorable="d" 
+      d:DesignHeight="320" d:DesignWidth="500"
+      Title="Track My Playtime Setup">
+
+    <Grid>
+        <Grid HorizontalAlignment="Left" Height="300" Margin="277,0,0,0" VerticalAlignment="Center" Width="213">
+            <RadioButton x:Name="rbCurrentUser" Click="rbCurrentUser_Click" GroupName="InstallType" Content="Current User" BorderThickness="0" IsChecked="True" Foreground="White"  FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" Height="NaN" Margin="17,163,85,120" Width="NaN"/>
+            <RadioButton x:Name="rbAllUser" Click="rbAllUser_Click" GroupName="InstallType" Content="All User" BorderThickness="0" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" Height="NaN" Margin="17,142,114,142" Width="NaN"/>
+            <Label Content="Select Install Type:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="17" HorizontalAlignment="Left" Margin="13,101,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="btnNext" Click="btnNext_Click" Content="Next" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=RoundedBorder}" Foreground="White" FontSize="14" BorderThickness="0" Background="#2F6EA6" HorizontalAlignment="Left" Margin="120,268,0,0" VerticalAlignment="Top" Height="22" Width="83"/>
+            <Button x:Name="btnCancel" Click="btnCancel_Click" Content="Cancel" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=RoundedBorder}" Foreground="White" FontSize="14" BorderThickness="0" Background="#2F6EA6" HorizontalAlignment="Left" Margin="24,268,0,0" VerticalAlignment="Top" Height="22" Width="82"/>
+            <Label x:Name="labelInfo" Visibility="Collapsed" Content="*required administrator privileges" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="8" HorizontalAlignment="Left" Margin="10,244,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="300" Margin="10,0,0,0" VerticalAlignment="Center" Width="262">
+            <Image Source="/img_art.png" Stretch="Fill" Margin="10,10,10,10" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+        </Grid>
+    </Grid>
+</Page>

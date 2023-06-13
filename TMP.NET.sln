@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "submodules", "submodules", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LauncherHandler", "TMPLauncherHandler\LauncherHandler.csproj", "{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMP Setup", "TMP Setup\TMP Setup.csproj", "{25EF3B45-60E9-4DB2-831F-0E072D57C753}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25EF3B45-60E9-4DB2-831F-0E072D57C753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25EF3B45-60E9-4DB2-831F-0E072D57C753}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25EF3B45-60E9-4DB2-831F-0E072D57C753}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25EF3B45-60E9-4DB2-831F-0E072D57C753}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

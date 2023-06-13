@@ -1,0 +1,31 @@
+﻿<Page x:Class="TMP_Setup.GUI.ContentPage.InstallFailed"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TMP_Setup.GUI.ContentPage"
+      mc:Ignorable="d" 
+      d:DesignHeight="320" d:DesignWidth="500"
+      Loaded="Page_Loaded"
+      Title="InstallFailed">
+
+    <Grid>
+        <Grid HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="480">
+            <Label Content="Installing Failed!" Foreground="White" FontFamily="{StaticResource GlobalFont}" FontSize="16" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="btnFinish" Click="btnFinish_Click" Content="Finish" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderThickness="0" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=ButtonBasic}" Height="22" Margin="387,268,0,0" VerticalAlignment="Top" Width="83"/>
+            <Grid HorizontalAlignment="Center" Height="140" VerticalAlignment="Center" Width="460">
+                <Label Content="Track My Playtime failed to install on your computer" Foreground="White" FontFamily="{StaticResource GlobalFont}" FontSize="11" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <TextBlock Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="11" HorizontalAlignment="Center" Height="74" Margin="0,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="440">
+                    - Check storage whether there is sufficient available space or not <LineBreak/>
+                    - Try running setup with administrator <LineBreak/>
+                    - Try downloading again, maybe the file is corrupted <LineBreak/>
+                    - Check if directory is exist or not
+                </TextBlock>
+                <Label Content="Try some of these solutions:" Foreground="White" FontFamily="{StaticResource GlobalFont}" FontSize="11" HorizontalAlignment="Left" Margin="10,33,0,0" VerticalAlignment="Top"/>
+            </Grid>
+            <Separator HorizontalAlignment="Center" Margin="0,44,0,0" VerticalAlignment="Top" Height="13" Width="460"/>
+            <Label x:Name="labelErrorMsg" Content="Error Message:" Foreground="White" FontFamily="{StaticResource GlobalFont}" FontSize="10" HorizontalAlignment="Left" Margin="10,225,0,0" VerticalAlignment="Top"/>
+        </Grid>
+
+    </Grid>
+</Page>

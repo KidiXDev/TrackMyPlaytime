@@ -1,0 +1,29 @@
+﻿<Page x:Class="TMP_Setup.GUI.ContentPage.DirectoryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TMP_Setup.GUI.ContentPage"
+      mc:Ignorable="d" 
+      d:DesignHeight="320" d:DesignWidth="500"
+      Loaded="Page_Loaded"
+      Title="DirectoryPage">
+
+    <Grid>
+        <Grid HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="480">
+            <Grid HorizontalAlignment="Center" Height="125" Margin="0,10,0,0" VerticalAlignment="Top" Width="460">
+                <TextBox x:Name="tbInstallDir" Foreground="Black" Text="{Binding InstallDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" FontSize="16" Height="22" Margin="10,93,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="356"/>
+                <Button x:Name="btnBrowse" Click="btnBrowse_Click" Content="Browse" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderThickness="0" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=ButtonBasic}" Height="22" Margin="371,93,0,0" VerticalAlignment="Top" Width="79"/>
+                <Label Content="Install Directory:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Margin="10,61,0,0" VerticalAlignment="Top"/>
+                <Label Content="Just a few more steps" Foreground="White" FontFamily="{StaticResource GlobalFont}" FontSize="16" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top"/>
+            </Grid>
+            <Grid HorizontalAlignment="Center" Height="113" Margin="0,150,0,0" VerticalAlignment="Top" Width="460">
+                <CheckBox x:Name="cboxCreateShortcut" Content="Create Shortcut"  IsChecked="True" BorderThickness="0" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+            </Grid>
+            <Button x:Name="btnInstall" Click="btnInstall_Click" Content="Install" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderThickness="0" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=ButtonBasic}" Height="22" Margin="387,268,0,0" VerticalAlignment="Top" Width="83"/>
+            <Label Content="*Requires at least 100MB of available free space" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="8" HorizontalAlignment="Left" Margin="10,271,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="btnBack" Click="btnBack_Click" Content="Back" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderThickness="0" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=ButtonBasic}" Height="22" Margin="294,268,0,0" VerticalAlignment="Top" Width="84"/>
+        </Grid>
+
+    </Grid>
+</Page>
