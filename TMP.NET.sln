@@ -5,13 +5,11 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMP.NET", "TMP.NET.csproj", "{40E6D293-342E-423D-A8F2-D195EA905465}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "submodules", "submodules", "{C381229F-7878-4478-AE01-7BEA86F6A64B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LauncherHandler", "TMPLauncherHandler\LauncherHandler.csproj", "{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMP Setup", "TMP Setup\TMP Setup.csproj", "{25EF3B45-60E9-4DB2-831F-0E072D57C753}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMPUninstaller", "TMPUninstaller\TMPUninstaller.csproj", "{EEA102C7-B462-49B3-921A-004E8617FD39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LauncherHandler", "LauncherHandler\LauncherHandler.csproj", "{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{40E6D293-342E-423D-A8F2-D195EA905465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40E6D293-342E-423D-A8F2-D195EA905465}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40E6D293-342E-423D-A8F2-D195EA905465}.Release|Any CPU.Build.0 = Release|Any CPU
-		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}.Release|Any CPU.Build.0 = Release|Any CPU
 		{25EF3B45-60E9-4DB2-831F-0E072D57C753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{25EF3B45-60E9-4DB2-831F-0E072D57C753}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25EF3B45-60E9-4DB2-831F-0E072D57C753}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,12 +29,13 @@ Global
 		{EEA102C7-B462-49B3-921A-004E8617FD39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEA102C7-B462-49B3-921A-004E8617FD39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEA102C7-B462-49B3-921A-004E8617FD39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{52EAC49D-B6AD-4BA6-BE7C-CBF39C22E643} = {C381229F-7878-4478-AE01-7BEA86F6A64B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {36D95830-0911-4113-9188-28DEBD66D0D6}
