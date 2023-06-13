@@ -19,3 +19,26 @@ If you like playing visual novel games, then you should try using this program, 
 ## Discord Rich Presence
 Let your friends or others know what you're playing with the Discord Rich Presence feature. <br>
 You can also provide a custom image using a url that you can enter into the game list that you created.
+
+## Screenshot
+<table>
+  <tr>
+    <td><img src="./Screenshot/ss1.png" alt="ss1" width="500"/></td>
+    <td><img src="./Screenshot/ss2.png" alt="ss2" width="500"/></td>
+  </tr>
+</table>
+
+## Download
+You can download this program for **free!** <br>
+Enter the [Release](https://github.com/KidiXDev/TrackMyPlaytime/releases) section and then just download the latest available release.
+
+## How to install
+After you have finished downloading the installer, just install it as usual, when finished the program will be installed on your computer. <br>
+
+**Additional Note:** Sometimes antivirus considers this program as a _virus_ which has been confirmed to be a **false positive**, you can find the source code above and you can see for yourself if this program is completely **safe**.
+
+## Help
+If you need help or have problems, please contact me:
+- Discord Server: [Link](https://discord.gg/xWPBs55DUc)
+
+Or you can report bugs to the [Issue](https://github.com/KidiXDev/TrackMyPlaytime/issues) section.
