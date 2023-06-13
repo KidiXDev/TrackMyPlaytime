@@ -20,13 +20,6 @@ namespace TMP.NET.Modules
             return guid;
         }
 
-        /*private string GenerateRandomString(int leng)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            Random random = new Random();
-            return new string(Enumerable.Repeat(chars, leng).Select(s => s[random.Next(s.Length)]).ToArray());
-        }*/
-
         private string GenerateRandomString(int leng)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -65,23 +58,6 @@ namespace TMP.NET.Modules
                 shortcut.IconLocation = iconPath;
                 shortcut.Save();
             }
-
-            /*public void CreateURLShortcut(string url, string shortcutPath, string iconPath, string args)
-            {
-                // Create a new shortcut object
-                WshShell shell = new WshShell();
-                IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutPath);
-
-                // Set the target URL and working directory
-                shortcut.TargetPath = url;
-                shortcut.WorkingDirectory = Path.GetDirectoryName(url);
-
-                // Set the icon path
-                shortcut.IconLocation = iconPath;
-
-                // Save the shortcut
-                shortcut.Save();
-            }*/
 
             public void CreateURLShortcut(String url, string shortcutPath, string iconPath)
             {

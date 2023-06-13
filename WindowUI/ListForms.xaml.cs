@@ -167,9 +167,7 @@ namespace TMP.NET.WindowUI
         public ListForms(bool IsEdit, GameList gl)
         {
             InitializeComponent();
-            //btnDelete.Visibility = Visibility.Hidden;
             System.Windows.Controls.Image deleteImage = (System.Windows.Controls.Image)FindResource("DeleteImage");
-            //var resourceKey = new ComponentResourceKey(typeof(Image), "DeleteImage");
             btnDelete.Content = deleteImage;
             btnDelete.Click -= btnDelete_Click;
             btnDelete.Click += btnDeleteImage_Click;

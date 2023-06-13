@@ -71,12 +71,11 @@ namespace TMP_Setup.GUI.ContentPage
                         foreach (ZipArchiveEntry entry in archive.Entries)
                         {
                             string entryPath = Path.Combine(extractPath, entry.FullName);
-                            if (entryPath.EndsWith("/")) // Membuat direktori jika diperlukan
+                            if (entryPath.EndsWith("/"))
                             {
                                 Directory.CreateDirectory(entryPath);
-                                completedEntries++; // Mengupdate kemajuan
+                                completedEntries++;
 
-                                // Menggunakan Dispatcher.Invoke untuk memperbarui ProgressBar di UI thread
                                 Application.Current.Dispatcher.Invoke(() =>
                                 {
                                     UpdateProgressBar(totalEntries, completedEntries);
@@ -93,9 +92,8 @@ namespace TMP_Setup.GUI.ContentPage
                                 }
                             }
 
-                            completedEntries++; // Mengupdate kemajuan
+                            completedEntries++;
 
-                            // Menggunakan Dispatcher.Invoke untuk memperbarui ProgressBar di UI thread
                             Application.Current.Dispatcher.Invoke(() =>
                             {
                                 UpdateProgressBar(totalEntries, completedEntries);

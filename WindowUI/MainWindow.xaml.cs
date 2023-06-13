@@ -94,10 +94,6 @@ namespace TMP.NET
 
         private readonly string[] args = Environment.GetCommandLineArgs();
 
-        //private DeveloperConsole devConsole = new DeveloperConsole();
-
-        private NotificationHandler _notification = new NotificationHandler();
-
         private enum AppState
         {
             Idle, Initialize, Running

@@ -72,7 +72,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Modules\CaptureHandler.cs" />
-    <Compile Include="Modules\ConfigurationManager.cs" />
     <Compile Include="Modules\CustomProtocolHandler.cs" />
     <Compile Include="Modules\DCID.cs" />
     <Compile Include="Modules\Config.cs" />
@@ -80,18 +79,10 @@
     <Compile Include="Modules\GUIDGen.cs" />
     <Compile Include="Modules\ImportList.cs" />
     <Compile Include="Modules\Keyboard\KeyboardHook.cs" />
-    <Compile Include="Modules\NotificationHandler.cs" />
     <Compile Include="Modules\UnsafeNative.cs" />
-    <Compile Include="WindowUI\DeveloperConsole.xaml.cs">
-      <DependentUpon>DeveloperConsole.xaml</DependentUpon>
-    </Compile>
     <Compile Include="WindowUI\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="WindowUI\DeveloperConsole.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="WindowUI\ListForms.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -182,9 +173,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\tmp_dot_net_logo_rounded.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="tmp_dot_net_logo_rounded.ico" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">
