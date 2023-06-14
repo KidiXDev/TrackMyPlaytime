@@ -13,6 +13,8 @@ namespace TMP.NET.WindowUI
     public partial class SettingWindow : Window
     {
         Config setting;
+
+        UpdateChecker _chk = new UpdateChecker();
         public SettingWindow(Config setting)
         {
             InitializeComponent();
@@ -94,6 +96,8 @@ namespace TMP.NET.WindowUI
             {
                 tbTextractorDirx64.Text = ofd.FileName;
             }
+
+            
         }
 
         private void tbTextractorDelay_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
@@ -113,6 +117,11 @@ namespace TMP.NET.WindowUI
             {
                 e.CancelCommand();
             }
+        }
+
+        private async void btnCheckforUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            await _chk.CheckForUpdate();
         }
     }
 }

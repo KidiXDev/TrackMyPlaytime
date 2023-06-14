@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TMP.NET.WindowUI"
         mc:Ignorable="d"
-        Title="Setting" Height="496" Width="500"
+        Title="Setting" Height="530" Width="500"
         SizeToContent="WidthAndHeight"
         ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
@@ -14,7 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid HorizontalAlignment="Center" Height="364" VerticalAlignment="Top" Width="480" Margin="0,10,0,0">
+        <Grid HorizontalAlignment="Center" Height="411" VerticalAlignment="Top" Width="480" Margin="0,10,0,0">
             <Label Content="Textractor" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
             <Separator HorizontalAlignment="Left" Background="White" Height="5" Margin="10,36,0,0" VerticalAlignment="Top" Width="96"/>
             <Label Content="x86" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top"/>
@@ -36,11 +36,14 @@
             <CheckBox x:Name="cbEnableRichPresence" Content="Enabled Rich Presence" IsChecked="True" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="260,188,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="tbTextractorDelay" DataObject.Pasting="Label_Pasting" PreviewTextInput="tbTextractorDelay_PreviewTextInput" ToolTip="Set textractor launch delay (ms). Default value is 3000" Text="3000" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" FontSize="16" HorizontalAlignment="Left" Margin="10,261,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="143" Height="22"/>
             <Label Content="Textractor Delay:" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="3,230,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="btnCheckforUpdate" Click="btnCheckforUpdate_Click" Content="Check For Update" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" Foreground="White" Background="#1B4772" HorizontalAlignment="Left" Margin="10,379,0,0" VerticalAlignment="Top" Width="137" Height="22"/>
+            <Label Content="Update:" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,352,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Grid HorizontalAlignment="Left" Height="68" Margin="276,402,0,0" VerticalAlignment="Top" Width="214">
-            <Button x:Name="btnCancel" Content="X" Click="btnCancel_Click" Foreground="White" FontSize="32" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="48" Margin="95,10,0,0" VerticalAlignment="Top" Width="48" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
-            <Button x:Name="btnApply" Content="{StaticResource ResourceKey=SaveIcon}" Click="btnApply_Click" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="48" Margin="156,10,0,0" VerticalAlignment="Top" Width="48" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
+        <Grid HorizontalAlignment="Center" Height="68" Margin="0,436,0,0" VerticalAlignment="Top" Width="480">
+            <Button x:Name="btnCancel" Content="X" Click="btnCancel_Click" Foreground="White" FontSize="32" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="48" Margin="358,0,0,0" VerticalAlignment="Center" Width="48" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
+            <Button x:Name="btnApply" Content="{StaticResource ResourceKey=SaveIcon}" Click="btnApply_Click" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="48" Margin="419,0,0,0" VerticalAlignment="Center" Width="48" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
+            <Button x:Name="btnAbout" Content="!" Click="btnCancel_Click" Foreground="White" FontSize="32" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="48" Margin="10,0,0,0" VerticalAlignment="Center" Width="48" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
         </Grid>
-        <Separator Background="White" HorizontalAlignment="Center" Height="5" Margin="0,379,0,0" VerticalAlignment="Top" Width="480"/>
+        <Separator Background="White" HorizontalAlignment="Center" Height="5" Margin="0,426,0,0" VerticalAlignment="Top" Width="480"/>
     </Grid>
 </Window>
