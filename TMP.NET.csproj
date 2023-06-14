@@ -80,6 +80,7 @@
     <Compile Include="Modules\ImportList.cs" />
     <Compile Include="Modules\Keyboard\KeyboardHook.cs" />
     <Compile Include="Modules\UnsafeNative.cs" />
+    <Compile Include="Modules\UpdateChecker.cs" />
     <Compile Include="WindowUI\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
@@ -132,6 +133,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Fonts\Rubik-VariableFont_wght.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

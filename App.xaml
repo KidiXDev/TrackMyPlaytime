@@ -28,7 +28,7 @@
         <Image x:Key="ImportIcon" Source="/TMP.NET;component/Resources/import_icon.png" Width="15" Height="15" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
         <Image x:Key="DeleteImage" Source="/TMP.NET;component/Resources/delete_image_icon.png" Width="30" Height="30" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
 
-        <FontFamily x:Key="GlobalFont"> Rubik Light </FontFamily>
+        <FontFamily x:Key="GlobalFont"> pack://application:,,,/Fonts/#Rubik </FontFamily>
 
         <Style x:Key="DisableHighlight" TargetType="{x:Type Button}">
             <Setter Property="Template">
