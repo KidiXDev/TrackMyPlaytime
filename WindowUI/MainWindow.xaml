@@ -100,7 +100,7 @@
             <Image Source="/TMP.NET;component/Resources/time_icon.png" Width="37" Height="37" HorizontalAlignment="Left" Margin="526,10,0,0" VerticalAlignment="Top" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
             <Image Source="/TMP.NET;component/Resources/calender_icon.png" Width="31" Height="33" HorizontalAlignment="Left" Margin="530,61,0,0" VerticalAlignment="Top" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
             <Viewbox HorizontalAlignment="Left" Height="38" Margin="8,9,0,0" VerticalAlignment="Top" Width="503" >
-                <TextBlock x:Name="labelGameTitle" Text="Game Title Goes Here" FontFamily="{StaticResource ResourceKey=GlobalFont}" Foreground="White" FontWeight="bold"/>
+                <TextBlock x:Name="labelGameTitle" Text="Game Title Goes Here" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold"/>
             </Viewbox>
         </Grid>
     </Grid>

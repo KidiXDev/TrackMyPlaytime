@@ -15,7 +15,7 @@
         <Grid HorizontalAlignment="Center" Height="70" Margin="0,240,0,0" VerticalAlignment="Top" Width="480">
             <Button x:Name="btnNext" IsEnabled="False" Click="btnNext_Click" Content="Next" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" Style="{StaticResource ResourceKey=ButtonBasic}" BorderThickness="0" HorizontalAlignment="Left" Height="22" Margin="387,38,0,0" VerticalAlignment="Top" Width="83"/>
             <Button x:Name="btnCancel" Click="btnCancel_Click" Content="Cancel" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" Background="#2F6EA6" HorizontalAlignment="Left" Height="22" Margin="294,38,0,0" VerticalAlignment="Top" Width="84"/>
-            <CheckBox x:Name="cbAgree" Click="cbAgree_Click" Foreground="White" BorderThickness="0" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" Content="I agree and accept the license agreement" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="251"/>
+            <CheckBox x:Name="cbAgree" Click="cbAgree_Click" Foreground="White" BorderThickness="0" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" Content="I Accept" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="251"/>
         </Grid>
 
     </Grid>
