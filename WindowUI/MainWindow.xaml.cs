@@ -39,8 +39,11 @@
  *       Update Features:
  *       - Make Installer and Uninstaller
  *       
- *       Upcoming Features:
- *       - Unknown
+ *       Fixed Issue:
+ *       Fixed Issue Textractor Crash
+ *       
+ *       Upcoming:
+ *       Fullscreen Support
  *
 */
 
@@ -75,7 +78,7 @@ namespace TMP.NET
     {
         #region Variable & Object Instance
 
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly string _ListData_n = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\listdata.kdb");
         private readonly string _Config = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\config.cfg");
@@ -362,7 +365,7 @@ namespace TMP.NET
             };
             timer.Start();
         }
-
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -516,34 +519,47 @@ namespace TMP.NET
 
         private void textractorExec(GameList game)
         {
-            try
-            {
-                new Thread(() =>
+            new Thread(() =>
+            {    
+                try
                 {
                     if (!setting.DisableTextractor && !game.DisableTextractor)
                     {
+                        if (!File.Exists(setting.x86Directory))
+                            throw new FileNotFoundException("Textractor Executable not found");
+
+                        if (!File.Exists(setting.x64Directory))
+                            throw new FileNotFoundException("Textractor Executable not found");
+
                         Thread.Sleep(setting.TextractorDelay);
                         var textractorProc = new Process();
                         if (game.ProgramType.Equals("x86"))
                         {
+                            if (string.IsNullOrEmpty(setting.x86Directory))
+                                return;
+
                             textractorProc.StartInfo.FileName = setting.x86Directory;
                             textractorProc.StartInfo.WorkingDirectory = Path.GetDirectoryName(setting.x86Directory);
                             textractorProc.Start();
                         }
                         else
                         {
+                            if (string.IsNullOrEmpty(setting.x86Directory))
+                                return;
+
                             textractorProc.StartInfo.FileName = setting.x64Directory;
                             textractorProc.StartInfo.WorkingDirectory = Path.GetDirectoryName(setting.x64Directory);
                             textractorProc.Start();
                         }
                     }
-                }).Start();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"Failed launch Textractor\nInfo{e.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                log.Error("Failed launch Textractor", e);
-            }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"Failed launch Textractor\nInfo{e.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    log.Error("Failed launch Textractor", e);
+                }
+            }).Start();
+            
         }
 
         private void StartProcessWithLauncherHandler(GameList list, Stopwatch timer, object selected)
@@ -945,6 +961,7 @@ namespace TMP.NET
         {
             var ofd = new OpenFileDialog();
             ofd.Filter = "TMP Export File (*.kex)|*.kex";
+            ofd.Title = "Import GameList";
             if (ofd.ShowDialog() == true)
             {
                 if (DeserializeImportList(ofd.FileName))
