@@ -8,8 +8,8 @@
         Title="Track My Playtime" Height="720" Width="1280"
         KeyboardNavigation.TabNavigation="None"
         Closing="Window_Closing"
-        SizeToContent="WidthAndHeight"
-        ResizeMode="CanMinimize"
+        SizeToContent="Manual"
+        ResizeMode="CanResize"
         WindowStartupLocation="CenterScreen"
         Background="#0A2647"
         Icon="/TMP.NET;component/Resources/icon.ico"
@@ -21,13 +21,13 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid x:Name="GridImg" Height="595" Margin="267,0,0,0" VerticalAlignment="Top">
+        <Grid x:Name="GridImg" Margin="267,0,0,109">
             <Grid.Background>
                 <ImageBrush Stretch="UniformToFill" ImageSource="/TMP.NET;component/Resources/no-image.png"/>
             </Grid.Background>
         </Grid>
-        <Grid x:Name="Sidebar" HorizontalAlignment="Left" Height="704" VerticalAlignment="Center" Width="267">
-            <ListView x:Name="LV_List" VirtualizingStackPanel.IsVirtualizing="True" SelectionChanged="LV_Selected" ItemsSource="{Binding i_listv}" FontFamily="Rubik Light" HorizontalAlignment="Center" Height="595" VerticalAlignment="Top" Width="267" Background="#0A2647" VirtualizingPanel.ScrollUnit="Pixel" Foreground="White" BorderThickness="0" SelectionMode="Single">
+        <Grid x:Name="Sidebar" HorizontalAlignment="Left" Width="267">
+            <ListView x:Name="LV_List" VirtualizingStackPanel.IsVirtualizing="True" SelectionChanged="LV_Selected" ItemsSource="{Binding i_listv}" FontFamily="Rubik Light" Background="#0A2647" VirtualizingPanel.ScrollUnit="Pixel" Foreground="White" BorderThickness="0" SelectionMode="Single" Margin="0,0,0,109" HorizontalAlignment="Left" Width="267">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -81,26 +81,26 @@
                     </Style>
                 </ListView.Style>
             </ListView>
-            <Button x:Name="btnAdd" Click="btnAdd_Click" Content="+" Style="{StaticResource ResourceKey=CircleBorder}" Foreground="White" HorizontalAlignment="Left" Height="28" Margin="63,0,0,23" VerticalAlignment="Bottom" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" FontSize="40" Padding="0,-17,0,2"/>
-            <Button x:Name="btnSetting" Click="btnSetting_Click" Content="{StaticResource ResourceKey=WrenchIcon}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="28" Margin="22,653,0,0" VerticalAlignment="Top" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
+            <Button x:Name="btnAdd" Click="btnAdd_Click" Content="+" Style="{StaticResource ResourceKey=CircleBorder}" Foreground="White" HorizontalAlignment="Left" Margin="63,0,0,23" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" FontSize="40" Padding="0,-17,0,2" Height="28" VerticalAlignment="Bottom"/>
+            <Button x:Name="btnSetting" Click="btnSetting_Click" Content="{StaticResource ResourceKey=WrenchIcon}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Margin="22,0,0,23" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" Height="28" VerticalAlignment="Bottom"/>
             <Button x:Name="btnDebug" Visibility="Collapsed" Click="btnDebug_Click" Content="DB" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="28" Margin="228,653,0,0" VerticalAlignment="Top" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
             <Button x:Name="btnDebug2" Visibility="Collapsed" Click="btnDebug2_Click" Content="G" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="28" Margin="195,653,0,0" VerticalAlignment="Top" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
             <Button x:Name="btnDebug3" Visibility="Collapsed" Click="btnDebug3_Click" Content="G" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="28" Margin="162,653,0,0" VerticalAlignment="Top" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
             <Button x:Name="btnDebug4" Visibility="Collapsed" Click="btnDebug4_Click" Content="G" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="28" Margin="198,614,0,0" VerticalAlignment="Top" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
-            <Button x:Name="btnImport" Click="btnImport_Click" Content="{StaticResource ResourceKey=ImportIcon}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="28" Margin="104,653,0,0" VerticalAlignment="Top" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
+            <Button x:Name="btnImport" Click="btnImport_Click" Content="{StaticResource ResourceKey=ImportIcon}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Margin="104,0,0,23" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" Height="28" VerticalAlignment="Bottom"/>
         </Grid>
-        <Grid x:Name="CommandBar" HorizontalAlignment="Left" Margin="267,0,0,0" Width="1013" Height="109" VerticalAlignment="Bottom">
-            <Button x:Name="btnPlay" Click="btnPlay_Click" Content="Play" Background="Green" HorizontalAlignment="Left" Height="114" Margin="767,0,0,0" VerticalAlignment="Center" Width="246" FontSize="50" Foreground="White" FontFamily="Rubik Light" FontWeight="DemiBold" BorderThickness="0" d:IsLocked="True"/>
-            <Label x:Name="label_DevName" Content="Developer: Developer name goes here" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" FontFamily="rubik light" FontWeight="SemiBold" FontSize="18" Margin="5,0,0,0"/>
-            <Button x:Name="btnEdit" Content="{StaticResource ResourceKey=SettingIcon}" Click="btnEdit_Click" ToolTip="Edit this game" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="61" Margin="679,0,0,0" VerticalAlignment="Center" Width="60" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
-            <Label Content="Playtime" FontSize="18" FontFamily="Rubik Light" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Left" Margin="561,6,0,0" VerticalAlignment="Top"/>
-            <Label x:Name="label_Playtime" Content="0h 0m 0s" FontSize="12" FontFamily="Rubik Light" Foreground="White" HorizontalAlignment="Left" Margin="562,27,0,0" VerticalAlignment="Top"/>
-            <Label Content="Last Played" FontSize="16" FontFamily="Rubik Light" FontWeight="Bold" Foreground="White" HorizontalAlignment="Left" Margin="561,56,0,0" VerticalAlignment="Top"/>
-            <Label x:Name="label_LastPlayed" Content="01-12-2077" FontSize="12" FontFamily="Rubik Light" Foreground="White" HorizontalAlignment="Left" Margin="561,75,0,0" VerticalAlignment="Top"/>
-            <Image Source="/TMP.NET;component/Resources/time_icon.png" Width="37" Height="37" HorizontalAlignment="Left" Margin="526,10,0,0" VerticalAlignment="Top" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
-            <Image Source="/TMP.NET;component/Resources/calender_icon.png" Width="31" Height="33" HorizontalAlignment="Left" Margin="530,61,0,0" VerticalAlignment="Top" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
-            <Viewbox HorizontalAlignment="Left" Height="38" Margin="8,9,0,0" VerticalAlignment="Top" Width="503" >
-                <TextBlock x:Name="labelGameTitle" Text="Game Title Goes Here" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold"/>
+        <Grid x:Name="CommandBar" Margin="267,0,0,0" Height="109" VerticalAlignment="Bottom">
+            <Button x:Name="btnPlay" Click="btnPlay_Click" Content="Play" Background="Green" Margin="0,0,0,-3" FontSize="50" Foreground="White" FontFamily="Rubik Light" FontWeight="DemiBold" BorderThickness="0" HorizontalAlignment="Right" Width="246"/>
+            <Label x:Name="label_DevName" Content="Developer: Developer Name" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontFamily="rubik light" FontWeight="SemiBold" FontSize="18" Margin="5,39,0,0"/>
+            <Button x:Name="btnEdit" Content="{StaticResource ResourceKey=SettingIcon}" Click="btnEdit_Click" ToolTip="Edit this game" Style="{StaticResource ResourceKey=CircleBorder}" Margin="0,0,274,0" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" HorizontalAlignment="Right" Width="60" Height="61" VerticalAlignment="Center"/>
+            <Label Content="Playtime" FontSize="18" FontFamily="Rubik Light" FontWeight="SemiBold" Foreground="White" Margin="0,6,364,0" HorizontalAlignment="Right" Width="88" Height="31" VerticalAlignment="Top"/>
+            <Label x:Name="label_Playtime" Content="0h 0m 0s" FontSize="12" FontFamily="Rubik Light" Foreground="White" Margin="0,27,357,0" HorizontalAlignment="Right" Width="94" Height="24" VerticalAlignment="Top"/>
+            <Label Content="Last Played" FontSize="16" FontFamily="Rubik Light" FontWeight="Bold" Foreground="White" Margin="0,0,350,24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="102"/>
+            <Label x:Name="label_LastPlayed" Content="01-12-2077" FontSize="12" FontFamily="Rubik Light" Foreground="White" Margin="0,0,357,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="95"/>
+            <Image Source="/TMP.NET;component/Resources/time_icon.png" Margin="0,10,450,0" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Right" Width="37" Height="37" VerticalAlignment="Top"/>
+            <Image Source="/TMP.NET;component/Resources/calender_icon.png" Margin="0,0,454,15" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Right" Width="31" Height="33" VerticalAlignment="Bottom"/>
+            <Viewbox Margin="8,9,502,62" HorizontalAlignment="Left">
+                <TextBlock x:Name="labelGameTitle" Text="Game Title" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold"/>
             </Viewbox>
         </Grid>
     </Grid>
