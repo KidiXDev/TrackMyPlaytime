@@ -14,7 +14,7 @@
         <Grid HorizontalAlignment="Center" Height="244" VerticalAlignment="Center" Width="460">
             <Label Content="Track My Playtime" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="18" HorizontalAlignment="Left" Margin="77,18,0,0" VerticalAlignment="Top"/>
             <Image Source="/TMP.NET;component/Resources/icon.ico" HorizontalAlignment="Left" Height="62" Margin="10,10,0,0" VerticalAlignment="Top" Width="63"/>
-            <Label Content="Version: 1.0.1" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Margin="77,41,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="labelVersion" Content="Version: 1.0.1" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Margin="77,41,0,0" VerticalAlignment="Top"/>
             <TextBlock HorizontalAlignment="Center" Height="65" TextWrapping="Wrap" VerticalAlignment="Center" Width="440" FontFamily="{StaticResource GlobalFont}" Foreground="White" FontSize="12">
                 Track my playtime is a program that can record your game playing time and can also manage game collections, especially visual novel games, in one place to make it easier for you when you want to play or choose.
             </TextBlock>
