@@ -29,7 +29,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Public Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -81,6 +81,7 @@
     <Compile Include="Modules\Keyboard\KeyboardHook.cs" />
     <Compile Include="Modules\UnsafeNative.cs" />
     <Compile Include="Modules\UpdateChecker.cs" />
+    <Compile Include="Modules\WindowExtension.cs" />
     <Compile Include="WindowUI\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>

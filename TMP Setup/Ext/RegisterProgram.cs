@@ -8,7 +8,6 @@ namespace TMP_Setup.Ext
         RegistryKey keyCurrentUser = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes").OpenSubKey("tmpdotnet", true);
         RegistryKey keyUninstallerCurrentUser = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Uninstall").OpenSubKey("Track My Playtime", true);
 
-
         public void DebugTest()
         {
             try
@@ -116,6 +115,36 @@ namespace TMP_Setup.Ext
             catch (Exception ex)
             {
                 Console.WriteLine($"Error registering CurrentUserUninstaller: {ex.Message}");
+            }
+        }
+
+        public string GetInstallDir()
+        {
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Uninstall").OpenSubKey("Track My Playtime"))
+                {
+                    if (key != null)
+                    {
+                        return key.GetValue("InstallLocation").ToString();
+                    }
+                    else
+                    {
+                        using (RegistryKey key2 = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Uninstall").OpenSubKey("Track My Playtime"))
+                        {
+                            if (key2 != null)
+                            {
+                                return key2.GetValue("InstallLocation").ToString();
+                            }
+                        }
+                    }
+
+                    return null;
+                }
+            }
+            catch
+            {
+                return null;
             }
         }
     }

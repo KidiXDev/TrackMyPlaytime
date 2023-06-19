@@ -13,7 +13,8 @@ namespace TMP_Setup.GUI.ContentPage
     /// </summary>
     public partial class DirectoryPage : Page, INotifyPropertyChanged
     {
-        private AdminChecker _chk = new AdminChecker();
+        private AdminChecker _chk;
+        private RegisterProgram _program;
 
         bool currentUser;
 
@@ -43,9 +44,10 @@ namespace TMP_Setup.GUI.ContentPage
         public DirectoryPage(bool type)
         {
             InitializeComponent();
-
+             _chk = new AdminChecker();
             this.DataContext = this;
             this.currentUser = type;
+            _program = new RegisterProgram();
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -55,10 +57,27 @@ namespace TMP_Setup.GUI.ContentPage
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!currentUser)
-                InstallDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\Track My Playtime";
+            if (string.IsNullOrEmpty(_program.GetInstallDir()))
+            {
+                if (!currentUser)
+                    InstallDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\Track My Playtime";
+                else
+                    InstallDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Track My Playtime";
+            }
             else
-                InstallDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Track My Playtime";
+            {
+                label_isInstalled.Visibility = Visibility.Visible;
+                string insDir = _program.GetInstallDir();
+                string illegalChars = new string(Path.GetInvalidPathChars()) + new string(Path.GetInvalidFileNameChars());
+                foreach (char c in illegalChars)
+                {
+                    if (c != ':' && c != '\\')
+                    {
+                        insDir = insDir.Replace(c.ToString(), "");
+                    }
+                }
+                InstallDir = insDir;
+            }
         }
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
