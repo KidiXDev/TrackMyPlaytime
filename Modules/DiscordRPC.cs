@@ -42,6 +42,7 @@ namespace TMP.NET.Modules
             }
             catch (Exception ex)
             {
+                MainWindow.log.Error("Exception thrown when dispose DiscordRpcCLient", ex);
                 Console.WriteLine(ex.Message);
             }
         }
