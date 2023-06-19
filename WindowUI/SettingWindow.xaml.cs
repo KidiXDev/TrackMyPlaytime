@@ -123,7 +123,8 @@ namespace TMP.NET.WindowUI
 
         private void btnAbout_Click(object sender, RoutedEventArgs e)
         {
-
+            this.DialogResult = false;
+            new AboutWindow().ShowDialog();
         }
     }
 }

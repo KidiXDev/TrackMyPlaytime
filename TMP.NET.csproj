@@ -82,9 +82,16 @@
     <Compile Include="Modules\UnsafeNative.cs" />
     <Compile Include="Modules\UpdateChecker.cs" />
     <Compile Include="Modules\WindowExtension.cs" />
+    <Compile Include="WindowUI\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowUI\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="WindowUI\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WindowUI\ListForms.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
