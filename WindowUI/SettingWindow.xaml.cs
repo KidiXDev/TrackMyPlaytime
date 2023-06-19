@@ -44,6 +44,7 @@ namespace TMP.NET.WindowUI
             }
             catch (Exception ex)
             {
+                MainWindow.log.Error("Failed to apply textractor delay setting", ex);
                 Console.WriteLine(ex.Message);
             }
 
@@ -110,18 +111,19 @@ namespace TMP.NET.WindowUI
         {
             Regex regex = new Regex("[^0-9]+");
             if (regex.IsMatch((String)e.DataObject.GetData(typeof(String))))
-            {
                 e.CancelCommand();
-            }
             else
-            {
                 e.CancelCommand();
-            }
         }
 
         private async void btnCheckforUpdate_Click(object sender, RoutedEventArgs e)
         {
             await _chk.CheckForUpdate();
+        }
+
+        private void btnAbout_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
