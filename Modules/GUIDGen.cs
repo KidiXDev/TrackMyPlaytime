@@ -73,6 +73,7 @@ namespace TMP.NET.Modules
                 }
                 catch (Exception ex)
                 {
+                    MainWindow.log.Error("Failed to create shortcut", ex);
                     MessageBox.Show($"Failed to create shortcut\nInfo: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }

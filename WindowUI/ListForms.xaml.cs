@@ -30,27 +30,35 @@ namespace TMP.NET.WindowUI
 
         public Bitmap ResizeImage(Image image, int width, int height)
         {
-            var destRect = new Rectangle(0, 0, width, height);
-            var destImage = new Bitmap(width, height);
-
-            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
-
-            using (var graphics = Graphics.FromImage(destImage))
+            try
             {
-                graphics.CompositingMode = CompositingMode.SourceCopy;
-                graphics.CompositingQuality = CompositingQuality.HighQuality;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                var destRect = new Rectangle(0, 0, width, height);
+                var destImage = new Bitmap(width, height);
 
-                using (var wrapMode = new ImageAttributes())
+                destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+                using (var graphics = Graphics.FromImage(destImage))
                 {
-                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
-                }
-            }
+                    graphics.CompositingMode = CompositingMode.SourceCopy;
+                    graphics.CompositingQuality = CompositingQuality.HighQuality;
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-            return destImage;
+                    using (var wrapMode = new ImageAttributes())
+                    {
+                        wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                        graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                    }
+                }
+
+                return destImage;
+            }
+            catch (Exception ex)
+            {
+                MainWindow.log.Error("Failed to Resize Image", ex);
+                return null;
+            }
         }
 
         public void CreateShortcut(GameList gl)
@@ -70,32 +78,48 @@ namespace TMP.NET.WindowUI
 
         private Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
         {
-            using (MemoryStream outStream = new MemoryStream())
+            try
             {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(bitmapImage));
-                enc.Save(outStream);
-                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outStream);
+                using (MemoryStream outStream = new MemoryStream())
+                {
+                    BitmapEncoder enc = new BmpBitmapEncoder();
+                    enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+                    enc.Save(outStream);
+                    System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outStream);
 
-                return new Bitmap(bitmap);
+                    return new Bitmap(bitmap);
+                }
+            }
+            catch (Exception ex)
+            {
+                MainWindow.log.Error("Failed to Convert BitmapImage2Bitmap", ex);
+                return null;
             }
         }
 
         public static BitmapImage ToBitmapImage(Bitmap bitmap)
         {
-            using (var memory = new MemoryStream())
+            try
             {
-                bitmap.Save(memory, ImageFormat.Png);
-                memory.Position = 0;
+                using (var memory = new MemoryStream())
+                {
+                    bitmap.Save(memory, ImageFormat.Png);
+                    memory.Position = 0;
 
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memory;
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-                bitmapImage.Freeze();
+                    var bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = memory;
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.EndInit();
+                    bitmapImage.Freeze();
 
-                return bitmapImage;
+                    return bitmapImage;
+                }
+            }
+            catch (Exception ex)
+            {
+                MainWindow.log.Error("Failed to Convert Bitmap2BitmapImage", ex);
+                return null;
             }
         }
 
@@ -133,8 +157,9 @@ namespace TMP.NET.WindowUI
                     return Convert.ToBase64String(stream.ToArray());
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                MainWindow.log.Warn("Exception Thrown when convert img to base64 string", ex);
                 return null;
             }
         }
@@ -161,6 +186,38 @@ namespace TMP.NET.WindowUI
             catch
             {
                 return false;
+            }
+        }
+
+        public string IconToBase64String(ImageSource imageSource)
+        {
+            var bitmapSource = (BitmapSource)imageSource;
+
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+
+            using (var memoryStream = new MemoryStream())
+            {
+                encoder.Save(memoryStream);
+                return Convert.ToBase64String(memoryStream.ToArray());
+            }
+        }
+
+        public ImageSource IconPathMethod(string GamePath)
+        {
+            try
+            {
+                if (File.Exists(GamePath))
+                {
+                    System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(GamePath);
+                    return Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                }
+                else { return null; }
+            }
+            catch
+            {
+                Console.WriteLine("Failed to extract icon from executable files...");
+                return null;
             }
         }
 
@@ -236,7 +293,10 @@ namespace TMP.NET.WindowUI
         {
             Title = Title + " | Busy...";
             if (!FieldChecker())
+            {
+                Title = Title.Substring(0, Title.IndexOf('|')).Trim();
                 return;
+            }
 
             if (rbX64.IsChecked ?? false)
                 v_ProgramType = "x64";
@@ -325,7 +385,8 @@ namespace TMP.NET.WindowUI
                     File.Delete(shortcutPath);
             }
             catch(Exception ex)
-            { 
+            {
+                MainWindow.log.Error("Exception Thrown when Delete GameList", ex);
                 MessageBox.Show($"Exception thrown.\nInfo: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -351,7 +412,7 @@ namespace TMP.NET.WindowUI
                 return false;
             }
 
-            if (string.IsNullOrEmpty(tbGameTitle.Text) || string.IsNullOrEmpty(tbDeveloper.Text) || string.IsNullOrEmpty(tbGameDir.Text))
+            if (string.IsNullOrEmpty(tbGameTitle.Text) || string.IsNullOrEmpty(tbGameDir.Text))
             {
                 MessageBox.Show("Please enter all field correctly.\t\t", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;

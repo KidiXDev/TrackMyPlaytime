@@ -14,7 +14,23 @@ namespace TMP.NET.Modules
         public string GameName { get; set; }
         public string GameDev { get; set; }
         public ImageSource IconPath { get { return IconPathMethod(); } }
-        public ImageSource IconPathMethod()
+
+        #region Method
+        public string IconToBase64String(ImageSource imageSource)
+        {
+            var bitmapSource = (BitmapSource)imageSource;
+
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+
+            using (var memoryStream = new MemoryStream())
+            {
+                encoder.Save(memoryStream);
+                return Convert.ToBase64String(memoryStream.ToArray());
+            }
+        }
+
+        public ImageSource ExtractIconFromExe(string GamePath)
         {
             try
             {
@@ -31,6 +47,37 @@ namespace TMP.NET.Modules
                 return null;
             }
         }
+
+        public BitmapImage IconPathMethod()
+        {
+            if (IconBase64 == null)
+            {
+                try
+                {
+                    IconBase64 = IconToBase64String(ExtractIconFromExe(GamePath));
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
+            if (IconBase64 == null)
+                return null;
+
+            byte[] bytes = Convert.FromBase64String(IconBase64);
+            using (var stream = new MemoryStream(bytes))
+            {
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.StreamSource = stream;
+                image.EndInit();
+                bytes = null;
+                return image;
+            }
+        }
+
         public BitmapImage BackgroundPath()
         {
             if (BackgroundBase64 == null)
@@ -48,6 +95,9 @@ namespace TMP.NET.Modules
                 return image;
             }
         }
+
+        #endregion
+
         public string GamePath { get; set; }
         public string BackgroundBase64 { get; set; }
         public DateTime Tracker { get; set; }
@@ -62,5 +112,6 @@ namespace TMP.NET.Modules
         public TimeSpan Playtime { get; set; }
         public string GUID { get; set; }
         public string BackgroundDir { get; set; }
+        public string IconBase64 { get; set; }
     }
 }
