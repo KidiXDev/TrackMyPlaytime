@@ -13,8 +13,8 @@
         WindowStartupLocation="CenterScreen"
         Background="#0A2647"
         Icon="/TMP.NET;component/Resources/icon.ico"
-        MinHeight="720"
-        MinWidth="1280"
+        MinHeight="627"
+        MinWidth="1115"
         Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
