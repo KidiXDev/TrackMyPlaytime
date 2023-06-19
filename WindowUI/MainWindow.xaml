@@ -13,6 +13,8 @@
         WindowStartupLocation="CenterScreen"
         Background="#0A2647"
         Icon="/TMP.NET;component/Resources/icon.ico"
+        MinHeight="720"
+        MinWidth="1280"
         Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -27,7 +29,7 @@
             </Grid.Background>
         </Grid>
         <Grid x:Name="Sidebar" HorizontalAlignment="Left" Width="267">
-            <ListView x:Name="LV_List" VirtualizingStackPanel.IsVirtualizing="True" SelectionChanged="LV_Selected" ItemsSource="{Binding i_listv}" FontFamily="Rubik Light" Background="#0A2647" VirtualizingPanel.ScrollUnit="Pixel" Foreground="White" BorderThickness="0" SelectionMode="Single" Margin="0,0,0,109" HorizontalAlignment="Left" Width="267">
+            <ListView x:Name="LV_List" VirtualizingStackPanel.IsVirtualizing="True" SelectionChanged="LV_Selected" ItemsSource="{Binding i_listv}" FontFamily="{StaticResource GlobalFont}" Background="#0A2647" VirtualizingPanel.ScrollUnit="Pixel" Foreground="White" BorderThickness="0" SelectionMode="Single" Margin="0,0,0,109" HorizontalAlignment="Left" Width="267">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -91,7 +93,6 @@
         </Grid>
         <Grid x:Name="CommandBar" Margin="267,0,0,0" Height="109" VerticalAlignment="Bottom">
             <Button x:Name="btnPlay" Click="btnPlay_Click" Content="Play" Background="Green" Margin="0,0,0,-3" FontSize="50" Foreground="White" FontFamily="Rubik Light" FontWeight="DemiBold" BorderThickness="0" HorizontalAlignment="Right" Width="246"/>
-            <Label x:Name="label_DevName" Content="Developer: Developer Name" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontFamily="rubik light" FontWeight="SemiBold" FontSize="18" Margin="5,39,0,0"/>
             <Button x:Name="btnEdit" Content="{StaticResource ResourceKey=SettingIcon}" Click="btnEdit_Click" ToolTip="Edit this game" Style="{StaticResource ResourceKey=CircleBorder}" Margin="0,0,274,0" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" HorizontalAlignment="Right" Width="60" Height="61" VerticalAlignment="Center"/>
             <Label Content="Playtime" FontSize="18" FontFamily="Rubik Light" FontWeight="SemiBold" Foreground="White" Margin="0,6,364,0" HorizontalAlignment="Right" Width="88" Height="31" VerticalAlignment="Top"/>
             <Label x:Name="label_Playtime" Content="0h 0m 0s" FontSize="12" FontFamily="Rubik Light" Foreground="White" Margin="0,27,357,0" HorizontalAlignment="Right" Width="94" Height="24" VerticalAlignment="Top"/>
@@ -101,6 +102,10 @@
             <Image Source="/TMP.NET;component/Resources/calender_icon.png" Margin="0,0,454,15" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Right" Width="31" Height="33" VerticalAlignment="Bottom"/>
             <Viewbox Margin="8,9,502,62" HorizontalAlignment="Left">
                 <TextBlock x:Name="labelGameTitle" Text="Game Title" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold"/>
+            </Viewbox>
+
+            <Viewbox Margin="8,47,515,40" HorizontalAlignment="Left">
+                <TextBlock x:Name="label_DevName" Text="Developer Name" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold"/>
             </Viewbox>
         </Grid>
     </Grid>

@@ -40,10 +40,14 @@
  *       - Make Installer and Uninstaller
  *       
  *       Fixed Issue:
- *       Fixed Issue Textractor Crash
+ *       Fixed Issue Textractor Crash #1
  *       
- *       Upcoming:
- *       Fullscreen Support
+ *       Done:
+ *       - Fullscreen Support
+ *       - Performance Boost
+ *       - Changed the way to get the icon from before having to extract the icon from the executable file, 
+ *         so after extracting it then saving it into base64string to reduce loading time.
+ *       
  *
 */
 
@@ -85,6 +89,8 @@ namespace TMP.NET
 
         private ObservableCollection<GameList> i_List = new ObservableCollection<GameList>();
         public ObservableCollection<GameList> i_listv { get { return i_List; } }
+
+        private WindowExtension _wext;
 
         private List<ImportList> importList;
 
@@ -365,7 +371,15 @@ namespace TMP.NET
             };
             timer.Start();
         }
-        
+
+        private void Window_SourceInitialized(object sender, EventArgs ea)
+        {
+            HwndSource hwndSource = (HwndSource)HwndSource.FromVisual((Window)sender);
+            hwndSource.AddHook(_wext.DragHook);
+
+            _wext.aspectRatio = this.Width / this.Height;
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -374,8 +388,9 @@ namespace TMP.NET
                 MainWindow.WindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
                 HwndSource.FromHwnd(MainWindow.WindowHandle)?.AddHook(new HwndSourceHook(HandleMessages));
             };
+            _wext = new WindowExtension();
             Modules.Keyboard.KeyboardHook.KeyCombinationPressed += ScreenshotExec;
-            //devConsole.Show();
+            this.SourceInitialized += Window_SourceInitialized;
 
             DataContext = this;
             FirstLoad();
@@ -500,7 +515,7 @@ namespace TMP.NET
             }
             else if (game.HideGameTitle)
             {
-                discord.updatePresence("Playing a game", null, imageKey, null);
+                discord.updatePresence("Playing a game", null, imageKey, null, "tmp_logo", "Track My Playtime");
             }
             else if (game.HideImageKey)
             {
@@ -544,7 +559,7 @@ namespace TMP.NET
                         }
                         else
                         {
-                            if (string.IsNullOrEmpty(setting.x86Directory))
+                            if (string.IsNullOrEmpty(setting.x64Directory))
                                 return;
 
                             textractorProc.StartInfo.FileName = setting.x64Directory;
@@ -731,7 +746,7 @@ namespace TMP.NET
                 var l_gameList = (GameList)LV_List.SelectedItem;
                 var selectedItem = LV_List.SelectedIndex;
                 labelGameTitle.Text = l_gameList.GameName;
-                label_DevName.Content = l_gameList.GameDev;
+                label_DevName.Text = l_gameList.GameDev;
 
                 var g_Brush = GridImg.Background as ImageBrush;
 
@@ -774,8 +789,9 @@ namespace TMP.NET
                 var gl = new GameList();
                 gl.GameName = form.tbGameTitle.Text;
                 gl.GamePath = form.tbGameDir.Text;
-                gl.GameDev = form.tbDeveloper.Text;
+                gl.GameDev = string.IsNullOrEmpty(form.tbDeveloper.Text) ? "Unknown" : form.tbDeveloper.Text;
                 gl.BackgroundBase64 = form.m_ConvertIMG2Base64(form.imgBitmap);
+                gl.IconBase64 = form.IconToBase64String(form.IconPathMethod(form.tbGameDir.Text));
                 gl.ProgramType = form.v_ProgramType;
                 gl.LaunchParameter = new string[form.v_LaunchParameter.Length];
                 Array.Copy(form.v_LaunchParameter, gl.LaunchParameter, form.v_LaunchParameter.Length);
@@ -814,8 +830,9 @@ namespace TMP.NET
                     var gl = (GameList)LV_List.SelectedItem;
                     gl.GameName = form.tbGameTitle.Text;
                     gl.GamePath = form.tbGameDir.Text;
-                    gl.GameDev = form.tbDeveloper.Text;
+                    gl.GameDev = string.IsNullOrEmpty(form.tbDeveloper.Text) ? "Unknown" : form.tbDeveloper.Text;
                     gl.BackgroundBase64 = form.m_ConvertIMG2Base64(form.imgBitmap);
+                    gl.IconBase64 = form.IconToBase64String(form.IconPathMethod(form.tbGameDir.Text));
                     gl.ProgramType = form.v_ProgramType;
                     gl.LaunchParameter = new string[form.v_LaunchParameter.Length];
                     Array.Copy(form.v_LaunchParameter, gl.LaunchParameter, form.v_LaunchParameter.Length);
@@ -833,7 +850,7 @@ namespace TMP.NET
                     CollectionViewSource.GetDefaultView(i_List).Refresh();
 
                     labelGameTitle.Text = gl.GameName;
-                    label_DevName.Content = gl.GameDev;
+                    label_DevName.Text = gl.GameDev;
 
                     var g_Brush = GridImg.Background as ImageBrush;
 
@@ -854,7 +871,7 @@ namespace TMP.NET
                         CollectionViewSource.GetDefaultView(i_List).Refresh();
 
                         labelGameTitle.Text = null;
-                        label_DevName.Content = null;
+                        label_DevName.Text = null;
                         label_Playtime.Content = "0h 0m 0s";
                         label_LastPlayed.Content = "Never";
 
@@ -950,7 +967,6 @@ namespace TMP.NET
             Bitmap img = CaptureHandler.TakeScreenshot(proc);
             img.Save("ss.png", ImageFormat.Png);
 
-            // Menampilkan notifikasi
             string imagePath = Environment.CurrentDirectory + "\\ss.png";
             ShowNotification("Screenshot Taken!", "Saved in: " + imagePath);
 
