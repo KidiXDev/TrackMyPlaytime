@@ -10,7 +10,7 @@ namespace TMP.NET.Modules
 {
     public class UpdateChecker
     {
-        private bool updateAvailable = false;
+        public static bool updateAvailable = false;
         private const string repoURL = "https://api.github.com/repos/KidiXDev/TrackMyPlaytime/releases/latest";
 
         public async Task CheckForUpdate()
@@ -55,6 +55,7 @@ namespace TMP.NET.Modules
                 }
                 catch (Exception ex)
                 {
+                    MainWindow.log.Warn("Checking update failed", ex);
                     MessageBox.Show($"Update check failed\nInfo: {ex.Message}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
