@@ -30,7 +30,7 @@ You can also provide a custom image using a url that you can enter into the game
 
 ## Download
 You can download this program for **free!** <br>
-Enter the [Release](https://github.com/KidiXDev/TrackMyPlaytime/releases) section and then just download the latest available release.
+Goto [Official Web](https://kidixdev.github.io/trackmyplaytimeweb/) or enter the [Release](https://github.com/KidiXDev/TrackMyPlaytime/releases) section and then just download the latest available release.
 
 ## How to install
 After you have finished downloading the installer, just install it as usual, when finished the program will be installed on your computer. <br>
