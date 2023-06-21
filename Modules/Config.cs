@@ -16,5 +16,10 @@ namespace TMP.NET.Modules
         public bool EnabledRichPresence { get { return _EnabledRichPresence; } set { _EnabledRichPresence = value; } }
         public int SelectedIndex { get; set; }
         public int TextractorDelay { get { return _TextractorDelay; } set { _TextractorDelay = value; } }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        public double Top { get; set; }
+        public double Left { get; set; }
+        public bool Maximized { get; set; }
     }
 }

@@ -201,6 +201,13 @@ namespace TMP.NET
             DeserializeData(_ListData_n);
             DeserializeSetting(_Config);
 
+            this.Width = setting.Width;
+            this.Height = setting.Height;
+            this.Top = setting.Top;
+            this.Left = setting.Left;
+            if(setting.Maximized)
+                this.WindowState = WindowState.Maximized;
+
             if (setting.EnabledRichPresence)
                 discord.Initialize();
         }
@@ -409,6 +416,25 @@ namespace TMP.NET
                 discord.Deinitialize();
 
             Modules.Keyboard.KeyboardHook.Stop();
+
+            // Save window state
+            if (WindowState == WindowState.Maximized)
+            {
+                setting.Width = RestoreBounds.Width;
+                setting.Height = RestoreBounds.Height;
+                setting.Top = RestoreBounds.Top;
+                setting.Left = RestoreBounds.Left;
+                setting.Maximized = true;
+            }
+            else
+            {
+                setting.Width = this.Width;
+                setting.Height = this.Height;
+                setting.Top = this.Top;
+                setting.Left = this.Left;
+                setting.Maximized = false;
+            } 
+
             SerializeSetting(_Config);
         }
 
@@ -630,7 +656,6 @@ namespace TMP.NET
                     });
                     log.Error("Exception thrown when launch with launcher handler", ex);
                     MessageBox.Show($"An error occurred while executing the program\nInfo: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
                 }
 
                 TimeSpan ts = timer.Elapsed;
@@ -685,7 +710,6 @@ namespace TMP.NET
                 catch (Exception ex)
                 {
                     timer.Stop();
-                    timer.Reset();
                     state = AppState.Running;
                     this.Dispatcher.Invoke(() =>
                     {
@@ -693,7 +717,6 @@ namespace TMP.NET
                     });
                     log.Error("Exception thrown when launch game", ex);
                     MessageBox.Show($"An error occurred while executing the program\nInfo: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
                 }
 
                 TimeSpan ts = timer.Elapsed;

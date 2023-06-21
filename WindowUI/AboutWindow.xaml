@@ -16,19 +16,20 @@
             <Image Source="/TMP.NET;component/Resources/icon.ico" HorizontalAlignment="Left" Height="62" Margin="10,10,0,0" VerticalAlignment="Top" Width="63"/>
             <Label x:Name="labelVersion" Content="Version: 1.0.1" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Margin="77,41,0,0" VerticalAlignment="Top"/>
             <TextBlock HorizontalAlignment="Center" Height="65" TextWrapping="Wrap" VerticalAlignment="Center" Width="440" FontFamily="{StaticResource GlobalFont}" Foreground="White" FontSize="12">
-                Track my playtime is a program that can record your game playing time and can also manage game collections, especially visual novel games, in one place to make it easier for you when you want to play or choose.
+                Track My Playtime is a program that can record your game playing time and can also manage game collections in one place to make it easier for you when you want to choose or play, especially for visual novel games.
             </TextBlock>
             <Label Content="This program created by: KidiXDev" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="10" HorizontalAlignment="Left" Margin="10,212,0,0" VerticalAlignment="Top"/>
             <TextBlock HorizontalAlignment="Center" Height="65" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" FontFamily="{StaticResource GlobalFont}" Foreground="White" FontSize="12" Margin="0,142,0,0">
-                Official Link:
-                <Hyperlink NavigateUri="https://github.com/KidiXDev/TrackMyPlaytime" RequestNavigate="Hyperlink_RequestNavigate">
+                Official Web:
+                <Hyperlink NavigateUri="https://kidixdev.github.io/trackmyplaytimeweb/" RequestNavigate="Hyperlink_RequestNavigate">
                     Link
                 </Hyperlink>
-                <LineBreak></LineBreak>
+                <LineBreak/>
                 Discord Server:
                 <Hyperlink NavigateUri="https://discord.gg/xWPBs55DUc" RequestNavigate="Hyperlink_RequestNavigate">
                     Link
                 </Hyperlink>
+                <LineBreak/>
             </TextBlock>
         </Grid>
 
