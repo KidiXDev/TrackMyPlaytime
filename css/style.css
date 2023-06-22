@@ -1,0 +1,90 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+hr {
+  width: 80%;
+  margin: 20px auto;
+}
+
+p{
+  color: white;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+  text-align: center;
+  background: linear-gradient(#0f58d6, #205369);
+}
+
+.content {
+  overflow-y: auto;
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: white;
+}
+
+.screenshot-container {
+  position: relative;
+  margin-top: 20px;
+  width: 100%;
+  height: fit-content;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .screenshot-container {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.screenshot-slider {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.screenshot {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.slider-control-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.slider-control {
+  display: inline-block;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 4px;
+  border-color: #4caf50;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.download-button {
+  display: inline-block;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 18px;
+  margin-top: 20px;
+  width: 150px;
+}
