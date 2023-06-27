@@ -1,6 +1,6 @@
 ﻿/*
- *   Status: In-Development
- *   Publishing Status: Un-released
+ *   Status: Released
+ *   Publishing Status: Public Released
  *
  *   Project Started
  *   ===============
@@ -25,33 +25,51 @@
  *       - Logging Feature
  *       
  *       [3 June 2023]
- *       Update Features:
+ *       Updated Features:
  *       - Screenshot
  *       - Global Keyboard Hook
  *       
  *       [4 June 2023]
- *       Update Features:
+ *       Updated Features:
  *       - Argument Listener at runtime
  *       - Change the GameTitle label to Textblock inside the ViewBox to achieve automatic font re-size
  *       - Add Textractor Launch Delay Setting
  *       
  *       [12 June 2023]
- *       Update Features:
+ *       Updated Features:
  *       - Make Installer and Uninstaller
  *       
- *       Fixed Issue:
- *       Fixed Issue Textractor Crash #1
+ *       [14 June 2023]
+ *       ==============
+ *       v1.0.0
+ *       ======
+ *       - First Public Release
  *       
- *       Done:
+ *       [19 June 2023]
+ *       ==============
+ *       v1.1.0
+ *       ======
+ *       Updated Features:
+ *       - Optimized Performance
+ *       - Fixed crash issue #1
+ *       - Added about window
  *       - Fullscreen Support
- *       - Performance Boost
- *       - Changed the way to get the icon from before having to extract the icon from the executable file, 
- *         so after extracting it then saving it into base64string to reduce loading time.
+ *       
+ *       [27 June 2023]
+ *       ==============
+ *       v1.2.0
+ *       ======
+ *       Updated Features:
+ *       - Added automatic update checker
+ *       - Change notification system
+ *       - Added screenshots sound effect
+ *       - Change UI Update Before and After game launch
  *       
  *
 */
 
 using log4net;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
@@ -62,8 +80,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -205,7 +225,7 @@ namespace TMP.NET
             this.Height = setting.Height;
             this.Top = setting.Top;
             this.Left = setting.Left;
-            if(setting.Maximized)
+            if (setting.Maximized)
                 this.WindowState = WindowState.Maximized;
 
             if (setting.EnabledRichPresence)
@@ -224,16 +244,20 @@ namespace TMP.NET
                 if (!Directory.Exists(imagePath))
                     Directory.CreateDirectory(imagePath);
 
-                string fileName = $"{proc.ProcessName} {DateTime.Now.ToString("dd-MMMM-yyyy HH-mm-ss")}.png";
+                string fileName = $"{proc.ProcessName} {DateTime.Now.ToString("dd-MMMM-yyyy HH.mm.ss")}.png";
                 string combined = Path.Combine(imagePath, fileName);
                 var img = CaptureHandler.TakeScreenshot(proc);
                 img.Save(combined, ImageFormat.Png);
 
-                ShowNotification("Screenshot Taken!", "Saved in: " + combined);
+                var str = Application.GetResourceStream(new Uri("pack://application:,,,/TMP.NET;component/Resources/capture-sfx.wav")).Stream;
+                SoundPlayer sp = new SoundPlayer(str);
+                sp.Play();
+
+                ShowScreenshotNotification("Screenshot Taken!", $"Saved in: {combined}", combined);
             }
             catch (Exception ex)
             {
-                ShowNotification("Failed take screenshot", $"Info: {ex.Message}");
+                log.Warn("Failed take screenshot", ex);
             }
         }
 
@@ -258,14 +282,12 @@ namespace TMP.NET
 
                     if (mainWindow.ShortcutURLStarter(launchId))
                     {
-                        Console.WriteLine("ingfo");
                         mainWindow.StateChecker();
                         if (mainWindow.state == AppState.Initialize)
                         {
                             mainWindow.StartProcess();
                         }
                     }
-                    Console.WriteLine($"Launch Id: {launchId}");
                 }
             }
         }
@@ -355,28 +377,17 @@ namespace TMP.NET
         }
         #endregion
 
-        private void ShowNotification(string baloonMsg, string message)
+        private void ShowScreenshotNotification(string title, string message, string imgDir)
         {
-            System.Windows.Forms.NotifyIcon notifyIcon = new System.Windows.Forms.NotifyIcon();
-            notifyIcon.Icon = SystemIcons.Information;
-
-            HwndSource source = (HwndSource)HwndSource.FromVisual(this);
-
-            IntPtr handle = source.Handle;
-
-            notifyIcon.BalloonTipTitle = baloonMsg;
-            notifyIcon.BalloonTipText = message;
-            notifyIcon.Visible = true;
-            notifyIcon.ShowBalloonTip(3000);
-
-            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-            timer.Interval = 3000;
-            timer.Tick += (sender, e) =>
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
-                notifyIcon.Dispose();
-                timer.Stop();
-            };
-            timer.Start();
+                new ToastContentBuilder()
+                    .AddArgument("openss", imgDir)
+                    .AddText(title)
+                    .AddText(message)
+                    .AddHeroImage(new Uri(imgDir))
+                    .Show();
+            }));
         }
 
         private void Window_SourceInitialized(object sender, EventArgs ea)
@@ -433,9 +444,10 @@ namespace TMP.NET
                 setting.Top = this.Top;
                 setting.Left = this.Left;
                 setting.Maximized = false;
-            } 
+            }
 
             SerializeSetting(_Config);
+            ToastNotificationManagerCompat.Uninstall();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -443,6 +455,14 @@ namespace TMP.NET
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 LoadShortcut();
+                if (setting.AutoCheckUpdate)
+                {
+                    Task.Run(async () =>
+                    {
+                        UpdateChecker update = new UpdateChecker();
+                        await update.CheckForUpdateOnBackground();
+                    });
+                }
             }));
         }
 
@@ -561,16 +581,16 @@ namespace TMP.NET
         private void textractorExec(GameList game)
         {
             new Thread(() =>
-            {    
+            {
                 try
                 {
                     if (!setting.DisableTextractor && !game.DisableTextractor)
                     {
                         if (!File.Exists(setting.x86Directory))
-                            throw new FileNotFoundException("Textractor Executable not found");
+                            throw new FileNotFoundException("Textractor Executable not found\n\nPlease make sure you enter the correct directory, or if you don't want to use Textractor it's a good idea to disable it via Settings");
 
                         if (!File.Exists(setting.x64Directory))
-                            throw new FileNotFoundException("Textractor Executable not found");
+                            throw new FileNotFoundException("Textractor Executable not found\n\nPlease make sure you enter the correct directory, or if you don't want to use Textractor it's a good idea to disable it via Settings");
 
                         Thread.Sleep(setting.TextractorDelay);
                         var textractorProc = new Process();
@@ -594,13 +614,18 @@ namespace TMP.NET
                         }
                     }
                 }
+                catch (FileNotFoundException e)
+                {
+                    MessageBox.Show($"Failed launch Textractor\nInfo: {e.Message}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    log.Warn("Failed launch Textractor", e);
+                }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"Failed launch Textractor\nInfo{e.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Failed launch Textractor\nInfo: {e.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     log.Error("Failed launch Textractor", e);
                 }
             }).Start();
-            
+
         }
 
         private void StartProcessWithLauncherHandler(GameList list, Stopwatch timer, object selected)
@@ -625,6 +650,11 @@ namespace TMP.NET
                         throw new FileNotFoundException($"Removed or Missing Program Directory:\n{list.GamePath}");
 
                     proc.Start();
+
+                    _dateTime = DateTime.Now;
+                    list.Tracker = _dateTime;
+                    updateTracker(list, selected);
+
                     timer.Start();
                     this.Dispatcher.Invoke(() =>
                     {
@@ -661,8 +691,8 @@ namespace TMP.NET
                 TimeSpan ts = timer.Elapsed;
                 _dateTime = DateTime.Now;
 
-                list.Playtime += ts;
                 list.Tracker = _dateTime;
+                list.Playtime += ts;
 
                 // Update UI
                 updateTracker(list, selected);
@@ -687,6 +717,11 @@ namespace TMP.NET
                         proc.StartInfo.Verb = string.Empty;
 
                     proc.Start();
+
+                    _dateTime = DateTime.Now;
+                    l_gameList.Tracker = _dateTime;
+                    updateTracker(l_gameList, selected);
+
                     timer.Start();
                     this.Dispatcher.Invoke(() =>
                     {
@@ -722,8 +757,8 @@ namespace TMP.NET
                 TimeSpan ts = timer.Elapsed;
                 _dateTime = DateTime.Now;
 
-                l_gameList.Playtime += ts;
                 l_gameList.Tracker = _dateTime;
+                l_gameList.Playtime += ts;
 
                 // Update UI
                 updateTracker(l_gameList, selected);
@@ -768,6 +803,7 @@ namespace TMP.NET
             {
                 var l_gameList = (GameList)LV_List.SelectedItem;
                 var selectedItem = LV_List.SelectedIndex;
+
                 labelGameTitle.Text = l_gameList.GameName;
                 label_DevName.Text = l_gameList.GameDev;
 
@@ -806,6 +842,7 @@ namespace TMP.NET
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             var form = new ListForms(false, null); // Show form window
+            form.Owner = this;
             var result = form.ShowDialog() ?? false; // save dialog result
             if (result)  // if dialog result is true then save all information and save it to Listview
             {
@@ -837,7 +874,7 @@ namespace TMP.NET
 
                 SerializeData(_ListData_n);
 
-                if(form.cbCreateShortcut.IsChecked ?? false)
+                if (form.cbCreateShortcut.IsChecked ?? false)
                     form.CreateShortcut(gl);
             }
         }
@@ -847,6 +884,7 @@ namespace TMP.NET
             if (LV_List.SelectedItem != null)
             {
                 var form = new ListForms(true, (GameList)LV_List.SelectedItem);
+                form.Owner = this;
                 var res = form.ShowDialog() ?? false;
                 if (res)
                 {
@@ -911,6 +949,7 @@ namespace TMP.NET
         private void btnSetting_Click(object sender, RoutedEventArgs e)
         {
             SettingWindow form = new SettingWindow(setting);
+            form.Owner = this;
             var res = form.ShowDialog() ?? false;
             if (res)
             {
@@ -926,6 +965,7 @@ namespace TMP.NET
                         setting.TimeTracking = form.cbTimeTracking.IsChecked ?? true;
                         setting.EnabledRichPresence = form.cbEnableRichPresence.IsChecked ?? true;
                         setting.TextractorDelay = Convert.ToInt32(form.tbTextractorDelay.Text);
+                        setting.AutoCheckUpdate = form.cbAutoCheckUpdate.IsChecked ?? true;
                         SerializeSetting(_Config);
 
                         Process.Start(Application.ResourceAssembly.Location);
@@ -940,6 +980,7 @@ namespace TMP.NET
                 setting.TimeTracking = form.cbTimeTracking.IsChecked ?? true;
                 setting.EnabledRichPresence = form.cbEnableRichPresence.IsChecked ?? true;
                 setting.TextractorDelay = Convert.ToInt32(form.tbTextractorDelay.Text);
+                setting.AutoCheckUpdate = form.cbAutoCheckUpdate.IsChecked ?? true;
 
                 if (!setting.EnabledRichPresence)
                     discord.Deinitialize();
@@ -991,7 +1032,6 @@ namespace TMP.NET
             img.Save("ss.png", ImageFormat.Png);
 
             string imagePath = Environment.CurrentDirectory + "\\ss.png";
-            ShowNotification("Screenshot Taken!", "Saved in: " + imagePath);
 
             Console.WriteLine("Captured!");
         }

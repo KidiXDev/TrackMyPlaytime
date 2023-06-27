@@ -38,6 +38,7 @@
             <Label Content="Textractor Delay:" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="3,230,0,0" VerticalAlignment="Top"/>
             <Button x:Name="btnCheckforUpdate" Click="btnCheckforUpdate_Click" Content="Check For Update" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" Foreground="White" Background="#1B4772" HorizontalAlignment="Left" Margin="10,379,0,0" VerticalAlignment="Top" Width="137" Height="22"/>
             <Label Content="Update:" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,352,0,0" VerticalAlignment="Top"/>
+            <CheckBox x:Name="cbAutoCheckUpdate" Content="Auto check for updates" IsChecked="True" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="10,331,0,0" VerticalAlignment="Top" Width="221" Height="16"/>
         </Grid>
         <Grid HorizontalAlignment="Center" Height="68" Margin="0,436,0,0" VerticalAlignment="Top" Width="480">
             <Button x:Name="btnCancel" Content="X" Click="btnCancel_Click" Foreground="White" FontSize="32" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="48" Margin="358,0,0,0" VerticalAlignment="Center" Width="48" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>

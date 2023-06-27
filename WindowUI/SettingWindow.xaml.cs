@@ -13,7 +13,7 @@ namespace TMP.NET.WindowUI
     public partial class SettingWindow : Window
     {
         Config setting;
-
+        AboutWindow aboutWindow;
         UpdateChecker _chk = new UpdateChecker();
         public SettingWindow(Config setting)
         {
@@ -74,6 +74,7 @@ namespace TMP.NET.WindowUI
             cbTimeTracking.IsChecked = setting.TimeTracking;
             cbEnableRichPresence.IsChecked = setting.EnabledRichPresence;
             tbTextractorDelay.Text = setting.TextractorDelay.ToString();
+            cbAutoCheckUpdate.IsChecked = setting.AutoCheckUpdate;
         }
 
         private void btnBrowseX86_Click(object sender, RoutedEventArgs e)
@@ -92,13 +93,13 @@ namespace TMP.NET.WindowUI
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Executable (*.exe)|*.exe";
             ofd.Title = "Select Textractor Executable";
-            
+
             if (ofd.ShowDialog() == true)
             {
                 tbTextractorDirx64.Text = ofd.FileName;
             }
 
-            
+
         }
 
         private void tbTextractorDelay_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
@@ -118,13 +119,39 @@ namespace TMP.NET.WindowUI
 
         private async void btnCheckforUpdate_Click(object sender, RoutedEventArgs e)
         {
+            if (UpdateChecker.updateAvailable)
+            {
+                var res = MessageBox.Show("An update is available, would you like to visit the download page?", "Notification", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (res == MessageBoxResult.Yes)
+                    _chk.OpenUpdateLink();
+
+                return;
+            }
+
+            if (_chk.cooldown)
+            {
+                MessageBox.Show("Please wait a while before checking for available updates again", "Cooldown...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            _chk.cooldown = true;
             await _chk.CheckForUpdate();
         }
 
         private void btnAbout_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
-            new AboutWindow().ShowDialog();
+            if (aboutWindow == null)
+            {
+                aboutWindow = new AboutWindow() { Owner = this };
+                aboutWindow.Closed += (obj, eArg) => { aboutWindow = null; };
+                aboutWindow.Show();
+            }
+            else
+            {
+                if (aboutWindow.WindowState == WindowState.Minimized)
+                    aboutWindow.WindowState = WindowState.Normal;
+                aboutWindow.Focus();
+            }
         }
     }
 }
