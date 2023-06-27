@@ -692,7 +692,9 @@ namespace TMP.NET
                 _dateTime = DateTime.Now;
 
                 list.Tracker = _dateTime;
-                list.Playtime += ts;
+
+                if(setting.TimeTracking)
+                    list.Playtime += ts;
 
                 // Update UI
                 updateTracker(list, selected);
@@ -758,7 +760,9 @@ namespace TMP.NET
                 _dateTime = DateTime.Now;
 
                 l_gameList.Tracker = _dateTime;
-                l_gameList.Playtime += ts;
+
+                if(setting.TimeTracking) // I forgot to implement this feature XD
+                    l_gameList.Playtime += ts;
 
                 // Update UI
                 updateTracker(l_gameList, selected);
