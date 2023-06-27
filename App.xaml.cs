@@ -1,12 +1,7 @@
-﻿using System;
-using System.Configuration;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
+using System;
 using System.Diagnostics;
-using System.IO;
-using System.IO.Pipes;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows;
 using TMP.NET.Modules;
 
@@ -23,7 +18,7 @@ namespace TMP.NET
         {
             var proc = Process.GetCurrentProcess();
             var processName = proc.ProcessName.Replace(".vshost", "");
-            var runningProcess = Process.GetProcesses().FirstOrDefault(x => 
+            var runningProcess = Process.GetProcesses().FirstOrDefault(x =>
             (x.ProcessName == processName || x.ProcessName == proc.ProcessName || x.ProcessName == proc.ProcessName + ".vshost") && x.Id != proc.Id);
 
             if (runningProcess == null)
@@ -42,35 +37,35 @@ namespace TMP.NET
     }
     public partial class App : Application
     {
-        /*private static string appGuid = ((GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), false).GetValue(0)).Value.ToString();
-        private static string MutexName = string.Format("Global\\{{{0}}}", appGuid);
-        private static Mutex mutex;*/
-
-        /*protected override void OnStartup(StartupEventArgs e)
+        public App() : base()
         {
-            bool createdNew;
-            mutex = new Mutex(true, MutexName, out createdNew);
+            this.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+        }
 
-            if (!createdNew)
-            {
-                MessageBox.Show("Program is already running.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Current.Shutdown();
-            }
-            else
-            {
-
-                base.OnStartup(e);
-            }
-        }*/
-
-        /*protected override void OnExit(ExitEventArgs e)
+        void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            *//*mutex?.ReleaseMutex();
-            mutex?.Close();
+            TMP.NET.MainWindow.log.Warn("Checking update failed", e.Exception);
+            MessageBox.Show("Unhandled exception occurred: \n" + e.Exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
 
-            base.OnExit(e);*//*
-        }*/
-
-        
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            ToastNotificationManagerCompat.OnActivated += toastArgs =>
+            {
+                ToastArguments args = ToastArguments.Parse(toastArgs.Argument);
+                Application.Current.Dispatcher.Invoke(delegate
+                {
+                    if (args.Contains("openss"))
+                    {
+                        Process.Start(args.Get("openss"));
+                    }
+                    else if (args.Contains("openweb"))
+                    {
+                        string repoUrl = "https://trackmyplaytime.netlify.app/";
+                        Process.Start(new ProcessStartInfo { FileName = repoUrl, UseShellExecute = true });
+                    }
+                });
+            };
+        }
     }
 }
