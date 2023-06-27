@@ -2,7 +2,7 @@ var slideIndex = 0;
 var screenshotSlider = document.querySelector(".screenshot-slider");
 var screenshots = document.querySelectorAll(".screenshot");
 var sliderControls = document.querySelectorAll(".slider-control");
-var timeout;
+var timeout = setTimeout(autoSlide, 5000);
 
 function slide(direction) {
   if (direction === "left") {
@@ -18,15 +18,10 @@ function slide(direction) {
   }
 
   screenshotSlider.style.transform = "translateX(-" + slideIndex * 100 + "%)";
-
-  clearTimeout(timeout);
-  timeout = setTimeout(autoSlide, 5000);
 }
 
 function autoSlide() {
-  slide("right");
-
   timeout = setTimeout(autoSlide, 5000);
+  slide("right");
 }
 
-autoSlide();

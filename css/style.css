@@ -9,7 +9,7 @@ hr {
   margin: 20px auto;
 }
 
-p{
+p {
   color: white;
 }
 
@@ -87,4 +87,10 @@ h1 {
   font-size: 18px;
   margin-top: 20px;
   width: 150px;
+}
+
+.globalfont {
+  font-family: "Rubik", sans-serif;
+  font-size: 18px;
+  color: white;
 }
