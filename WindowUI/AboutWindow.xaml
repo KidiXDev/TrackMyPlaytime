@@ -21,15 +21,19 @@
             <Label Content="This program created by: KidiXDev" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="10" HorizontalAlignment="Left" Margin="10,212,0,0" VerticalAlignment="Top"/>
             <TextBlock HorizontalAlignment="Center" Height="65" TextWrapping="Wrap" VerticalAlignment="Top" Width="440" FontFamily="{StaticResource GlobalFont}" Foreground="White" FontSize="12" Margin="0,142,0,0">
                 Official Web:
-                <Hyperlink NavigateUri="https://kidixdev.github.io/trackmyplaytimeweb/" RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink NavigateUri="https://trackmyplaytime.netlify.app/" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="None">
                     Link
                 </Hyperlink>
                 <LineBreak/>
                 Discord Server:
-                <Hyperlink NavigateUri="https://discord.gg/xWPBs55DUc" RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink NavigateUri="https://discord.gg/xWPBs55DUc" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="None">
                     Link
                 </Hyperlink>
                 <LineBreak/>
+                Report Issue:
+                <Hyperlink NavigateUri="https://github.com/KidiXDev/TrackMyPlaytime/issues" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="None">
+                    Link
+                </Hyperlink>
             </TextBlock>
         </Grid>
 
