@@ -15,7 +15,8 @@ namespace TMPUninstaller.GUI.ContentPage
         private RegistryCommand _reg = new RegistryCommand();
         private string[] fileList =
         {
-            "tmp.exe", "DiscordRPC.dll", "handler.exe", "log4net.dll", "Newtonsoft.Json.dll", "TMP.NET.exe.config"
+            "tmp.exe", "DiscordRPC.dll", "handler.exe", "log4net.dll", "Newtonsoft.Json.dll", "TMP.NET.exe.config",
+            "tmp.exe.config", "Microsoft.Toolkit.Uwp.Notifications.dll", "System.ValueTuple.dll"
         };
 
         bool keepGameList, keepConfig;
@@ -53,7 +54,8 @@ namespace TMPUninstaller.GUI.ContentPage
                 // Start operation
                 foreach (var file in fileList)
                 {
-                    File.Delete(Path.Combine(installDir, file));
+                    if(File.Exists(Path.Combine(installDir, file)))
+                        File.Delete(Path.Combine(installDir, file));
 
                     completedEntries++;
                     Application.Current.Dispatcher.Invoke(() =>
