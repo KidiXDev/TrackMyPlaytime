@@ -30,7 +30,7 @@ You can also provide a custom image using a url that you can enter into the game
 
 ## :file_folder: Download
 You can download this program for **free!** <br>
-Goto [Official Web](https://kidixdev.github.io/TrackMyPlaytime) or enter the [Release](https://github.com/KidiXDev/TrackMyPlaytime/releases) section and then just download the latest available release.
+Goto [Official Web](https://trackmyplaytime.netlify.app) or enter the [Release](https://github.com/KidiXDev/TrackMyPlaytime/releases) section and then just download the latest available release.
 ## :page_facing_up: How to install
 After you have finished downloading the installer, just install it as usual, when finished the program will be installed on your computer. <br>
 
@@ -39,6 +39,9 @@ After you have finished downloading the installer, just install it as usual, whe
 
 ## :question: Help
 If you need help or have problems, please contact me:
-- Discord Server: [Link](https://discord.gg/xWPBs55DUc)
+> Discord Server: [Link](https://discord.gg/xWPBs55DUc)
 
 Or you can report bugs to the [Issue](https://github.com/KidiXDev/TrackMyPlaytime/issues) section.
+
+## 🥇 Contributor
+Thanks to [@StinkyOnion03](https://github.com/StinkyOnion03) for creating awesome Image Artwork and GUI Icon
