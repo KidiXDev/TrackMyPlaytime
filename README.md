@@ -39,7 +39,7 @@ After you have finished downloading the installer, just install it as usual, whe
 
 ## :question: Help
 If you need help or have problems, please contact me:
-- Discord Server: [Link](https://discord.gg/xWPBs55DUc)
+> Discord Server: [Link](https://discord.gg/xWPBs55DUc)
 
 Or you can report bugs to the [Issue](https://github.com/KidiXDev/TrackMyPlaytime/issues) section.
 
