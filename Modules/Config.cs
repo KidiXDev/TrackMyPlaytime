@@ -9,6 +9,7 @@ namespace TMP.NET.Modules
         private bool _DisableTextractor;
         private int _TextractorDelay = 3000;
         private bool _EnabledRichPresence = true;
+        private bool _AutoCheckUpdate = true;
         public string x86Directory { get; set; }
         public string x64Directory { get; set; }
         public bool DisableTextractor { get { return _DisableTextractor; } set { _DisableTextractor = value; } }
@@ -21,5 +22,6 @@ namespace TMP.NET.Modules
         public double Top { get; set; }
         public double Left { get; set; }
         public bool Maximized { get; set; }
+        public bool AutoCheckUpdate { get { return _AutoCheckUpdate; } set { _AutoCheckUpdate = value; } }
     }
 }
