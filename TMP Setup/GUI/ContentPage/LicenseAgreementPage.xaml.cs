@@ -15,6 +15,7 @@ namespace TMP_Setup.GUI.ContentPage
  can be downloaded by everyone.
 
  Official Links: https://github.com/KidiXDev/TrackMyPlaytime
+ Website: https://trackmyplaytime.netlify.app
  Contact Support: kidixdev@gmail.com
 ";
 

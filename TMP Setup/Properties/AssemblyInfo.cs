@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KidiXDev")]
 [assembly: AssemblyProduct("TMP Setup")]
-[assembly: AssemblyCopyright("Copyright © KidiXDev  2023")]
+[assembly: AssemblyCopyright("Copyright © KidiXDev 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,6 +51,7 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.2.0.1")]
+[assembly: AssemblyFileVersion("1.2.0.1")]
 [assembly: NeutralResourcesLanguage("en")]
+[assembly: Guid("51565529-A882-4F36-B261-F4884CD21DDE")]
