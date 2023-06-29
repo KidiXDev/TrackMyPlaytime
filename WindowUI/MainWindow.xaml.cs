@@ -104,8 +104,13 @@ namespace TMP.NET
 
         public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+#if DEBUG
+        private readonly string _ListData_n = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\Debug\\listdata.kdb");
+        private readonly string _Config = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\Debug\\config.cfg");
+#else
         private readonly string _ListData_n = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\listdata.kdb");
         private readonly string _Config = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\config.cfg");
+#endif
 
         private ObservableCollection<GameList> i_List = new ObservableCollection<GameList>();
         public ObservableCollection<GameList> i_listv { get { return i_List; } }
@@ -123,12 +128,14 @@ namespace TMP.NET
 
         private readonly string[] args = Environment.GetCommandLineArgs();
 
-        private enum AppState
+        private GameList _currentSelectedList;
+
+        public enum AppState
         {
             Idle, Initialize, Running
         }
 
-        private AppState state = AppState.Idle;
+        public AppState state = AppState.Idle;
         #endregion
 
         #region Serialize And Deserialize Data
@@ -455,6 +462,12 @@ namespace TMP.NET
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 LoadShortcut();
+
+                if(LV_List.SelectedItem == null)
+                    btnEdit.IsEnabled = false;
+                else
+                    btnEdit.IsEnabled = true;
+
                 if (setting.AutoCheckUpdate)
                 {
                     Task.Run(async () =>
@@ -781,6 +794,8 @@ namespace TMP.NET
                 var selected = LV_List.SelectedItem;
                 var timer = new Stopwatch();
 
+                _currentSelectedList = l_gameList;
+
                 if (!l_gameList.UseLauncherHandler)
                 {
                     proc.StartInfo.FileName = l_gameList.GamePath;
@@ -803,6 +818,11 @@ namespace TMP.NET
 
         private void LV_Selected(object sender, SelectionChangedEventArgs e)
         {
+            if (LV_List.SelectedItem == null)
+                btnEdit.IsEnabled = false;
+            else
+                btnEdit.IsEnabled = true;
+
             if (LV_List.SelectedItem != null)
             {
                 var l_gameList = (GameList)LV_List.SelectedItem;
@@ -845,7 +865,7 @@ namespace TMP.NET
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            var form = new ListForms(false, null); // Show form window
+            var form = new ListForms(false, null, null); // Show form window
             form.Owner = this;
             var result = form.ShowDialog() ?? false; // save dialog result
             if (result)  // if dialog result is true then save all information and save it to Listview
@@ -887,7 +907,7 @@ namespace TMP.NET
         {
             if (LV_List.SelectedItem != null)
             {
-                var form = new ListForms(true, (GameList)LV_List.SelectedItem);
+                var form = new ListForms(true, (GameList)LV_List.SelectedItem, _currentSelectedList);
                 form.Owner = this;
                 var res = form.ShowDialog() ?? false;
                 if (res)
@@ -935,8 +955,8 @@ namespace TMP.NET
 
                         CollectionViewSource.GetDefaultView(i_List).Refresh();
 
-                        labelGameTitle.Text = null;
-                        label_DevName.Text = null;
+                        labelGameTitle.Text = "Game Title";
+                        label_DevName.Text = "Developer Name";
                         label_Playtime.Content = "0h 0m 0s";
                         label_LastPlayed.Content = "Never";
 

@@ -16,7 +16,6 @@ namespace TMP_Setup.Ext
             }
             catch (Exception ex)
             {
-                // Handle exceptions appropriately
                 Console.WriteLine($"Error registering CurrentUser: {ex.Message}");
             }
         }
@@ -39,7 +38,6 @@ namespace TMP_Setup.Ext
             }
             catch (Exception ex)
             {
-                // Handle exceptions appropriately
                 Console.WriteLine($"Error registering CurrentUser: {ex.Message}");
             }
         }
@@ -49,10 +47,8 @@ namespace TMP_Setup.Ext
             try
             {
                 RegistryKey keyAllUser = Registry.ClassesRoot.OpenSubKey("tmpdotnet");
-                //Console.WriteLine(keyAllUser.Name);
                 if (keyAllUser == null)
                 {
-                    //Console.WriteLine(keyAllUser.Name + 2);
                     keyAllUser = Registry.ClassesRoot.CreateSubKey("tmpdotnet", true);
                     keyAllUser.SetValue(string.Empty, "URL:tmpdotnet Protocol");
                     keyAllUser.SetValue("URL Protocol", string.Empty);
@@ -75,7 +71,6 @@ namespace TMP_Setup.Ext
             try
             {
                 RegistryKey keyUninstallerAllUser = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Uninstall", true).OpenSubKey("Track My Playtime", true);
-                //Console.WriteLine(keyUninstallerAllUser.Name);
                 if (keyUninstallerAllUser == null)
                 {
                     Console.WriteLine("LOADING...");
@@ -133,9 +128,7 @@ namespace TMP_Setup.Ext
                         using (RegistryKey key2 = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("Windows").OpenSubKey("CurrentVersion").OpenSubKey("Uninstall").OpenSubKey("Track My Playtime"))
                         {
                             if (key2 != null)
-                            {
                                 return key2.GetValue("InstallLocation").ToString();
-                            }
                         }
                     }
 

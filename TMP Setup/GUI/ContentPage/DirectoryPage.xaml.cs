@@ -1,6 +1,6 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,7 +44,7 @@ namespace TMP_Setup.GUI.ContentPage
         public DirectoryPage(bool type)
         {
             InitializeComponent();
-             _chk = new AdminChecker();
+            _chk = new AdminChecker();
             this.DataContext = this;
             this.currentUser = type;
             _program = new RegisterProgram();
@@ -67,6 +67,8 @@ namespace TMP_Setup.GUI.ContentPage
             else
             {
                 label_isInstalled.Visibility = Visibility.Visible;
+                btnBrowse.IsEnabled = false;
+
                 string insDir = _program.GetInstallDir();
                 string illegalChars = new string(Path.GetInvalidPathChars()) + new string(Path.GetInvalidFileNameChars());
                 foreach (char c in illegalChars)
@@ -102,7 +104,21 @@ namespace TMP_Setup.GUI.ContentPage
 
         private void btnInstall_Click(object sender, RoutedEventArgs e)
         {
+            if (!ProcessChecker())
+                return;
             this.NavigationService.Navigate(new InstallProgress(InstallDir, currentUser, cboxCreateShortcut.IsChecked ?? true));
+        }
+
+        private bool ProcessChecker()
+        {
+            var process = Process.GetProcessesByName("tmp");
+            if (process.Length > 0)
+            {
+                MessageBox.Show("Please close \"Track My Playtime\" First.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            return true;
         }
     }
 }

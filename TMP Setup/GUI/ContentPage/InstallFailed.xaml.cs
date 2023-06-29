@@ -18,7 +18,7 @@ namespace TMP_Setup.GUI.ContentPage
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            labelErrorMsg.Content = $"Error Message: {msg}";
+            labelErrorMsg.Text = $"Error Message: {msg}";
         }
 
         private void btnFinish_Click(object sender, RoutedEventArgs e)
