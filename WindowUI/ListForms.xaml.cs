@@ -25,6 +25,7 @@ namespace TMP.NET.WindowUI
         public string[] v_LaunchParameter;
         private string lastImageSelected;
         public bool isDeleted, isValid;
+        private GameList _currentSelectedList;
 
         private GUIDGen.ShortcutCreator _gen = new GUIDGen.ShortcutCreator();
 
@@ -221,9 +222,10 @@ namespace TMP.NET.WindowUI
             }
         }
 
-        public ListForms(bool IsEdit, GameList gl)
+        public ListForms(bool IsEdit, GameList gl, GameList currentSelectedList)
         {
             InitializeComponent();
+            _currentSelectedList = currentSelectedList;
             System.Windows.Controls.Image deleteImage = (System.Windows.Controls.Image)FindResource("DeleteImage");
             btnDelete.Content = deleteImage;
             btnDelete.Click -= btnDelete_Click;
@@ -245,6 +247,12 @@ namespace TMP.NET.WindowUI
                 btnDelete.Click -= btnDeleteImage_Click;
                 btnDelete.Click += btnDelete_Click;
                 cbCreateShortcut.Visibility = Visibility.Hidden;
+                var window = (MainWindow)Application.Current.MainWindow;
+                if (window.state == MainWindow.AppState.Running)
+                {
+                    if(gl == currentSelectedList)
+                        btnDelete.IsEnabled = false;
+                }
             }
         }
 
