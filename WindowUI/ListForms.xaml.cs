@@ -278,8 +278,6 @@ namespace TMP.NET.WindowUI
                 var chk = new BitmapImage(new Uri(ofd.FileName));
                 if (chk.PixelWidth > 1920 || chk.PixelHeight > 1080)
                 {
-                    //MessageBox.Show("Image Resolution to High!\t\t\t\nPlease choose another image.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    //return;
                     imgBitmap = ToBitmapImage(ResizeImage(BitmapImage2Bitmap(chk), 1280, 720));
                 }
                 else

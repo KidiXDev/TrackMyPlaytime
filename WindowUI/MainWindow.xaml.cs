@@ -462,6 +462,12 @@ namespace TMP.NET
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 LoadShortcut();
+
+                if(LV_List.SelectedItem == null)
+                    btnEdit.IsEnabled = false;
+                else
+                    btnEdit.IsEnabled = true;
+
                 if (setting.AutoCheckUpdate)
                 {
                     Task.Run(async () =>
@@ -812,6 +818,11 @@ namespace TMP.NET
 
         private void LV_Selected(object sender, SelectionChangedEventArgs e)
         {
+            if (LV_List.SelectedItem == null)
+                btnEdit.IsEnabled = false;
+            else
+                btnEdit.IsEnabled = true;
+
             if (LV_List.SelectedItem != null)
             {
                 var l_gameList = (GameList)LV_List.SelectedItem;
@@ -944,8 +955,8 @@ namespace TMP.NET
 
                         CollectionViewSource.GetDefaultView(i_List).Refresh();
 
-                        labelGameTitle.Text = null;
-                        label_DevName.Text = null;
+                        labelGameTitle.Text = "Game Title";
+                        label_DevName.Text = "Developer Name";
                         label_Playtime.Content = "0h 0m 0s";
                         label_LastPlayed.Content = "Never";
 
