@@ -16,6 +16,44 @@
         MinHeight="627"
         MinWidth="1115"
         Loaded="Window_Loaded">
+    <Window.Resources>
+        <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Background" Value="#0A2647"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border Background="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" CornerRadius="10"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="rectangle" Background="#0D1430" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}" CornerRadius="8"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="rectangle" Value="#0D1430"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="true">
+                                <Setter Property="Background" TargetName="rectangle" Value="#0D1430"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -29,7 +67,7 @@
             </Grid.Background>
         </Grid>
         <Grid x:Name="Sidebar" HorizontalAlignment="Left" Width="267">
-            <ListView x:Name="LV_List" VirtualizingStackPanel.IsVirtualizing="True" SelectionChanged="LV_Selected" ItemsSource="{Binding i_listv}" FontFamily="{StaticResource GlobalFont}" Background="#0A2647" VirtualizingPanel.ScrollUnit="Pixel" Foreground="White" BorderThickness="0" SelectionMode="Single" Margin="0,0,0,109" HorizontalAlignment="Left" Width="267">
+            <ListView x:Name="LV_List" VirtualizingStackPanel.IsVirtualizing="True" SelectionChanged="LV_Selected" ItemsSource="{Binding i_listv}" FontFamily="{StaticResource GlobalFont}" Background="#0A2647" VirtualizingPanel.ScrollUnit="Pixel" Foreground="White" BorderThickness="0" SelectionMode="Single" Margin="0,34,0,109" HorizontalAlignment="Center" Width="267">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -38,39 +76,57 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Image Source="{Binding IconPath}" Width="24" Height="24" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="{Binding GameName}" Padding="10" FontSize="12"/>
+                            <TextBlock Grid.Column="1" Text="{Binding GameName}" Padding="10" FontSize="12" ToolTip="{Binding GameName}"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.Resources>
+                    <!-- ListView Context Menu -->
+                    <ContextMenu x:Key="ItemContextMenu" FontFamily="{StaticResource GlobalFont}">
+                        <MenuItem x:Name="ctxEdit" Header="Edit Game" Click="btnEdit_Click">
+                            <MenuItem.Icon>
+                                <Image Width="15" Height="15" Source="/TMP.NET;component/Resources/setting_icon.png" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem x:Name="ctxDelete" Header="Delete" Click="ctxDelete_Click">
+                            <MenuItem.Icon>
+                                <Image Width="15" Height="15" Source="/TMP.NET;component/Resources/trash_icon.png" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem x:Name="ctxProperties" Header="Properties" Click="ctxProperties_Click">
+                            <MenuItem.Icon>
+                                <Image Width="12" Height="12" Source="/TMP.NET;component/Resources/info-icon.png" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+
                     <Style TargetType="{x:Type ScrollBar}">
                         <Setter Property="Background" Value="#0A2647"/>
-                        <Setter Property="Foreground" Value="#0A2647"/>
-                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="BorderBrush" Value="#0A2647"/>
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type ScrollBar}">
-                                    <Grid>
+                                    <Grid x:Name="Bg" SnapsToDevicePixels="true">
                                         <Grid.RowDefinitions>
-                                            <RowDefinition MaxHeight="18"/>
+                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
                                             <RowDefinition Height="0.00001*"/>
-                                            <RowDefinition MaxHeight="18"/>
+                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
                                         </Grid.RowDefinitions>
-                                        <Border Grid.RowSpan="3" CornerRadius="7" Background="#0A2647"/>
-                                        <RepeatButton Grid.Row="0" Command="ScrollBar.LineUpCommand" BorderThickness="0" Foreground="#0A2647" Background="#0A2647" Height="18" Padding="2,0,0,0" Visibility="Hidden"/>
-                                        <Track Grid.Row="1" Name="PART_Track" IsDirectionReversed="true">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
+                                        <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
                                             <Track.DecreaseRepeatButton>
-                                                <RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
+                                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
                                             </Track.DecreaseRepeatButton>
-                                            <Track.Thumb>
-                                                <Thumb Background="#B1C7FF" BorderThickness="0" Margin="1,0,1,0" BorderBrush="#1F3C70"/>
-                                            </Track.Thumb>
                                             <Track.IncreaseRepeatButton>
-                                                <RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false"/>
+                                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
                                             </Track.IncreaseRepeatButton>
+                                            <Track.Thumb>
+                                                <Thumb Style="{StaticResource ScrollBarThumbVertical}" Margin="2"/>
+                                            </Track.Thumb>
                                         </Track>
-                                        <RepeatButton Grid.Row="2" Command="ScrollBar.LineDownCommand" BorderThickness="0" Foreground="#0A2647" Background="#0A2647" Height="18" Padding="2,0,0,0" Visibility="Hidden"/>
                                     </Grid>
+
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -82,22 +138,51 @@
                         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
                     </Style>
                 </ListView.Style>
+
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}" >
+                        <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                    </Style>
+                </ListView.ItemContainerStyle>
             </ListView>
-            <Button x:Name="btnAdd" Click="btnAdd_Click" Content="+" Style="{StaticResource ResourceKey=CircleBorder2}" Foreground="White" HorizontalAlignment="Left" Margin="63,0,0,23" Width="28" Background="#2F6EA6" BorderThickness="0" FontSize="39" Padding="0,-16,0,2" Height="28" VerticalAlignment="Bottom"/>
-            <Button x:Name="btnSetting" Click="btnSetting_Click" Content="{StaticResource ResourceKey=WrenchIcon}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Margin="22,0,0,23" Width="28" RenderTransformOrigin="0.5,0.536" Background="#2F6EA6" BorderThickness="0" Height="28" VerticalAlignment="Bottom"/>
+            <Button x:Name="btnAdd" Click="btnAdd_Click" Content="+" ToolTip="Add new game" Style="{StaticResource ResourceKey=CircleBorder2}" Foreground="White" HorizontalAlignment="Left" Margin="63,0,0,23" Width="28" Background="#2F6EA6" BorderThickness="0" FontSize="39" Padding="0,-16,0,2" Height="28" VerticalAlignment="Bottom"/>
+            <Button x:Name="btnSetting" Click="btnSetting_Click" ToolTip="Open TMP Setting" Content="{StaticResource ResourceKey=WrenchIcon}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Margin="22,0,0,23" Width="28" RenderTransformOrigin="0.5,0.536" Background="#2F6EA6" BorderThickness="0" Height="28" VerticalAlignment="Bottom"/>
             <Button x:Name="btnDebug" Visibility="Collapsed" Click="btnDebug_Click" Content="DB" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="28" Margin="228,653,0,0" VerticalAlignment="Top" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
             <Button x:Name="btnDebug2" Visibility="Collapsed" Click="btnDebug2_Click" Content="G" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="28" Margin="195,653,0,0" VerticalAlignment="Top" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
             <Button x:Name="btnDebug3" Visibility="Collapsed" Click="btnDebug3_Click" Content="G" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="28" Margin="162,653,0,0" VerticalAlignment="Top" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
-            <Button x:Name="btnDebug4" Visibility="Collapsed" Click="btnDebug4_Click" Content="G" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="28" Margin="198,614,0,0" VerticalAlignment="Top" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
-            <Button x:Name="btnImport" Click="btnImport_Click" Content="{StaticResource ResourceKey=ImportIcon}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Margin="104,0,0,23" Width="28" RenderTransformOrigin="0.536,0.518" Background="#2F6EA6" BorderThickness="0" Height="28" VerticalAlignment="Bottom"/>
+            <Button x:Name="btnDebug4" Visibility="Collapsed" Click="btnDebug4_Click" Content="G" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="28" Margin="198,0,0,62" VerticalAlignment="Bottom" Width="28" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
+            <Button x:Name="btnImport" Visibility="Collapsed" Click="btnImport_Click" Content="{StaticResource ResourceKey=ImportIcon}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Margin="141,0,0,23" Width="28" RenderTransformOrigin="0.536,0.518" Background="#2F6EA6" BorderThickness="0" Height="28" VerticalAlignment="Bottom"/>
+            <Button x:Name="btnExport" Visibility="Collapsed" Click="btnExport_Click" Content="{StaticResource ResourceKey=ExportIcon}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Margin="102,0,0,23" Width="28" RenderTransformOrigin="0.536,0.518" Background="#2F6EA6" BorderThickness="0" Height="28" VerticalAlignment="Bottom"/>
+
+            <!-- SearchBox -->
+            <TextBox x:Name="tbSearch" Background="#0D1430" Foreground="White" Padding="24,2,0,0" Style="{StaticResource ResourceKey=TextBoxStyle}" FontFamily="{StaticResource GlobalFont}" FontSize="12" BorderThickness="1" BorderBrush="#0C1A35" TextChanged="tbSearch_TextChanged" TextWrapping="NoWrap" Height="19" VerticalAlignment="Top" Margin="10,10,45,0"/>
+            <Image Source="/TMP.NET;component/Resources/search_icon.png" Width="12" Height="12" HorizontalAlignment="Left" Margin="17,14,0,0" VerticalAlignment="Top" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+            <!-- Search Placeholder -->
+            <TextBlock IsHitTestVisible="False" Text="Search" Height="19" Margin="10,10,45,0" Padding="24,3,0,0" Foreground="DarkGray" FontFamily="{StaticResource GlobalFont}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Top">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=tbSearch}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=tbSearch}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <Button x:Name="btnFilter" Click="btnFilter_Click" ToolTip="Filter" Content="{StaticResource ResourceKey=FilterIcon}" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" Height="20" Margin="227,10,0,0" VerticalAlignment="Top" Width="26"/>
         </Grid>
+
         <Grid x:Name="CommandBar" Margin="267,0,0,0" Height="109" VerticalAlignment="Bottom">
-            <Button x:Name="btnPlay" Click="btnPlay_Click" Content="Play" Background="Green" Margin="0,0,0,-3" FontSize="50" Foreground="White" FontFamily="Rubik Light" FontWeight="DemiBold" BorderThickness="0" HorizontalAlignment="Right" Width="246"/>
+            <Button x:Name="btnPlay" Style="{StaticResource ResourceKey=DisableHighlight}" MouseEnter="btnPlay_MouseEnter" MouseLeave="btnPlay_MouseLeave" Click="btnPlay_Click" Content="Play" Background="Green" Margin="0,0,0,-3" FontSize="50" Foreground="White" FontFamily="Rubik Light" FontWeight="DemiBold" BorderThickness="0" HorizontalAlignment="Right" Width="246"/>
             <Button x:Name="btnEdit" Content="{StaticResource ResourceKey=SettingIcon}" Click="btnEdit_Click" ToolTip="Edit this game" Style="{StaticResource ResourceKey=CircleBorder}" Margin="0,0,274,0" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" HorizontalAlignment="Right" Width="60" Height="61" VerticalAlignment="Center"/>
-            <Label Content="Playtime" FontSize="18" FontFamily="Rubik Light" FontWeight="SemiBold" Foreground="White" Margin="0,6,364,0" HorizontalAlignment="Right" Width="88" Height="31" VerticalAlignment="Top"/>
-            <Label x:Name="label_Playtime" Content="0h 0m 0s" FontSize="12" FontFamily="Rubik Light" Foreground="White" Margin="0,27,357,0" HorizontalAlignment="Right" Width="94" Height="24" VerticalAlignment="Top"/>
-            <Label Content="Last Played" FontSize="16" FontFamily="Rubik Light" FontWeight="Bold" Foreground="White" Margin="0,0,350,24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="102"/>
-            <Label x:Name="label_LastPlayed" Content="01-12-2077" FontSize="12" FontFamily="Rubik Light" Foreground="White" Margin="0,0,357,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="95"/>
+            <Label Content="Playtime" FontSize="18" FontFamily="Rubik Light" FontWeight="SemiBold" Foreground="White" Margin="0,6,339,0" HorizontalAlignment="Right" Width="113" Height="31" VerticalAlignment="Top"/>
+            <Label x:Name="label_Playtime" Content="0h 0m 0s" FontSize="12" FontFamily="Rubik Light" Foreground="White" Margin="0,27,339,0" HorizontalAlignment="Right" Width="112" Height="24" VerticalAlignment="Top"/>
+            <Label Content="Last Played" FontSize="16" FontFamily="Rubik Light" FontWeight="Bold" Foreground="White" Margin="0,0,339,24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="113"/>
+            <Label x:Name="label_LastPlayed" Content="01-12-2077" FontSize="12" FontFamily="Rubik Light" Foreground="White" Margin="0,0,339,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="113"/>
             <Image Source="/TMP.NET;component/Resources/time_icon.png" Margin="0,10,450,0" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Right" Width="37" Height="37" VerticalAlignment="Top"/>
             <Image Source="/TMP.NET;component/Resources/calender_icon.png" Margin="0,0,454,15" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Right" Width="31" Height="33" VerticalAlignment="Bottom"/>
             <Viewbox Margin="8,9,502,62" HorizontalAlignment="Left">

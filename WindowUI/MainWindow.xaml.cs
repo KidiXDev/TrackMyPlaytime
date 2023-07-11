@@ -65,7 +65,38 @@
  *       - Added screenshots sound effect
  *       - Change UI Update Before and After game launch
  *       
- *
+ *       [29 June 2023]
+ *       ==============
+ *       v1.2.1
+ *       ======
+ *       Bug Fixed:
+ *       - Fixed word wrap on installer
+ *       - Some Typo and bug fixes
+ *       - Installer optimization
+ *       - Added a small detail to the main menu
+ *       
+ *       [11 July 2023]
+ *       ==============
+ *       v1.3.0
+ *       =======
+ *       New Features:
+ *       - New GameList ContextMenu feature
+ *       - Search menu
+ *       - Added new detail animation on some UI Element
+ *       - Properties window
+ *       - Sort Filter option
+ *       - Add more UI Improvement
+ *       - Enable Screenshot Toogle
+ *       
+ *       Bug fixed:
+ *       - Typo on crash log fixed
+ *       - Typo message box on crash info
+ *       - WordWrap issue on playtime label
+ *       - Fixed minor issue when program required restart after change Discord RPC setting
+ *       
+ *       Temporary Removed Feature:
+ *       - Import GameList
+ *      
 */
 
 using log4net;
@@ -81,6 +112,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Threading.Tasks;
@@ -89,6 +121,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using TMP.NET.Modules;
 using TMP.NET.WindowUI;
@@ -120,15 +153,20 @@ namespace TMP.NET
         private List<ImportList> importList;
 
         private Config setting = new Config();
+        private Config.FilterConfig filterSetting = new Config.FilterConfig();
 
         private DateTime _dateTime;
         private GUIDGen _gen = new GUIDGen();
 
         private Modules.DiscordRPC discord = new Modules.DiscordRPC();
 
+        /// <summary>
+        /// Get CommandLine Argument
+        /// </summary>
         private readonly string[] args = Environment.GetCommandLineArgs();
 
         private GameList _currentSelectedList;
+        private GameList _lastSelectedList;
 
         public enum AppState
         {
@@ -139,6 +177,11 @@ namespace TMP.NET
         #endregion
 
         #region Serialize And Deserialize Data
+        /// <summary>
+        /// Used to save <see langword="GameList"/> or <see langword="Library"/> to specified directory <paramref name="filePath"/>.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <remarks><see langword="GameList"/> is <see cref="i_List"/>.</remarks>
         private void SerializeData(string filePath)
         {
             if (!Directory.Exists(Path.GetDirectoryName(filePath)))
@@ -152,7 +195,11 @@ namespace TMP.NET
                 formatter.Serialize(m_FStream, i_List);
             }
         }
-
+        /// <summary>
+        /// Used to save <see langword="Configuration"/> to specified directory <paramref name="filePath"/>.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <remarks>See also <see cref="Config"/>.</remarks>
         private void SerializeSetting(string filePath)
         {
             if (!Directory.Exists(Path.GetDirectoryName(filePath)))
@@ -160,9 +207,15 @@ namespace TMP.NET
                 Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             }
 
+            setting.filterConfig = filterSetting;
+
             File.WriteAllText(filePath, JsonConvert.SerializeObject(setting, Formatting.Indented));
         }
-
+        /// <summary>
+        /// Used to load <see langword="GameList"/> or <see langword="Library"/> from specified directory <paramref name="filePath"/>.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <remarks><see langword="GameList"/> is <see cref="i_List"/>.</remarks>
         private void DeserializeData(string filePath)
         {
             try
@@ -182,7 +235,11 @@ namespace TMP.NET
                 log.Error("Failed to load Game List", ex);
             }
         }
-
+        /// <summary>
+        /// Used to load <see langword="Configuration"/> from specified directory <paramref name="filePath"/>.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <remarks>See also <see cref="Config"/>.</remarks>
         private void DeserializeSetting(string filePath)
         {
             try
@@ -190,6 +247,8 @@ namespace TMP.NET
                 if (File.Exists(filePath))
                 {
                     setting = JsonConvert.DeserializeObject<Config>(File.ReadAllText(filePath));
+
+                    filterSetting = setting.filterConfig;
                 }
             }
             catch (Exception ex)
@@ -223,6 +282,10 @@ namespace TMP.NET
         }
         #endregion
 
+        /// <summary>
+        /// Used to load configuration data and game libraries.
+        /// </summary>
+        /// <remarks>This method used to run before <see cref="Window_Loaded(object, RoutedEventArgs)"/>.</remarks>
         private void FirstLoad()
         {
             DeserializeData(_ListData_n);
@@ -239,10 +302,19 @@ namespace TMP.NET
                 discord.Initialize();
         }
 
+        /// <summary>
+        /// Execute screenshot process.
+        /// </summary>
+        /// <remarks>See also <seealso cref="CaptureHandler.TakeScreenshot(Process)"/></remarks>
         private void ScreenshotExec()
         {
             try
             {
+                // If screenshot is disabled via setting
+                if (!setting.EnabledScreenshot)
+                    return;
+
+                // If game window is not focused, return.
                 if (!CaptureHandler.IsWindowFocused(proc))
                     return;
 
@@ -251,11 +323,13 @@ namespace TMP.NET
                 if (!Directory.Exists(imagePath))
                     Directory.CreateDirectory(imagePath);
 
+                // Save captured image.
                 string fileName = $"{proc.ProcessName} {DateTime.Now.ToString("dd-MMMM-yyyy HH.mm.ss")}.png";
                 string combined = Path.Combine(imagePath, fileName);
                 var img = CaptureHandler.TakeScreenshot(proc);
                 img.Save(combined, ImageFormat.Png);
 
+                // Play capture sfx.
                 var str = Application.GetResourceStream(new Uri("pack://application:,,,/TMP.NET;component/Resources/capture-sfx.wav")).Stream;
                 SoundPlayer sp = new SoundPlayer(str);
                 sp.Play();
@@ -327,6 +401,10 @@ namespace TMP.NET
 
 
         #region Shortcut Utilize
+        /// <summary>
+        /// Check if <see langword="StartShortcut"/> is <see langword="True"/> or not, if <see langword="True"/> then process to <see cref="StartProcess"/>
+        /// </summary>
+        /// <remarks>See also: <br/> <seealso cref="StartShortcut"/> <br/> <seealso cref="StartProcess"/></remarks>
         private void LoadShortcut()
         {
             if (StartShortcut())
@@ -340,11 +418,16 @@ namespace TMP.NET
                 if (setting.SelectedIndex >= 0 && LV_List.Items.Count > 0)
                 {
                     LV_List.SelectedIndex = setting.SelectedIndex;
-                    LV_List.ScrollIntoView(LV_List.Items[setting.SelectedIndex]);
+                    if (LV_List.Items.Count >= setting.SelectedIndex)
+                        LV_List.ScrollIntoView(LV_List.Items[setting.SelectedIndex]);
                 }
             }
         }
 
+        /// <summary>
+        /// Check if argument contains "launch/" or not.
+        /// </summary>
+        /// <returns><see langword="True"/> if contains defined sentences.</returns>
         private bool StartShortcut()
         {
             if (args.Length >= 1)
@@ -369,6 +452,11 @@ namespace TMP.NET
             return false;
         }
 
+        /// <summary>
+        /// Check if <paramref name="guid"/> is exist on <see cref="i_List"/>
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns><see langword="True"/> if exist and process to <see cref="HandleParameter"/> <br/> otherwise is <see langword="False"/>.</returns>
         private bool ShortcutURLStarter(string guid)
         {
             foreach (var l in i_List)
@@ -384,6 +472,12 @@ namespace TMP.NET
         }
         #endregion
 
+        /// <summary>
+        /// Show screenshot toast notification.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        /// <param name="imgDir"></param>
         private void ShowScreenshotNotification(string title, string message, string imgDir)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
@@ -397,12 +491,33 @@ namespace TMP.NET
             }));
         }
 
+        private void DatabaseUpdater()
+        {
+            foreach(var item in i_List)
+            {
+                if(item.DatabaseVersion == null)
+                {
+                    item.DateCreated = DateTime.Now;
+                    item.DatabaseVersion = new Version(1, 0, 0);
+                }
+            }
+            SerializeData(_ListData_n);
+        }
+
         private void Window_SourceInitialized(object sender, EventArgs ea)
         {
             HwndSource hwndSource = (HwndSource)HwndSource.FromVisual((Window)sender);
             hwndSource.AddHook(_wext.DragHook);
 
             _wext.aspectRatio = this.Width / this.Height;
+        }
+
+        private bool UserFilter(object item)
+        {
+            if (string.IsNullOrEmpty(tbSearch.Text))
+                return true;
+            else
+                return ((item as GameList).GameName.IndexOf(tbSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         public MainWindow()
@@ -418,7 +533,13 @@ namespace TMP.NET
             this.SourceInitialized += Window_SourceInitialized;
 
             DataContext = this;
+
             FirstLoad();
+
+            // Sort GameList
+            FilterSort();
+
+            DatabaseUpdater();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -455,6 +576,7 @@ namespace TMP.NET
 
             SerializeSetting(_Config);
             ToastNotificationManagerCompat.Uninstall();
+            Application.Current.Shutdown();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -463,7 +585,7 @@ namespace TMP.NET
             {
                 LoadShortcut();
 
-                if(LV_List.SelectedItem == null)
+                if (LV_List.SelectedItem == null)
                     btnEdit.IsEnabled = false;
                 else
                     btnEdit.IsEnabled = true;
@@ -479,6 +601,9 @@ namespace TMP.NET
             }));
         }
 
+        /// <summary>
+        /// Check current state of program.
+        /// </summary>
         private void StateChecker()
         {
             if (state == AppState.Running)
@@ -502,6 +627,20 @@ namespace TMP.NET
                 state = AppState.Initialize;
                 Modules.Keyboard.KeyboardHook.Start();
             }
+        }
+
+        public void FilterSort()
+        {
+            FilterController fc = new FilterController(filterSetting, i_List, LV_List);
+            fc.FilterControl();
+
+            FilterInit();
+        }
+
+        private void FilterInit()
+        {
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(LV_List.ItemsSource);
+            view.Filter = UserFilter;
         }
 
         #region UI Update & Process Logic
@@ -787,10 +926,10 @@ namespace TMP.NET
 
         private void StartProcess()
         {
-            if (LV_List.SelectedItem != null)
+            if (_lastSelectedList != null)
             {
                 Title = $"Track My Playtime | Initializing...";
-                var l_gameList = (GameList)LV_List.SelectedItem;
+                var l_gameList = _lastSelectedList;
                 var selected = LV_List.SelectedItem;
                 var timer = new Stopwatch();
 
@@ -818,10 +957,10 @@ namespace TMP.NET
 
         private void LV_Selected(object sender, SelectionChangedEventArgs e)
         {
-            if (LV_List.SelectedItem == null)
+            /*if (LV_List.SelectedItem == null)
                 btnEdit.IsEnabled = false;
             else
-                btnEdit.IsEnabled = true;
+                btnEdit.IsEnabled = true;*/
 
             if (LV_List.SelectedItem != null)
             {
@@ -839,13 +978,14 @@ namespace TMP.NET
                     g_Brush.ImageSource = l_gameList.BackgroundPath();
 
                 updateTracker(l_gameList, LV_List.SelectedItem);
+                _lastSelectedList = l_gameList;
                 setting.SelectedIndex = selectedItem;
             }
         }
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
-            if (LV_List.SelectedItems != null)
+            if (_lastSelectedList != null)
             {
                 if (i_List.Count <= 0)
                     return;
@@ -865,7 +1005,7 @@ namespace TMP.NET
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            var form = new ListForms(false, null, null); // Show form window
+            var form = new ListForms(false, null, null, setting); // Show form window
             form.Owner = this;
             var result = form.ShowDialog() ?? false; // save dialog result
             if (result)  // if dialog result is true then save all information and save it to Listview
@@ -887,13 +1027,14 @@ namespace TMP.NET
                 gl.HideImageKey = form.cbHideImageKey.IsChecked ?? false;
                 gl.BackgroundDir = form.imgDir;
                 gl.GUID = _gen.GenerateGUID(6, i_List);
+                gl.DateCreated = DateTime.Now;
 
                 i_List.Add(gl);
 
-                // Refresh ListView
-                i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.GameName));
-                LV_List.ItemsSource = i_List;
-                CollectionViewSource.GetDefaultView(i_List).Refresh();
+                // Sort GameList
+                FilterSort();
+
+
                 LV_List.SelectedItem = gl;
 
                 SerializeData(_ListData_n);
@@ -905,14 +1046,14 @@ namespace TMP.NET
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-            if (LV_List.SelectedItem != null)
+            if (_lastSelectedList != null)
             {
-                var form = new ListForms(true, (GameList)LV_List.SelectedItem, _currentSelectedList);
+                var form = new ListForms(true, _lastSelectedList, _currentSelectedList, setting);
                 form.Owner = this;
                 var res = form.ShowDialog() ?? false;
                 if (res)
                 {
-                    var gl = (GameList)LV_List.SelectedItem;
+                    var gl = _lastSelectedList;
                     gl.GameName = form.tbGameTitle.Text;
                     gl.GamePath = form.tbGameDir.Text;
                     gl.GameDev = string.IsNullOrEmpty(form.tbDeveloper.Text) ? "Unknown" : form.tbDeveloper.Text;
@@ -929,10 +1070,8 @@ namespace TMP.NET
                     gl.HideImageKey = form.cbHideImageKey.IsChecked ?? false;
                     gl.BackgroundDir = form.imgDir;
 
-                    // Refresh ListView
-                    i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.GameName));
-                    LV_List.ItemsSource = i_List;
-                    CollectionViewSource.GetDefaultView(i_List).Refresh();
+                    // Sort GameList
+                    FilterSort();
 
                     labelGameTitle.Text = gl.GameName;
                     label_DevName.Text = gl.GameDev;
@@ -953,7 +1092,8 @@ namespace TMP.NET
                         if (LV_List.SelectedItem is GameList selected)
                             i_List.Remove(selected);
 
-                        CollectionViewSource.GetDefaultView(i_List).Refresh();
+                        // Sort GameList
+                        FilterSort();
 
                         labelGameTitle.Text = "Game Title";
                         label_DevName.Text = "Developer Name";
@@ -990,9 +1130,16 @@ namespace TMP.NET
                         setting.EnabledRichPresence = form.cbEnableRichPresence.IsChecked ?? true;
                         setting.TextractorDelay = Convert.ToInt32(form.tbTextractorDelay.Text);
                         setting.AutoCheckUpdate = form.cbAutoCheckUpdate.IsChecked ?? true;
+                        setting.UncompressedArtwork = form.cbUncompressedArtwork.IsChecked ?? false;
+                        setting.EnabledScreenshot = form.cbEnableScreenshot.IsChecked ?? true;
                         SerializeSetting(_Config);
 
-                        Process.Start(Application.ResourceAssembly.Location);
+                        ProcessStartInfo Info = new ProcessStartInfo();
+                        Info.Arguments = "/C choice /C Y /N /D Y /T 2 & START \"\" \"" + Assembly.GetEntryAssembly().Location + "\"";
+                        Info.WindowStyle = ProcessWindowStyle.Hidden;
+                        Info.CreateNoWindow = true;
+                        Info.FileName = "cmd.exe";
+                        Process.Start(Info);
                         Application.Current.Shutdown();
                     }
 
@@ -1005,6 +1152,8 @@ namespace TMP.NET
                 setting.EnabledRichPresence = form.cbEnableRichPresence.IsChecked ?? true;
                 setting.TextractorDelay = Convert.ToInt32(form.tbTextractorDelay.Text);
                 setting.AutoCheckUpdate = form.cbAutoCheckUpdate.IsChecked ?? true;
+                setting.UncompressedArtwork = form.cbUncompressedArtwork.IsChecked ?? false;
+                setting.EnabledScreenshot = form.cbEnableScreenshot.IsChecked ?? true;
 
                 if (!setting.EnabledRichPresence)
                     discord.Deinitialize();
@@ -1049,15 +1198,15 @@ namespace TMP.NET
 
         private void btnDebug4_Click(object sender, RoutedEventArgs e)
         {
-            /*var gl1 = (GameList)LV_List.SelectedItem;
-            Console.WriteLine(gl1.Playtime.TotalHours);*/
-
-            Bitmap img = CaptureHandler.TakeScreenshot(proc);
-            img.Save("ss.png", ImageFormat.Png);
-
-            string imagePath = Environment.CurrentDirectory + "\\ss.png";
-
-            Console.WriteLine("Captured!");
+            for(int a = 0; a < 100; a++)
+            {
+                GameList gl = new GameList();
+                gl.GameName = $"DEBUG {a}";
+                gl.GamePath = "C:/Users/ACER/Documents/osu!Profiler.exe";
+                gl.GUID = _gen.GenerateGUID(6, i_List);
+                gl.DateCreated = DateTime.Now;
+                i_List.Add(gl);
+            }
         }
 
         private void btnImport_Click(object sender, RoutedEventArgs e)
@@ -1125,10 +1274,9 @@ namespace TMP.NET
                         i_List.Remove(deleted);
                     }
 
-                    // Refresh ListView
-                    i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.GameName));
-                    LV_List.ItemsSource = i_List;
-                    CollectionViewSource.GetDefaultView(i_List).Refresh();
+                    // Sort GameList
+                    FilterSort();
+
                     MessageBox.Show("Import Successfully!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     SerializeData(_ListData_n);
                 }
@@ -1139,5 +1287,154 @@ namespace TMP.NET
             }
         }
         #endregion
+
+        private void btnExport_Click(object sender, RoutedEventArgs e)
+        {
+            new ExportWindow().ShowDialog();
+        }
+
+        private void btnPlay_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            DoubleAnimation animation = new DoubleAnimation
+            {
+                To = 55,
+                Duration = new Duration(TimeSpan.FromSeconds(0.1)),
+                EasingFunction = new QuadraticEase()
+            };
+
+            ElasticEase elasticEase = new ElasticEase
+            {
+                EasingMode = EasingMode.EaseOut,
+                Oscillations = 1,
+                Springiness = 10
+            };
+            Storyboard.SetTarget(animation, btnPlay);
+            Storyboard.SetTargetProperty(animation, new PropertyPath("FontSize"));
+            Storyboard storyboard = new Storyboard();
+            storyboard.Children.Add(animation);
+            storyboard.Completed += (s, _) => btnPlay.FontSize = 55;
+            storyboard.Begin();
+        }
+
+        private void btnPlay_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            DoubleAnimation animation = new DoubleAnimation
+            {
+                To = 50,
+                Duration = new Duration(TimeSpan.FromSeconds(0.1)),
+                EasingFunction = new QuadraticEase()
+            };
+
+            ElasticEase elasticEase = new ElasticEase
+            {
+                EasingMode = EasingMode.EaseOut,
+                Oscillations = 1,
+                Springiness = 10
+            };
+            Storyboard.SetTarget(animation, btnPlay);
+            Storyboard.SetTargetProperty(animation, new PropertyPath("FontSize"));
+            Storyboard storyboard = new Storyboard();
+            storyboard.Children.Add(animation);
+            storyboard.Completed += (s, _) => btnPlay.FontSize = 50;
+            storyboard.Begin();
+        }
+
+        private void tbSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if(LV_List.ItemsSource != null)
+                    CollectionViewSource.GetDefaultView(LV_List.ItemsSource).Refresh();
+
+                LV_List.SelectedItem = _lastSelectedList;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        private void btnFilter_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new FilterWindow(filterSetting)
+            {
+                Width = 350,
+                Height = 250
+            };
+
+            var buttonLocation = btnFilter.PointToScreen(new System.Windows.Point(0, 0));
+
+            double windowLeft = buttonLocation.X + btnFilter.ActualWidth + 10;
+            double windowTop = buttonLocation.Y;
+
+            // Add offside
+            window.Left = windowLeft + 4.3;
+            window.Top = windowTop - 10;
+
+            window.Show();
+        }
+
+        private void ctxDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if(LV_List.SelectedItems != null)
+            {
+                var gl = (GameList)LV_List.SelectedItem;
+                string dateAdded = "Unknown";
+                if (gl.DateCreated != DateTime.MinValue)
+                    dateAdded = gl.DateCreated.ToString("dd-MMMM-yyyy");
+
+                var res = MessageBox.Show($"Are you sure want to delete this game from the library?\n\nTitle: {gl.GameName}\nDeveloper: {gl.GameDev}\nDate Added: {dateAdded}", "Are you sure?", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                if (res == MessageBoxResult.Cancel)
+                    return;
+
+                if (LV_List.SelectedItem is GameList selected)
+                {
+                    try
+                    {
+                        var shortcutName = selected.GameName;
+                        string invalidChars = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+                        foreach (char invalidChar in invalidChars)
+                        {
+                            shortcutName = shortcutName.Replace(invalidChar.ToString(), "");
+                        }
+
+                        var shortcutPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\{shortcutName}.url";
+
+                        if (File.Exists(shortcutPath))
+                            File.Delete(shortcutPath);
+
+                        i_List.Remove(selected);
+                    }
+                    catch (Exception ex)
+                    {
+                        MainWindow.log.Error("Exception Thrown when Delete GameList", ex);
+                    }
+                }
+                else return;
+
+                // Sort GameList
+                FilterSort();
+
+                labelGameTitle.Text = "Game Title";
+                label_DevName.Text = "Developer Name";
+                label_Playtime.Content = "0h 0m 0s";
+                label_LastPlayed.Content = "Never";
+
+                var g_Brush = GridImg.Background as ImageBrush;
+                g_Brush.ImageSource = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
+
+                SerializeData(_ListData_n);
+                return;
+            }
+        }
+
+        private void ctxProperties_Click(object sender, RoutedEventArgs e)
+        {
+            if (LV_List.SelectedItems != null)
+            {
+                var window = new PropertiesWindow((GameList)LV_List.SelectedItem);
+                window.Show();
+            }
+        }
     }
 }

@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 
 namespace TMP.NET.Modules
 {
+    /// <summary>
+    /// Class for handling ScreenCapture process.
+    /// </summary>
     internal class CaptureHandler
     {
 
@@ -30,6 +33,11 @@ namespace TMP.NET.Modules
             public int Bottom;
         }
 
+        /// <summary>
+        /// Take ScreenCapture from <paramref name="process"/>.
+        /// </summary>
+        /// <param name="process"></param>
+        /// <returns><see cref="Bitmap"/> from captured <paramref name="process"/>.</returns>
         public static Bitmap TakeScreenshot(Process process)
         {
             IntPtr handle = process.MainWindowHandle;
@@ -52,6 +60,11 @@ namespace TMP.NET.Modules
             return screenshot;
         }
 
+        /// <summary>
+        /// Check if process window is focused or not.
+        /// </summary>
+        /// <param name="proc"></param>
+        /// <returns> <see langword="True"/> if window is focused, otherwise is <see langword="False"/>.</returns>
         public static bool IsWindowFocused(Process proc)
         {
             IntPtr foregroundWindow = GetForegroundWindow();

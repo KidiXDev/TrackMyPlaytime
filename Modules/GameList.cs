@@ -7,6 +7,9 @@ using System.Windows.Media.Imaging;
 
 namespace TMP.NET.Modules
 {
+    /// <summary>
+    /// Stores all information on games that have been added to the library
+    /// </summary>
     [Serializable]
     public class GameList
     {
@@ -16,6 +19,11 @@ namespace TMP.NET.Modules
         public ImageSource IconPath { get { return IconPathMethod(); } }
 
         #region Method
+        /// <summary>
+        /// Convert image icon to base-64 string
+        /// </summary>
+        /// <param name="imageSource"></param>
+        /// <returns>Base64String of the icon image</returns>
         public string IconToBase64String(ImageSource imageSource)
         {
             var bitmapSource = (BitmapSource)imageSource;
@@ -29,7 +37,11 @@ namespace TMP.NET.Modules
                 return Convert.ToBase64String(memoryStream.ToArray());
             }
         }
-
+        /// <summary>
+        /// Extract icon from executable file
+        /// </summary>
+        /// <param name="GamePath"></param>
+        /// <returns>ImageSource of the icon of an executable file</returns>
         public ImageSource ExtractIconFromExe(string GamePath)
         {
             try
@@ -47,7 +59,10 @@ namespace TMP.NET.Modules
                 return null;
             }
         }
-
+        /// <summary>
+        /// Re-convert icon from base-64 string to bitmap image
+        /// </summary>
+        /// <returns>ImageSource of the icon of an executable file</returns>
         public BitmapImage IconPathMethod()
         {
             if (IconBase64 == null)
@@ -77,7 +92,10 @@ namespace TMP.NET.Modules
                 return image;
             }
         }
-
+        /// <summary>
+        /// Re-converts background image from base-64 string to bitmap image
+        /// </summary>
+        /// <returns>The BitmapImage that was converted to a base-64 string</returns>
         public BitmapImage BackgroundPath()
         {
             if (BackgroundBase64 == null)
@@ -113,5 +131,7 @@ namespace TMP.NET.Modules
         public string GUID { get; set; }
         public string BackgroundDir { get; set; }
         public string IconBase64 { get; set; }
+        public DateTime DateCreated { get; set; }
+        public Version DatabaseVersion { get; set; }
     }
 }
