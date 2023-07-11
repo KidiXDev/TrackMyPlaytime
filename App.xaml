@@ -46,7 +46,7 @@
         </Style>
 
         <Image x:Key="SettingIcon" Source="/TMP.NET;component/Resources/setting_icon.png" Width="40" Height="40" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
-        <Image x:Key="WrenchIcon" Source="/TMP.NET;component/Resources/wrench_icon.png" Width="18" Height="18" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+        <Image x:Key="WrenchIcon" Source="/TMP.NET;component/Resources/wrench_icon.png" Width="16" Height="16" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
         <Image x:Key="SaveIcon" Source="/TMP.NET;component/Resources/save_icon.png" Width="20" Height="20" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
         <Image x:Key="XIcon" Source="/TMP.NET;component/Resources/x_icon.png" Width="18" Height="18" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
         <Image x:Key="TrashIcon" Source="/TMP.NET;component/Resources/trash_icon.png" Width="28" Height="28" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
@@ -54,7 +54,8 @@
         <Image x:Key="ImportIcon" Source="/TMP.NET;component/Resources/import_icon.png" Width="15" Height="15" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
         <Image x:Key="DeleteImage" Source="/TMP.NET;component/Resources/delete_image_icon.png" Width="30" Height="30" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
         <Image x:Key="ExportIcon" Source="/TMP.NET;component/Resources/export_icon.png" Width="15" Height="15" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
-        <Image x:Key="FilterIcon" Source="/TMP.NET;component/Resources/filter_icon.png" HorizontalAlignment="Left" Height="13" VerticalAlignment="Top" Width="21"/>
+        <Image x:Key="FilterIcon" Source="/TMP.NET;component/Resources/filter_icon.png" HorizontalAlignment="Left" Height="13" VerticalAlignment="Top" Width="21" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+        <Image x:Key="FolderOpenIcon" Source="/TMP.NET;component/Resources/folder_open_icon.png" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="18" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
 
         <FontFamily x:Key="GlobalFont"> pack://application:,,,/Fonts/#Rubik </FontFamily>
 
@@ -72,12 +73,78 @@
                             <Trigger Property="IsMouseOver" 
                           Value="True">
                                 <Setter Property="Background" 
-                           Value="White"/>
+                           Value="Transparent"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <Style x:Key="{x:Type ContextMenu}" TargetType="{x:Type ContextMenu}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="FontFamily" Value="{StaticResource GlobalFont}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ContextMenu}">
+                        <Border Background="#0D1430" CornerRadius="7, 7, 8, 8" BorderBrush="#1B4772" BorderThickness="2" Opacity="1">
+                            <StackPanel ClipToBounds="True" Orientation="Vertical" IsItemsHost="True" Margin="5,4,5,4"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <ControlTemplate x:Key="{x:Static MenuItem.TopLevelItemTemplateKey}" TargetType="{x:Type MenuItem}">
+            <Border Name="Border" >
+                <Grid>
+                    <ContentPresenter Margin="6,3,6,3" ContentSource="Header" RecognizesAccessKey="True" />
+                </Grid>
+            </Border>
+        </ControlTemplate>
+
+        <Style x:Key="{x:Type ToolTip}" TargetType="{x:Type ToolTip}">
+            <Setter Property="Background" Value="#0D1430"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="{StaticResource GlobalFont}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToolTip">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="#1B4772"
+                            BorderThickness="1"
+                            CornerRadius="5"
+                                Margin="4">
+                            <ContentPresenter Margin="8"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Top"
+                                          TextBlock.Foreground="{TemplateBinding Foreground}"
+                                          TextBlock.TextAlignment="Left"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="ContextMenu">
+                <Setter.Value>
+                    <ContextMenu Style="{StaticResource {x:Type ContextMenu}}">
+                        <MenuItem Command="ApplicationCommands.Copy" />
+                        <MenuItem Command="ApplicationCommands.Cut" />
+                        <Separator/>
+                        <MenuItem Command="ApplicationCommands.Paste" />
+                    </ContextMenu>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="3" />
+                </Style>
+            </Style.Resources>
         </Style>
     </Application.Resources>
 </Application>

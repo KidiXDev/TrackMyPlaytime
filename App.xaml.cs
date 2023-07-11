@@ -44,7 +44,7 @@ namespace TMP.NET
 
         void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            TMP.NET.MainWindow.log.Warn("Checking update failed", e.Exception);
+            TMP.NET.MainWindow.log.Fatal("PROGRAM CRASH", e.Exception);
             MessageBox.Show("Unhandled exception occurred: \n" + e.Exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
