@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using TMP.NET.Modules;
 using System.Windows.Interop;
+using System.Linq;
 
 namespace TMP.NET.WindowUI
 {
@@ -25,6 +26,7 @@ namespace TMP.NET.WindowUI
         public string[] v_LaunchParameter;
         private string lastImageSelected;
         public bool isDeleted, isValid;
+        private Config setting;
         private GameList _currentSelectedList;
 
         private GUIDGen.ShortcutCreator _gen = new GUIDGen.ShortcutCreator();
@@ -74,7 +76,6 @@ namespace TMP.NET.WindowUI
             var shortcutPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\{shortcutName}.url";
             var iconPath = gl.GamePath;
             _gen.CreateURLShortcut($"tmpdotnet://launch/{gl.GUID}", shortcutPath, iconPath);
-            MessageBox.Show("Shortcut Created!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
@@ -189,7 +190,11 @@ namespace TMP.NET.WindowUI
                 return false;
             }
         }
-
+        /// <summary>
+        /// Convert image icon to base-64 string
+        /// </summary>
+        /// <param name="imageSource"></param>
+        /// <returns>Base64String</returns>
         public string IconToBase64String(ImageSource imageSource)
         {
             var bitmapSource = (BitmapSource)imageSource;
@@ -203,7 +208,11 @@ namespace TMP.NET.WindowUI
                 return Convert.ToBase64String(memoryStream.ToArray());
             }
         }
-
+        /// <summary>
+        /// Re-convert icon from base-64 string to bitmap image
+        /// </summary>
+        /// <param name="GamePath"></param>
+        /// <returns>ImageSource of the icon of an executable file</returns>
         public ImageSource IconPathMethod(string GamePath)
         {
             try
@@ -222,9 +231,10 @@ namespace TMP.NET.WindowUI
             }
         }
 
-        public ListForms(bool IsEdit, GameList gl, GameList currentSelectedList)
+        public ListForms(bool IsEdit, GameList gl, GameList currentSelectedList, Config setting)
         {
             InitializeComponent();
+            this.setting = setting;
             _currentSelectedList = currentSelectedList;
             System.Windows.Controls.Image deleteImage = (System.Windows.Controls.Image)FindResource("DeleteImage");
             btnDelete.Content = deleteImage;
@@ -278,7 +288,10 @@ namespace TMP.NET.WindowUI
                 var chk = new BitmapImage(new Uri(ofd.FileName));
                 if (chk.PixelWidth > 1920 || chk.PixelHeight > 1080)
                 {
-                    imgBitmap = ToBitmapImage(ResizeImage(BitmapImage2Bitmap(chk), 1280, 720));
+                    if(!setting.UncompressedArtwork)
+                        imgBitmap = ToBitmapImage(ResizeImage(BitmapImage2Bitmap(chk), 1280, 720));
+                    else
+                        imgBitmap = chk;
                 }
                 else
                     imgBitmap = chk;
@@ -356,7 +369,7 @@ namespace TMP.NET.WindowUI
             else
                 rbX86.IsChecked = true;
 
-            tbLaunchParameter.Text = string.Join(" ", v_GL.LaunchParameter);
+            tbLaunchParameter.Text = string.Join(" ", v_GL.LaunchParameter == null || v_GL.LaunchParameter.Length == 0 ? Array.Empty<string>() : v_GL.LaunchParameter);
             cbDisableTextractor.IsChecked = v_GL.DisableTextractor;
             cbRunAsAdmin.IsChecked = v_GL.RunAsAdmin;
             cbUseLauncherHandler.IsChecked = v_GL.UseLauncherHandler;
@@ -369,7 +382,11 @@ namespace TMP.NET.WindowUI
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             Title = Title + " | Busy...";
-            var res = MessageBox.Show("Are you sure want to delete this game from the list?\nSaved playtime data from games on this list will be lost", "Are you sure?", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            string dateAdded = "Unknown";
+            if (v_GL.DateCreated != DateTime.MinValue)
+                dateAdded = v_GL.DateCreated.ToString("dd-MMMM-yyyy");
+
+            var res = MessageBox.Show($"Are you sure want to delete this game from the library?\n\nTitle: {v_GL.GameName}\nDeveloper: {v_GL.GameDev}\nDate Added: {dateAdded}", "Are you sure?", MessageBoxButton.OKCancel, MessageBoxImage.Question);
             if (res == MessageBoxResult.OK)
             {
                 isDeleted = true;

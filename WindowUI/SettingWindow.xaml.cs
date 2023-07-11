@@ -75,6 +75,8 @@ namespace TMP.NET.WindowUI
             cbEnableRichPresence.IsChecked = setting.EnabledRichPresence;
             tbTextractorDelay.Text = setting.TextractorDelay.ToString();
             cbAutoCheckUpdate.IsChecked = setting.AutoCheckUpdate;
+            cbUncompressedArtwork.IsChecked = setting.UncompressedArtwork;
+            cbEnableScreenshot.IsChecked = setting.EnabledScreenshot;
         }
 
         private void btnBrowseX86_Click(object sender, RoutedEventArgs e)
@@ -98,8 +100,6 @@ namespace TMP.NET.WindowUI
             {
                 tbTextractorDirx64.Text = ofd.FileName;
             }
-
-
         }
 
         private void tbTextractorDelay_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)

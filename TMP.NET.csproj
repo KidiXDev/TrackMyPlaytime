@@ -69,6 +69,7 @@
     <Compile Include="Modules\DCID.cs" />
     <Compile Include="Modules\Config.cs" />
     <Compile Include="Modules\DiscordRPC.cs" />
+    <Compile Include="Modules\FilterController.cs" />
     <Compile Include="Modules\GUIDGen.cs" />
     <Compile Include="Modules\ImportList.cs" />
     <Compile Include="Modules\Keyboard\KeyboardHook.cs" />
@@ -78,10 +79,27 @@
     <Compile Include="WindowUI\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowUI\ExportWindow.xaml.cs">
+      <DependentUpon>ExportWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowUI\FilterWindow.xaml.cs">
+      <DependentUpon>FilterWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowUI\PropertiesWindow.xaml.cs">
+      <DependentUpon>PropertiesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowUI\SettingWindow.xaml.cs">
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="WindowUI\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowUI\ExportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowUI\FilterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -106,6 +124,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="WindowUI\PropertiesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WindowUI\SettingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -215,6 +237,21 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\capture-sfx.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\export_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\search_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\filter_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\info-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\folder_open_icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

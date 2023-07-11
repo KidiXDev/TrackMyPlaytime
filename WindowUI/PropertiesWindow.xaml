@@ -1,0 +1,41 @@
+﻿<Window x:Class="TMP.NET.WindowUI.PropertiesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TMP.NET.WindowUI"
+        mc:Ignorable="d"
+        Title="Properties" Height="350" Width="400"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        Background="#0A2647"
+        Loaded="Window_Loaded">
+    <Grid>
+        <Grid HorizontalAlignment="Center" Height="314" VerticalAlignment="Center" Width="380">
+            <Image x:Name="ExecutableIcon" HorizontalAlignment="Left" Height="47" Margin="10,10,0,0" VerticalAlignment="Top" Width="47" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+            <Viewbox Margin="65,10,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="305">
+                <TextBlock x:Name="labelGameTitle" Text="Game Title" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold"/>
+            </Viewbox>
+            <Viewbox Margin="66,34,0,0" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left" Width="303">
+                <TextBlock x:Name="labelGameDev" Text="Game Developer" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold"/>
+            </Viewbox>
+            <Separator HorizontalAlignment="Center" Height="13" Margin="0,73,0,0" VerticalAlignment="Top" Width="360"/>
+            <Label Content="Directory:" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,91,0,0" VerticalAlignment="Top" Width="70"/>
+            <TextBox x:Name="tbGameDir" IsReadOnly="True" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=RoundedBorder}" FontSize="12" Margin="112,96,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="229" BorderThickness="0" Height="16"/>
+            <Label Content="Size:" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top" Width="41"/>
+            <TextBlock x:Name="tblockSize" HorizontalAlignment="Left" Height="16" Margin="112,123,0,0" TextWrapping="NoWrap" Text="16.2 GB" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" VerticalAlignment="Top" Width="258"/>
+            <Button x:Name="btnBrowse" ToolTip="Open file location" Click="btnBrowse_Click" Content="{StaticResource FolderOpenIcon}" Background="Transparent" Padding="2,3,0,0" BorderThickness="0" HorizontalAlignment="Left" Height="22" Margin="346,93,0,0" VerticalAlignment="Top" Width="24"/>
+            <Label Content="Date Added:" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Width="97"/>
+            <TextBlock x:Name="tblockDate" HorizontalAlignment="Left" Height="16" Margin="112,0,0,0" TextWrapping="NoWrap" Text="12 November 2022" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" VerticalAlignment="Center" Width="258"/>
+            <Label Content="Time Added:" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,172,0,0" VerticalAlignment="Top" Width="97"/>
+            <TextBlock x:Name="tblockTime" HorizontalAlignment="Left" Height="16" Margin="112,177,0,0" TextWrapping="NoWrap" Text="14.23" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" VerticalAlignment="Top" Width="258"/>
+            <Label Content="Playtime:" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,199,0,0" VerticalAlignment="Top" Width="97"/>
+            <TextBlock x:Name="tblockPlaytime" HorizontalAlignment="Left" Height="16" Margin="112,204,0,0" TextWrapping="NoWrap" Text="92h 12m 22s" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" VerticalAlignment="Top" Width="258"/>
+            <Button x:Name="btnClose" Click="btnClose_Click" Content="Close" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" HorizontalAlignment="Left" Margin="290,280,0,0" Padding="0,0,0,2" VerticalAlignment="Top" Width="80" Height="24"/>
+            <Label Content="GUID:" FontSize="11" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,281,0,0" VerticalAlignment="Top" Width="39"/>
+            <TextBlock x:Name="tblockGUID" HorizontalAlignment="Left" Height="12" Margin="47,286,0,0" TextWrapping="NoWrap" Text="G8US76" FontSize="11" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" VerticalAlignment="Top" Width="223"/>
+        </Grid>
+
+    </Grid>
+</Window>
