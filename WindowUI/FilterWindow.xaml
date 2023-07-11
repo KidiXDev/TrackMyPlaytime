@@ -1,0 +1,25 @@
+﻿<Window x:Class="TMP.NET.WindowUI.FilterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TMP.NET.WindowUI"
+        mc:Ignorable="d"
+        Title="FilterWindow" Height="250" Width="350"
+        Background="#0A2647"
+        ResizeMode="CanMinimize"
+        WindowStyle="None"
+        ShowInTaskbar="False"
+        Deactivated="Window_Deactivated">
+    <Grid>
+        <Grid HorizontalAlignment="Center" Height="214" VerticalAlignment="Center" Width="330">
+            <Label Content="Sort By:" Foreground="White" FontSize="16" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top"/>
+            <StackPanel Orientation="Horizontal" Margin="126,10,269,10"/>
+            <ComboBox x:Name="cboxFilter" FontFamily="{StaticResource GlobalFont}" FontSize="14" BorderThickness="0" HorizontalAlignment="Center" Height="24" Margin="0,51,0,0" VerticalAlignment="Top" Width="310"/>
+            <Label Content="Sort Type:" Foreground="White" FontSize="16" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top"/>
+            <ComboBox x:Name="cboxSortType" FontFamily="{StaticResource GlobalFont}" FontSize="14" BorderThickness="0" HorizontalAlignment="Center" Height="24" Margin="0,122,0,0" VerticalAlignment="Top" Width="310"/>
+            <Button x:Name="btnApply" Click="btnApply_Click" Content="Apply" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" HorizontalAlignment="Left" Margin="240,180,0,0" Padding="0,0,0,2" VerticalAlignment="Top" Width="80" Height="24"/>
+        </Grid>
+
+    </Grid>
+</Window>
