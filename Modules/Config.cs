@@ -14,6 +14,7 @@ namespace TMP.NET.Modules
         private bool _EnabledRichPresence = true;
         private bool _AutoCheckUpdate = true;
         private bool _EnabledScreenshot = true;
+        private FilterConfig _FilterConfig = new FilterConfig();
         public string x86Directory { get; set; }
         public string x64Directory { get; set; }
         public bool DisableTextractor { get { return _DisableTextractor; } set { _DisableTextractor = value; } }
@@ -29,7 +30,7 @@ namespace TMP.NET.Modules
         public bool AutoCheckUpdate { get { return _AutoCheckUpdate; } set { _AutoCheckUpdate = value; } }
         public bool EnabledScreenshot { get { return _EnabledScreenshot; } set { _EnabledScreenshot = value; } }
         public bool UncompressedArtwork { get; set; }
-        public FilterConfig filterConfig { get; set; }
+        public FilterConfig filterConfig { get { return _FilterConfig; } set { _FilterConfig = value; } }
         /// <summary>
         /// Stores information for filter and sort settings in the library view
         /// </summary>

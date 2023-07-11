@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -29,37 +30,43 @@ namespace TMP.NET.Modules
 
         public void FilterControl()
         {
-            if (filterSetting.SortIndex == 0)
+            try
             {
-                switch (filterSetting.FilterIndex)
+                if (filterSetting.SortIndex == 0)
                 {
-                    case 0:
-                        i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.GameName));
-                        break;
-                    case 1:
-                        i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.Playtime));
-                        break;
-                    default:
-                        i_List = new ObservableCollection<GameList>(i_List.OrderByDescending(item => item.Tracker));
-                        break;
+                    switch (filterSetting.FilterIndex)
+                    {
+                        case 0:
+                            i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.GameName));
+                            break;
+                        case 1:
+                            i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.Playtime));
+                            break;
+                        default:
+                            i_List = new ObservableCollection<GameList>(i_List.OrderByDescending(item => item.Tracker));
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (filterSetting.FilterIndex)
+                    {
+                        case 0:
+                            i_List = new ObservableCollection<GameList>(i_List.OrderByDescending(item => item.GameName));
+                            break;
+                        case 1:
+                            i_List = new ObservableCollection<GameList>(i_List.OrderByDescending(item => item.Playtime));
+                            break;
+                        default:
+                            i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.Tracker));
+                            break;
+                    }
                 }
             }
-            else
+            catch(Exception ex)
             {
-                switch (filterSetting.FilterIndex)
-                {
-                    case 0:
-                        i_List = new ObservableCollection<GameList>(i_List.OrderByDescending(item => item.GameName));
-                        break;
-                    case 1:
-                        i_List = new ObservableCollection<GameList>(i_List.OrderByDescending(item => item.Playtime));
-                        break;
-                    default:
-                        i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.Tracker));
-                        break;
-                }
+                Console.WriteLine(ex.Message);
             }
-
 
             // Refresh ListView
             LV_List.ItemsSource = i_List;
