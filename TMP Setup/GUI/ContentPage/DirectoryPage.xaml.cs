@@ -68,6 +68,7 @@ namespace TMP_Setup.GUI.ContentPage
             {
                 label_isInstalled.Visibility = Visibility.Visible;
                 btnBrowse.IsEnabled = false;
+                tbInstallDir.IsReadOnly = true;
 
                 string insDir = _program.GetInstallDir();
                 string illegalChars = new string(Path.GetInvalidPathChars()) + new string(Path.GetInvalidFileNameChars());
