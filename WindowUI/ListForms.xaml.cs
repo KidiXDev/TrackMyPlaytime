@@ -25,7 +25,7 @@ namespace TMP.NET.WindowUI
         public string v_ProgramType;
         public string[] v_LaunchParameter;
         private string lastImageSelected;
-        public bool isDeleted, isValid;
+        public bool isValid;
         private Config setting;
         private GameList _currentSelectedList;
 
@@ -236,33 +236,14 @@ namespace TMP.NET.WindowUI
             InitializeComponent();
             this.setting = setting;
             _currentSelectedList = currentSelectedList;
-            System.Windows.Controls.Image deleteImage = (System.Windows.Controls.Image)FindResource("DeleteImage");
-            btnDelete.Content = deleteImage;
-            btnDelete.Click -= btnDelete_Click;
-            btnDelete.Click += btnDeleteImage_Click;
-            btnDeleteImage.Visibility = Visibility.Collapsed;
-            btnShortcut.Visibility = Visibility.Hidden;
             if (gl != null && IsEdit)
                 v_GL = gl;
 
             if (IsEdit)
             {
-                System.Windows.Controls.Image trashIcon = (System.Windows.Controls.Image)FindResource("TrashIcon");
-                btnDelete.Content = trashIcon;
                 LoadValue();
                 this.Title = "Edit Game";
-                btnDelete.Visibility = Visibility.Visible;
-                btnShortcut.Visibility = Visibility.Visible;
-                btnDeleteImage.Visibility = Visibility.Visible;
-                btnDelete.Click -= btnDeleteImage_Click;
-                btnDelete.Click += btnDelete_Click;
                 cbCreateShortcut.Visibility = Visibility.Hidden;
-                var window = (MainWindow)Application.Current.MainWindow;
-                if (window.state == MainWindow.AppState.Running)
-                {
-                    if(gl == currentSelectedList)
-                        btnDelete.IsEnabled = false;
-                }
             }
         }
 
@@ -378,46 +359,6 @@ namespace TMP.NET.WindowUI
             cbHideImageKey.IsChecked = v_GL.HideImageKey;
         }
         #endregion
-
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
-        {
-            Title = Title + " | Busy...";
-            string dateAdded = "Unknown";
-            if (v_GL.DateCreated != DateTime.MinValue)
-                dateAdded = v_GL.DateCreated.ToString("dd-MMMM-yyyy");
-
-            var res = MessageBox.Show($"Are you sure want to delete this game from the library?\n\nTitle: {v_GL.GameName}\nDeveloper: {v_GL.GameDev}\nDate Added: {dateAdded}", "Are you sure?", MessageBoxButton.OKCancel, MessageBoxImage.Question);
-            if (res == MessageBoxResult.OK)
-            {
-                isDeleted = true;
-                this.DialogResult = false;
-            }
-
-            try
-            {
-                var shortcutName = v_GL.GameName;
-                string invalidChars = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-                foreach (char invalidChar in invalidChars)
-                {
-                    shortcutName = shortcutName.Replace(invalidChar.ToString(), "");
-                }
-
-                var shortcutPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\{shortcutName}.url";
-
-                if (File.Exists(shortcutPath))
-                    File.Delete(shortcutPath);
-            }
-            catch(Exception ex)
-            {
-                MainWindow.log.Error("Exception Thrown when Delete GameList", ex);
-                MessageBox.Show($"Exception thrown.\nInfo: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void btnShortcut_Click(object sender, RoutedEventArgs e)
-        {
-            CreateShortcut(v_GL);
-        }
 
         private void btnDeleteImage_Click(object sender, RoutedEventArgs e)
         {
