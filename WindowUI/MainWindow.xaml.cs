@@ -96,6 +96,23 @@
  *       
  *       Temporary Removed Feature:
  *       - Import GameList
+ *       
+ *       [12 July 2023]
+ *       ==============
+ *       v1.3.1
+ *       =======
+ *       Bug fixed:
+ *       - Shortcut issue (running the game via the shortcut doesn't work as it should,
+ *       could cause the game list data to be lost that had been included in the library).
+ *       - Incorrectly selected index right after changing sort type
+ *       - Delete game from library issue when you force to delete using context menu while your game is still running
+ *       
+ *       UI Improvement:
+ *       - Change setting UI layout (again)
+ *       - Removed Create shortcut and Delete button from Edit Game Window
+ *       
+ *       New Minor Feature:
+ *       - Added new Date Created sort menu
  *      
 */
 
@@ -107,10 +124,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Media;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -493,9 +508,9 @@ namespace TMP.NET
 
         private void DatabaseUpdater()
         {
-            foreach(var item in i_List)
+            foreach (var item in i_List)
             {
-                if(item.DatabaseVersion == null)
+                if (item.DatabaseVersion == null)
                 {
                     item.DateCreated = DateTime.Now;
                     item.DatabaseVersion = new Version(1, 0, 0);
@@ -523,6 +538,8 @@ namespace TMP.NET
         public MainWindow()
         {
             InitializeComponent();
+
+
             this.Loaded += (s, e) =>
             {
                 MainWindow.WindowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
@@ -535,9 +552,6 @@ namespace TMP.NET
             DataContext = this;
 
             FirstLoad();
-
-            // Sort GameList
-            FilterSort();
 
             DatabaseUpdater();
         }
@@ -574,6 +588,7 @@ namespace TMP.NET
                 setting.Maximized = false;
             }
 
+            setting.SelectedIndex = LV_List.SelectedIndex;
             SerializeSetting(_Config);
             ToastNotificationManagerCompat.Uninstall();
             Application.Current.Shutdown();
@@ -583,6 +598,9 @@ namespace TMP.NET
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
+                // Sort GameList
+                FilterSort();
+
                 LoadShortcut();
 
                 if (LV_List.SelectedItem == null)
@@ -845,7 +863,7 @@ namespace TMP.NET
 
                 list.Tracker = _dateTime;
 
-                if(setting.TimeTracking)
+                if (setting.TimeTracking)
                     list.Playtime += ts;
 
                 // Update UI
@@ -913,7 +931,7 @@ namespace TMP.NET
 
                 l_gameList.Tracker = _dateTime;
 
-                if(setting.TimeTracking) // I forgot to implement this feature XD
+                if (setting.TimeTracking) // I forgot to implement this feature XD
                     l_gameList.Playtime += ts;
 
                 // Update UI
@@ -1085,28 +1103,6 @@ namespace TMP.NET
 
                     SerializeData(_ListData_n);
                 }
-                else
-                {
-                    if (form.isDeleted)
-                    {
-                        if (LV_List.SelectedItem is GameList selected)
-                            i_List.Remove(selected);
-
-                        // Sort GameList
-                        FilterSort();
-
-                        labelGameTitle.Text = "Game Title";
-                        label_DevName.Text = "Developer Name";
-                        label_Playtime.Content = "0h 0m 0s";
-                        label_LastPlayed.Content = "Never";
-
-                        var g_Brush = GridImg.Background as ImageBrush;
-                        g_Brush.ImageSource = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
-
-                        SerializeData(_ListData_n);
-                        return;
-                    }
-                }
             }
         }
 
@@ -1198,11 +1194,11 @@ namespace TMP.NET
 
         private void btnDebug4_Click(object sender, RoutedEventArgs e)
         {
-            for(int a = 0; a < 100; a++)
+            for (int i = 0; i < 100; i++)
             {
                 GameList gl = new GameList();
-                gl.GameName = $"DEBUG {a}";
-                gl.GamePath = "C:/Users/ACER/Documents/osu!Profiler.exe";
+                gl.GameName = $"DEBUG {i}";
+                gl.GamePath = "";
                 gl.GUID = _gen.GenerateGUID(6, i_List);
                 gl.DateCreated = DateTime.Now;
                 i_List.Add(gl);
@@ -1343,12 +1339,12 @@ namespace TMP.NET
         {
             try
             {
-                if(LV_List.ItemsSource != null)
+                if (LV_List.ItemsSource != null)
                     CollectionViewSource.GetDefaultView(LV_List.ItemsSource).Refresh();
 
                 LV_List.SelectedItem = _lastSelectedList;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
@@ -1376,9 +1372,16 @@ namespace TMP.NET
 
         private void ctxDelete_Click(object sender, RoutedEventArgs e)
         {
-            if(LV_List.SelectedItems != null)
+            if (LV_List.SelectedItems != null)
             {
                 var gl = (GameList)LV_List.SelectedItem;
+
+                if (gl == _currentSelectedList && state == AppState.Running)
+                {
+                    MessageBox.Show($"This game is still running, This game is running, you can't delete it at this time", "Can not be deleted", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
                 string dateAdded = "Unknown";
                 if (gl.DateCreated != DateTime.MinValue)
                     dateAdded = gl.DateCreated.ToString("dd-MMMM-yyyy");
@@ -1435,6 +1438,12 @@ namespace TMP.NET
                 var window = new PropertiesWindow((GameList)LV_List.SelectedItem);
                 window.Show();
             }
+        }
+
+        private void ctxShortcut_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new ListForms(false, null, null, null);
+            win.CreateShortcut((GameList)LV_List.SelectedItem);
         }
     }
 }

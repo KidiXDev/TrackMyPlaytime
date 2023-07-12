@@ -93,6 +93,11 @@
                                 <Image Width="15" Height="15" Source="/TMP.NET;component/Resources/trash_icon.png" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
                             </MenuItem.Icon>
                         </MenuItem>
+                        <MenuItem x:Name="ctxShortcut" Header="Create Shortcut" Click="ctxShortcut_Click">
+                            <MenuItem.Icon>
+                                <Image Width="13" Height="13" Source="/TMP.NET;component/Resources/shortcut-logo.png" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                         <Separator/>
                         <MenuItem x:Name="ctxProperties" Header="Properties" Click="ctxProperties_Click">
                             <MenuItem.Icon>
