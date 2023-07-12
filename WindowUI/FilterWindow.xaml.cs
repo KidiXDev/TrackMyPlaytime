@@ -11,7 +11,7 @@ namespace TMP.NET.WindowUI
     public partial class FilterWindow : Window
     {
         private readonly string[] SortType = { "Ascending", "Descending" };
-        private readonly string[] Filter = { "Alphabet", "Playtime", "Last Played" };
+        private readonly string[] Filter = { "Alphabet", "Playtime", "Last Played", "Date Added" };
 
         public Config.FilterConfig _filterSetting;
 
