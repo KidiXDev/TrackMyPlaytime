@@ -42,8 +42,11 @@ namespace TMP.NET.Modules
                         case 1:
                             i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.Playtime));
                             break;
-                        default:
+                        case 2:
                             i_List = new ObservableCollection<GameList>(i_List.OrderByDescending(item => item.Tracker));
+                            break;
+                        case 3:
+                            i_List = new ObservableCollection<GameList>(i_List.OrderByDescending(item => item.DateCreated));
                             break;
                     }
                 }
@@ -57,8 +60,11 @@ namespace TMP.NET.Modules
                         case 1:
                             i_List = new ObservableCollection<GameList>(i_List.OrderByDescending(item => item.Playtime));
                             break;
-                        default:
+                        case 2:
                             i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.Tracker));
+                            break;
+                        case 3:
+                            i_List = new ObservableCollection<GameList>(i_List.OrderBy(item => item.DateCreated));
                             break;
                     }
                 }
