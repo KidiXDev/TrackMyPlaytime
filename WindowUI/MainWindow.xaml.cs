@@ -661,6 +661,20 @@ namespace TMP.NET
             view.Filter = UserFilter;
         }
 
+        public void FilterSort()
+        {
+            FilterController fc = new FilterController(filterSetting, i_List, LV_List);
+            fc.FilterControl();
+
+            FilterInit();
+        }
+
+        private void FilterInit()
+        {
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(LV_List.ItemsSource);
+            view.Filter = UserFilter;
+        }
+
         #region UI Update & Process Logic
         private void updateTracker(GameList game, object selected) // Update Date and Playtime UI
         {
