@@ -62,7 +62,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid Margin="267,0,0,109">
-            <Image x:Name="ArtworkImg" Source="/TMP.NET;component/Resources/no-image.png"/>
+            <Image x:Name="ArtworkImg" Source="/TMP.NET;component/Resources/no-image.png" Stretch="UniformToFill" StretchDirection="Both" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
         </Grid>
         <Grid x:Name="Sidebar" HorizontalAlignment="Left" Width="267">
             <ListView x:Name="LV_List" VirtualizingStackPanel.IsVirtualizing="True" SelectionChanged="LV_Selected" ItemsSource="{Binding i_listv}" FontFamily="{StaticResource GlobalFont}" Background="#0A2647" VirtualizingPanel.ScrollUnit="Pixel" Foreground="White" BorderThickness="0" SelectionMode="Single" Margin="0,34,0,109" HorizontalAlignment="Center" Width="267">
