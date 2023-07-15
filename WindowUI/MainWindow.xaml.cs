@@ -1374,7 +1374,7 @@ namespace TMP.NET
 
                 if (gl == _currentSelectedList && state == AppState.Running)
                 {
-                    MessageBox.Show($"This game is still running, This game is running, you can't delete it at this time", "Can not be deleted", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show($"This game is still running, you can't delete it at this time", "Failed to delete", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
