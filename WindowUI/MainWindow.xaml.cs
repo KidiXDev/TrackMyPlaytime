@@ -988,12 +988,10 @@ namespace TMP.NET
                 labelGameTitle.Text = l_gameList.GameName;
                 label_DevName.Text = l_gameList.GameDev;
 
-                var g_Brush = GridImg.Background as ImageBrush;
-
                 if (l_gameList.BackgroundPath() == null)
-                    g_Brush.ImageSource = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
+                    ArtworkImg.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
                 else
-                    g_Brush.ImageSource = l_gameList.BackgroundPath();
+                    ArtworkImg.Source = l_gameList.BackgroundPath();
 
                 updateTracker(l_gameList, LV_List.SelectedItem);
                 _lastSelectedList = l_gameList;
@@ -1094,12 +1092,10 @@ namespace TMP.NET
                     labelGameTitle.Text = gl.GameName;
                     label_DevName.Text = gl.GameDev;
 
-                    var g_Brush = GridImg.Background as ImageBrush;
-
                     if (gl.BackgroundPath() == null)
-                        g_Brush.ImageSource = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
+                        ArtworkImg.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
                     else
-                        g_Brush.ImageSource = gl.BackgroundPath();
+                        ArtworkImg.Source = gl.BackgroundPath();
 
                     SerializeData(_ListData_n);
                 }
@@ -1423,8 +1419,7 @@ namespace TMP.NET
                 label_Playtime.Content = "0h 0m 0s";
                 label_LastPlayed.Content = "Never";
 
-                var g_Brush = GridImg.Background as ImageBrush;
-                g_Brush.ImageSource = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
+                ArtworkImg.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
 
                 SerializeData(_ListData_n);
                 return;
