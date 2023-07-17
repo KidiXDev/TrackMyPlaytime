@@ -133,5 +133,9 @@ namespace TMP.NET.Modules
         public string IconBase64 { get; set; }
         public DateTime DateCreated { get; set; }
         public Version DatabaseVersion { get; set; }
+        public string Description { get; set; }
+        public string Tag { get; set; }
+        public string[] Website { get; set; }
+        public string ReleaseDate { get; set; }
     }
 }
