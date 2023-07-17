@@ -5,51 +5,120 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TMP.NET.WindowUI"
         mc:Ignorable="d"
-        Title="Setting" Height="530" Width="500"
-        SizeToContent="WidthAndHeight"
+        Title="Setting" Height="850" Width="450"
         ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
         Background="#0A2647">
+    <Window.Resources>
+        <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Background" Value="#0A2647"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border Background="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" CornerRadius="10"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="rectangle" Background="#0D1430" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}" CornerRadius="8"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="rectangle" Value="#0D1430"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="true">
+                                <Setter Property="Background" TargetName="rectangle" Value="#0D1430"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid HorizontalAlignment="Center" Height="411" VerticalAlignment="Top" Width="480" Margin="0,10,0,0">
-            <Label Content="Textractor" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-            <Separator HorizontalAlignment="Left" Background="White" Height="5" Margin="10,36,0,0" VerticalAlignment="Top" Width="96"/>
-            <Label Content="x86" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="tbTextractorDirx86" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="16" HorizontalAlignment="Left" Margin="50,53,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="347" Height="22"/>
-            <Button x:Name="btnBrowseX86" Click="btnBrowseX86_Click" Content="Browse" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" Foreground="White" Background="#1B4772" HorizontalAlignment="Left" Margin="402,53,0,0" VerticalAlignment="Top" Width="68" Height="22"/>
-            <Label Content="x64" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="tbTextractorDirx64" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="16" HorizontalAlignment="Left" Margin="50,90,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="347" Height="22"/>
-            <Button x:Name="btnBrowseX64" Click="btnBrowseX64_Click" Content="Browse" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" Foreground="White" Background="#1B4772" HorizontalAlignment="Left" Margin="402,90,0,0" VerticalAlignment="Top" Width="68" Height="22"/>
-            <Separator HorizontalAlignment="Center" Background="White" Height="21" Margin="0,120,0,0" VerticalAlignment="Top" Width="460"/>
-            <Label Content="System" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,145,0,0" VerticalAlignment="Top"/>
-            <Separator HorizontalAlignment="Left" Background="White" Height="5" Margin="10,171,0,0" VerticalAlignment="Top" Width="73"/>
-            <CheckBox x:Name="cbDisableTextractor" ToolTip="Disable textractor for global setting" Content="Disable Textractor" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="10,188,0,0" VerticalAlignment="Top"/>
-            <CheckBox x:Name="cbTimeTracking" ToolTip="Enable time tracking" Content="Time Tracking" IsChecked="True" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="10,209,0,0" VerticalAlignment="Top"/>
-            <StackPanel Orientation="Horizontal" Margin="236,135,239,10">
-                <Separator Background="White" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-            </StackPanel>
-            <Label Content="Discord Setting" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="260,145,0,0" VerticalAlignment="Top"/>
-            <Separator HorizontalAlignment="Left" Background="White" Height="5" Margin="260,171,0,0" VerticalAlignment="Top" Width="137"/>
-            <CheckBox x:Name="cbEnableRichPresence" ToolTip="Enable discord rich presence" Content="Enabled Rich Presence" IsChecked="True" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="260,188,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="tbTextractorDelay" DataObject.Pasting="Label_Pasting" PreviewTextInput="tbTextractorDelay_PreviewTextInput" ToolTip="Set textractor launch delay (ms).&#10;Default value is 3000" Text="3000" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="16" HorizontalAlignment="Left" Margin="10,304,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="143" Height="22"/>
-            <Label Content="Textractor Delay:" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="3,274,0,0" VerticalAlignment="Top"/>
-            <Button x:Name="btnCheckforUpdate" Click="btnCheckforUpdate_Click" Content="Check For Update" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" Foreground="White" Background="#1B4772" HorizontalAlignment="Left" Margin="10,379,0,0" VerticalAlignment="Top" Width="137" Height="22"/>
-            <Label Content="Update:" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,352,0,0" VerticalAlignment="Top"/>
-            <CheckBox x:Name="cbAutoCheckUpdate" ToolTip="You will be notified when new update is available" Content="Auto check for updates" IsChecked="True" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="10,230,0,0" VerticalAlignment="Top" Width="221" Height="16"/>
-            <CheckBox x:Name="cbUncompressedArtwork" ToolTip="Disable compressing images when the resolution is greater than 1920x1080 &#10;Warning: This is an experimental feature and very unstable, use it at your own risk" Content="Uncompressed Artwork" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="260,256,0,0" VerticalAlignment="Top"/>
-            <Label Content="Experimental" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="260,214,0,0" VerticalAlignment="Top"/>
-            <Separator HorizontalAlignment="Left" Background="White" Height="6" Margin="260,240,0,0" VerticalAlignment="Top" Width="121"/>
-            <CheckBox x:Name="cbExperimental" Visibility="Collapsed" Content="Enable Experimental Feature" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="260,379,0,0" VerticalAlignment="Top"/>
-            <CheckBox x:Name="cbEnableScreenshot" ToolTip="Enable screenshot when playing game.&#10;Press F12 to take screenshot. Note: Only game not launched by Launcher Handler" IsChecked="True" Content="Enabled Screenshot Feature" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="10,251,0,0" VerticalAlignment="Top"/>
+        <Grid Margin="10,10,10,108">
+            <ScrollViewer VirtualizingPanel.ScrollUnit="Pixel">
+                <ScrollViewer.Resources>
+                    <Style TargetType="{x:Type ScrollBar}">
+                        <Setter Property="Background" Value="#0A2647"/>
+                        <Setter Property="BorderBrush" Value="#0A2647"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                    <Grid x:Name="Bg" SnapsToDevicePixels="true">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                            <RowDefinition Height="0.00001*"/>
+                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
+                                        <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
+                                            <Track.DecreaseRepeatButton>
+                                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
+                                            </Track.DecreaseRepeatButton>
+                                            <Track.IncreaseRepeatButton>
+                                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
+                                            </Track.IncreaseRepeatButton>
+                                            <Track.Thumb>
+                                                <Thumb Style="{StaticResource ScrollBarThumbVertical}" Margin="2"/>
+                                            </Track.Thumb>
+                                        </Track>
+                                    </Grid>
+
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ScrollViewer.Resources>
+                <Grid Width="420">
+                    <Label Content="Textractor" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <Separator HorizontalAlignment="Left" Background="White" Height="5" Margin="10,36,0,0" VerticalAlignment="Top" Width="96"/>
+                    <Label Content="x86" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="tbTextractorDirx86" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="16" Margin="50,53,103,0" TextWrapping="NoWrap" VerticalAlignment="Top" Height="22"/>
+                    <Button x:Name="btnBrowseX86" Click="btnBrowseX86_Click" Content="Browse" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" Foreground="White" Background="#1B4772" Margin="0,53,30,0" VerticalAlignment="Top" Height="22" HorizontalAlignment="Right" Width="68"/>
+                    <Label Content="x64" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="tbTextractorDirx64" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="16" Margin="50,90,103,0" TextWrapping="NoWrap" VerticalAlignment="Top" Height="22"/>
+                    <Button x:Name="btnBrowseX64" Click="btnBrowseX64_Click" Content="Browse" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" Foreground="White" Background="#1B4772" Margin="0,90,30,0" VerticalAlignment="Top" Height="22" HorizontalAlignment="Right" Width="68"/>
+                    <Separator HorizontalAlignment="Right" Background="White" Height="21" Margin="0,120,10,0" VerticalAlignment="Top" Width="400"/>
+                    <Label Content="System" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,145,0,0" VerticalAlignment="Top"/>
+                    <Separator HorizontalAlignment="Left" Background="White" Height="5" Margin="10,171,0,0" VerticalAlignment="Top" Width="73"/>
+                    <CheckBox x:Name="cbDisableTextractor" ToolTip="Disable textractor for global setting" Content="Disable Textractor" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="10,188,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="cbTimeTracking" ToolTip="Enable time tracking" Content="Time Tracking" IsChecked="True" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="10,209,0,0" VerticalAlignment="Top"/>
+                    <StackPanel Orientation="Horizontal" Margin="242,135,246,10"/>
+                    <Label Content="Discord Setting" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,339,0,0" VerticalAlignment="Top"/>
+                    <Separator HorizontalAlignment="Left" Background="White" Height="4" Margin="10,365,0,0" VerticalAlignment="Top" Width="137"/>
+                    <CheckBox x:Name="cbEnableRichPresence" ToolTip="Enable discord rich presence" Content="Enabled Rich Presence" IsChecked="True" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="10,381,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="tbTextractorDelay" DataObject.Pasting="Label_Pasting" PreviewTextInput="tbTextractorDelay_PreviewTextInput" ToolTip="Set textractor launch delay (ms).&#10;Default value is 3000" Text="3000" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="16" HorizontalAlignment="Left" Margin="10,310,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="143" Height="22"/>
+                    <Label Content="Textractor Delay:" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="6,274,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="btnCheckforUpdate" Click="btnCheckforUpdate_Click" Content="Check For Update" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" Foreground="White" Background="#1B4772" HorizontalAlignment="Left" Margin="10,505,0,0" VerticalAlignment="Top" Width="137" Height="21"/>
+                    <Label Content="Update:" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,478,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="cbAutoCheckUpdate" ToolTip="You will be notified when new update is available" Content="Auto check for updates" IsChecked="True" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="10,230,0,0" VerticalAlignment="Top" Width="221" Height="16"/>
+                    <CheckBox x:Name="cbUncompressedArtwork" ToolTip="Disable compressing images when the resolution is greater than 1920x1080 &#10;Warning: This is an experimental feature and very unstable, use it at your own risk" Content="Uncompressed Artwork" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="10,449,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Experimental" Foreground="White" FontSize="18" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,407,0,0" VerticalAlignment="Top"/>
+                    <Separator HorizontalAlignment="Left" Background="White" Height="6" Margin="10,433,0,0" VerticalAlignment="Top" Width="121"/>
+                    <CheckBox x:Name="cbExperimental" Visibility="Collapsed" Content="Enable Experimental Feature" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="260,379,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="cbEnableScreenshot" ToolTip="Enable screenshot when playing game.&#10;Press F12 to take screenshot. Note: Only game not launched by Launcher Handler" IsChecked="True" Content="Enabled Screenshot Feature" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderBrush="White" HorizontalAlignment="Left" Margin="10,251,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </ScrollViewer>
         </Grid>
-        <Grid HorizontalAlignment="Center" Height="68" Margin="0,436,0,0" VerticalAlignment="Top" Width="480">
-            <Button x:Name="btnCancel" ToolTip="Cancel" Content="X" Click="btnCancel_Click" Foreground="White" FontSize="32" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="48" Margin="358,0,0,0" VerticalAlignment="Center" Width="48" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
-            <Button x:Name="btnApply" ToolTip="Apply Changes" Content="{StaticResource ResourceKey=SaveIcon}" Click="btnApply_Click" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="48" Margin="419,0,0,0" VerticalAlignment="Center" Width="48" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
-            <Button x:Name="btnAbout" ToolTip="About" Content="!" Click="btnAbout_Click" Foreground="White" FontSize="32" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Height="48" Margin="10,0,0,0" VerticalAlignment="Center" Width="48" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0"/>
+        <Grid Margin="10,0,10,10" Height="93" VerticalAlignment="Bottom">
+            <Button x:Name="btnCancel" ToolTip="Cancel" Content="X" Click="btnCancel_Click" Foreground="White" FontSize="32" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=CircleBorder}" Height="48" Margin="0,0,70,10" VerticalAlignment="Bottom" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" HorizontalAlignment="Right" Width="48"/>
+            <Button x:Name="btnApply" ToolTip="Apply Changes" Content="{StaticResource ResourceKey=SaveIcon}" Click="btnApply_Click" Style="{StaticResource ResourceKey=CircleBorder}" Margin="0,0,10,10" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" HorizontalAlignment="Right" Width="48" Height="48" VerticalAlignment="Bottom"/>
+            <Button x:Name="btnAbout" ToolTip="About" Content="!" Click="btnAbout_Click" Foreground="White" FontSize="32" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=CircleBorder}" HorizontalAlignment="Left" Margin="10,0,0,10" Width="48" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" Height="48" VerticalAlignment="Bottom"/>
+            <Separator HorizontalAlignment="Center" Background="White" Height="20" Margin="0,5,0,0" VerticalAlignment="Top" Width="510"/>
         </Grid>
-        <Separator Background="White" HorizontalAlignment="Center" Height="5" Margin="0,426,0,0" VerticalAlignment="Top" Width="480"/>
     </Grid>
 </Window>

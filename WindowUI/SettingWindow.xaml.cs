@@ -12,6 +12,9 @@ namespace TMP.NET.WindowUI
     /// </summary>
     public partial class SettingWindow : Window
     {
+        // Height: 530
+        // Weight: 500
+
         Config setting;
         AboutWindow aboutWindow;
         UpdateChecker _chk = new UpdateChecker();
@@ -84,6 +87,9 @@ namespace TMP.NET.WindowUI
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Executable (*.exe)|*.exe";
             ofd.Title = "Select Textractor Executable";
+            if(!string.IsNullOrEmpty(tbTextractorDirx86.Text) && File.Exists(tbTextractorDirx86.Text))
+                ofd.InitialDirectory = tbTextractorDirx86.Text;
+
             if (ofd.ShowDialog() == true)
             {
                 tbTextractorDirx86.Text = ofd.FileName;
@@ -95,6 +101,8 @@ namespace TMP.NET.WindowUI
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Executable (*.exe)|*.exe";
             ofd.Title = "Select Textractor Executable";
+            if (!string.IsNullOrEmpty(tbTextractorDirx64.Text) && File.Exists(tbTextractorDirx64.Text))
+                ofd.InitialDirectory = tbTextractorDirx64.Text;
 
             if (ofd.ShowDialog() == true)
             {
