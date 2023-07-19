@@ -134,8 +134,8 @@ namespace TMP.NET.Modules
         public DateTime DateCreated { get; set; }
         public Version DatabaseVersion { get; set; }
         public string Description { get; set; }
-        public string Tag { get; set; }
+        public string[] Tag { get; set; }
         public string[] Website { get; set; }
-        public string ReleaseDate { get; set; }
+        public DateTime ReleaseDate { get; set; }
     }
 }

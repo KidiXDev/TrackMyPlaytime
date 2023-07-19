@@ -15,6 +15,7 @@ namespace TMP.NET.Modules
         private bool _AutoCheckUpdate = true;
         private bool _EnabledScreenshot = true;
         private FilterConfig _FilterConfig = new FilterConfig();
+        private ContentConfig _ContentConfig = new ContentConfig();
         public string x86Directory { get; set; }
         public string x64Directory { get; set; }
         public bool DisableTextractor { get { return _DisableTextractor; } set { _DisableTextractor = value; } }
@@ -31,6 +32,7 @@ namespace TMP.NET.Modules
         public bool EnabledScreenshot { get { return _EnabledScreenshot; } set { _EnabledScreenshot = value; } }
         public bool UncompressedArtwork { get; set; }
         public FilterConfig filterConfig { get { return _FilterConfig; } set { _FilterConfig = value; } }
+        public ContentConfig contentConfig { get { return _ContentConfig; } set { _ContentConfig = value; } }
         /// <summary>
         /// Stores information for filter and sort settings in the library view
         /// </summary>
@@ -40,6 +42,16 @@ namespace TMP.NET.Modules
             private int _SortIndex = 0;
             public int FilterIndex { get { return _FilterIndex; } set { _FilterIndex = value; } }
             public int SortIndex { get { return _SortIndex;} set { _SortIndex = value; } }
+        }
+        /// <summary>
+        /// Stores configutaion information about content page
+        /// </summary>
+        public class ContentConfig
+        {
+            private double _BackgroundBlurValue = 80.0f;
+            private double _BackgroundopacityValue = 0.5f;
+            public double BackgroundBlurValue { get { return _BackgroundBlurValue; } set { _BackgroundBlurValue = value; } }
+            public double BackgroundOpacityValue { get { return _BackgroundopacityValue; } set { _BackgroundopacityValue = value; } }
         }
     }
 }
