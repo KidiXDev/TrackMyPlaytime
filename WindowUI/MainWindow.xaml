@@ -61,8 +61,9 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid Margin="267,0,0,109">
-            <Image x:Name="ArtworkImg" Source="/TMP.NET;component/Resources/no-image.png" Stretch="UniformToFill" StretchDirection="Both" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+        <Grid Margin="267,0,0,0">
+            <ContentControl x:Name="ContentArea"/>
+            <!-- <Image x:Name="ArtworkImg" Source="/TMP.NET;component/Resources/no-image.png" Stretch="UniformToFill" StretchDirection="Both" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/> -->
         </Grid>
         <Grid x:Name="Sidebar" HorizontalAlignment="Left" Width="267">
             <ListView x:Name="LV_List" VirtualizingStackPanel.IsVirtualizing="True" SelectionChanged="LV_Selected" ItemsSource="{Binding i_listv}" FontFamily="{StaticResource GlobalFont}" Background="#0A2647" VirtualizingPanel.ScrollUnit="Pixel" Foreground="White" BorderThickness="0" SelectionMode="Single" Margin="0,34,0,109" HorizontalAlignment="Center" Width="267">
@@ -179,13 +180,18 @@
             <Button x:Name="btnFilter" Click="btnFilter_Click" ToolTip="Filter" Content="{StaticResource ResourceKey=FilterIcon}" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" Height="20" Margin="227,10,0,0" VerticalAlignment="Top" Width="26"/>
         </Grid>
 
-        <Grid x:Name="CommandBar" Margin="267,0,0,0" Height="109" VerticalAlignment="Bottom">
+        <Grid x:Name="CommandBar" Margin="267,0,0,0" Height="109" VerticalAlignment="Bottom" Background="Transparent">
+            <Rectangle Margin="-6,0,0,0">
+                <Rectangle.Fill>
+                    <SolidColorBrush x:Name="SolidCommandBrush" Color="#0A2647" Opacity="0.6"/>
+                </Rectangle.Fill>
+            </Rectangle>
             <Button x:Name="btnPlay" Style="{StaticResource ResourceKey=DisableHighlight}" MouseEnter="btnPlay_MouseEnter" MouseLeave="btnPlay_MouseLeave" Click="btnPlay_Click" Content="Play" Background="Green" Margin="0,0,0,-3" FontSize="50" Foreground="White" FontFamily="Rubik Light" FontWeight="DemiBold" BorderThickness="0" HorizontalAlignment="Right" Width="246"/>
             <Button x:Name="btnEdit" Content="{StaticResource ResourceKey=SettingIcon}" Click="btnEdit_Click" ToolTip="Edit this game" Style="{StaticResource ResourceKey=CircleBorder}" Margin="0,0,274,0" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" HorizontalAlignment="Right" Width="60" Height="61" VerticalAlignment="Center"/>
             <Label Content="Playtime" FontSize="18" FontFamily="Rubik Light" FontWeight="SemiBold" Foreground="White" Margin="0,6,339,0" HorizontalAlignment="Right" Width="113" Height="31" VerticalAlignment="Top"/>
             <Label x:Name="label_Playtime" Content="0h 0m 0s" FontSize="12" FontFamily="Rubik Light" Foreground="White" Margin="0,27,339,0" HorizontalAlignment="Right" Width="112" Height="24" VerticalAlignment="Top"/>
             <Label Content="Last Played" FontSize="16" FontFamily="Rubik Light" FontWeight="Bold" Foreground="White" Margin="0,0,339,24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="113"/>
-            <Label x:Name="label_LastPlayed" Content="01-12-2077" FontSize="12" FontFamily="Rubik Light" Foreground="White" Margin="0,0,339,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="113"/>
+            <Label x:Name="label_LastPlayed" Content="01 May, 2077" FontSize="12" FontFamily="Rubik Light" Foreground="White" Margin="0,0,339,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="113"/>
             <Image Source="/TMP.NET;component/Resources/time_icon.png" Margin="0,10,450,0" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Right" Width="37" Height="37" VerticalAlignment="Top"/>
             <Image Source="/TMP.NET;component/Resources/calender_icon.png" Margin="0,0,454,15" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Right" Width="31" Height="33" VerticalAlignment="Bottom"/>
             <Viewbox Margin="8,9,502,62" HorizontalAlignment="Left">

@@ -134,12 +134,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using TMP.NET.Modules;
 using TMP.NET.WindowUI;
+using TMP.NET.WindowUI.ContentWindow;
 
 namespace TMP.NET
 {
@@ -160,6 +162,8 @@ namespace TMP.NET
         private readonly string _Config = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\config.cfg");
 #endif
 
+        //private ObservableCollection<GameListContentControl> _contentControll = new ObservableCollection<GameListContentControl>();
+        private GameListContentControl _contentControl;
         private ObservableCollection<GameList> i_List = new ObservableCollection<GameList>();
         public ObservableCollection<GameList> i_listv { get { return i_List; } }
 
@@ -169,6 +173,7 @@ namespace TMP.NET
 
         private Config setting = new Config();
         private Config.FilterConfig filterSetting = new Config.FilterConfig();
+        private Config.ContentConfig cc = new Config.ContentConfig();
 
         private DateTime _dateTime;
         private GUIDGen _gen = new GUIDGen();
@@ -182,6 +187,7 @@ namespace TMP.NET
 
         private GameList _currentSelectedList;
         private GameList _lastSelectedList;
+        private GameList _runningGame;
 
         public enum AppState
         {
@@ -223,6 +229,7 @@ namespace TMP.NET
             }
 
             setting.filterConfig = filterSetting;
+            setting.contentConfig = cc;
 
             File.WriteAllText(filePath, JsonConvert.SerializeObject(setting, Formatting.Indented));
         }
@@ -264,6 +271,7 @@ namespace TMP.NET
                     setting = JsonConvert.DeserializeObject<Config>(File.ReadAllText(filePath));
 
                     filterSetting = setting.filterConfig;
+                    cc = setting.contentConfig;
                 }
             }
             catch (Exception ex)
@@ -305,6 +313,7 @@ namespace TMP.NET
         {
             DeserializeData(_ListData_n);
             DeserializeSetting(_Config);
+            _contentControl = new GameListContentControl(setting, cc);
 
             this.Width = setting.Width;
             this.Height = setting.Height;
@@ -315,6 +324,9 @@ namespace TMP.NET
 
             if (setting.EnabledRichPresence)
                 discord.Initialize();
+
+            if (setting.LowSpecMode)
+                SolidCommandBrush.Opacity = 1;
         }
 
         /// <summary>
@@ -333,16 +345,49 @@ namespace TMP.NET
                 if (!CaptureHandler.IsWindowFocused(proc))
                     return;
 
-                string imagePath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\Track My Playtime";
+                // Check if game title has invalid char or not
+                var title = _runningGame.GameName;
+                string invalidChars = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+                foreach (char invalidChar in invalidChars)
+                {
+                    title = title.Replace(invalidChar.ToString(), "");
+                }
+
+                string imagePath = Path.Combine(setting.ScreenshotFolderDir, title);
 
                 if (!Directory.Exists(imagePath))
                     Directory.CreateDirectory(imagePath);
 
                 // Save captured image.
-                string fileName = $"{proc.ProcessName} {DateTime.Now.ToString("dd-MMMM-yyyy HH.mm.ss")}.png";
+                string fileName = $"{proc.ProcessName} {DateTime.Now.ToString("dd MMM, yyyy HH.mm.ss")}.png";
                 string combined = Path.Combine(imagePath, fileName);
-                var img = CaptureHandler.TakeScreenshot(proc);
-                img.Save(combined, ImageFormat.Png);
+
+                // Capture screen based on what API is used
+                if(setting.ScreenshotApiIndex == 0)
+                {
+                    var img = CaptureHandler.TakeScreenshot(proc);
+                    img.Save(combined, ImageFormat.Png);
+                }
+                else if(setting.ScreenshotApiIndex == 1)
+                {
+                    var img = ScreenCapture.CaptureDesktop();
+                    img.Save(combined, ImageFormat.Png);
+                }
+                else
+                {
+                    var img = ScreenCapture.CaptureActiveWindow();
+                    img.Save(combined, ImageFormat.Png);
+                }
+
+
+                /*var img = ScreenCapture.CaptureWindow(proc.MainWindowHandle);
+                img.Save(combined, ImageFormat.Png);*/
+
+                /*var img = DXScreenCapture.CaptureProcessScreenshot(proc);
+                img.Save(combined, ImageFormat.Png);*/
+
+                /*DXScreenCapture dxsc = new DXScreenCapture();
+                dxsc.SCaptureEx();*/
 
                 // Play capture sfx.
                 var str = Application.GetResourceStream(new Uri("pack://application:,,,/TMP.NET;component/Resources/capture-sfx.wav")).Stream;
@@ -699,7 +744,7 @@ namespace TMP.NET
                                 label_LastPlayed.Content = "Yesterday";
 
                             else
-                                label_LastPlayed.Content = game.Tracker.Date.ToString("dd-MM-yyyy");
+                                label_LastPlayed.Content = game.Tracker.Date.ToString("dd MMM, yyyy");
 
                             var totalHours = game.Playtime.TotalHours;
                             var hours = (int)Math.Floor(totalHours);
@@ -821,6 +866,7 @@ namespace TMP.NET
 
                     proc.Start();
 
+                    _runningGame = list;
                     _dateTime = DateTime.Now;
                     list.Tracker = _dateTime;
                     updateTracker(list, selected);
@@ -890,6 +936,7 @@ namespace TMP.NET
 
                     proc.Start();
 
+                    _runningGame = l_gameList;
                     _dateTime = DateTime.Now;
                     l_gameList.Tracker = _dateTime;
                     updateTracker(l_gameList, selected);
@@ -931,7 +978,7 @@ namespace TMP.NET
 
                 l_gameList.Tracker = _dateTime;
 
-                if (setting.TimeTracking) // I forgot to implement this feature XD
+                if (setting.TimeTracking)
                     l_gameList.Playtime += ts;
 
                 // Update UI
@@ -975,11 +1022,6 @@ namespace TMP.NET
 
         private void LV_Selected(object sender, SelectionChangedEventArgs e)
         {
-            /*if (LV_List.SelectedItem == null)
-                btnEdit.IsEnabled = false;
-            else
-                btnEdit.IsEnabled = true;*/
-
             if (LV_List.SelectedItem != null)
             {
                 var l_gameList = (GameList)LV_List.SelectedItem;
@@ -988,10 +1030,9 @@ namespace TMP.NET
                 labelGameTitle.Text = l_gameList.GameName;
                 label_DevName.Text = l_gameList.GameDev;
 
-                if (l_gameList.BackgroundPath() == null)
-                    ArtworkImg.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
-                else
-                    ArtworkImg.Source = l_gameList.BackgroundPath();
+                _contentControl.DeInit();
+                _contentControl.Init(l_gameList);
+                ContentArea.Content = _contentControl;
 
                 updateTracker(l_gameList, LV_List.SelectedItem);
                 _lastSelectedList = l_gameList;
@@ -1023,6 +1064,8 @@ namespace TMP.NET
         {
             var form = new ListForms(false, null, null, setting); // Show form window
             form.Owner = this;
+            form.Width = 650;
+            form.Height = 620;
             var result = form.ShowDialog() ?? false; // save dialog result
             if (result)  // if dialog result is true then save all information and save it to Listview
             {
@@ -1044,6 +1087,25 @@ namespace TMP.NET
                 gl.BackgroundDir = form.imgDir;
                 gl.GUID = _gen.GenerateGUID(6, i_List);
                 gl.DateCreated = DateTime.Now;
+                gl.ReleaseDate = form.datePickerReleaseDate.SelectedDate ?? DateTime.MinValue;
+                gl.Description = form.GetFlowDocumentText(form.rtbDescription.Document);
+                gl.Tag = form.tbTag.Text.Split(',');
+                gl.Website = new string[3];
+
+                if (!string.IsNullOrEmpty(form.tbWebName1.Text) && !string.IsNullOrEmpty(form.tbWeb1.Text))
+                {
+                    gl.Website[0] = form.tbWebName1.Text + ";" + form.tbWeb1.Text;
+                }
+
+                if (!string.IsNullOrEmpty(form.tbWebName2.Text) && !string.IsNullOrEmpty(form.tbWeb2.Text))
+                {
+                    gl.Website[1] = form.tbWebName2.Text + ";" + form.tbWeb2.Text;
+                }
+
+                if (!string.IsNullOrEmpty(form.tbWebName3.Text) && !string.IsNullOrEmpty(form.tbWeb3.Text) && form.tbWeb3.IsEnabled)
+                {
+                    gl.Website[2] = form.tbWebName3.Text + ";" + form.tbWeb3.Text;
+                }
 
                 i_List.Add(gl);
 
@@ -1066,6 +1128,8 @@ namespace TMP.NET
             {
                 var form = new ListForms(true, _lastSelectedList, _currentSelectedList, setting);
                 form.Owner = this;
+                form.Width = 650;
+                form.Height = 620;
                 var res = form.ShowDialog() ?? false;
                 if (res)
                 {
@@ -1085,6 +1149,25 @@ namespace TMP.NET
                     gl.HideGameTitle = form.cbHideGameTitle.IsChecked ?? false;
                     gl.HideImageKey = form.cbHideImageKey.IsChecked ?? false;
                     gl.BackgroundDir = form.imgDir;
+                    gl.ReleaseDate = form.datePickerReleaseDate.SelectedDate ?? DateTime.MinValue;
+                    gl.Description = form.GetFlowDocumentText(form.rtbDescription.Document);
+                    gl.Tag = form.tbTag.Text.Split(',');
+                    gl.Website = new string[3];
+
+                    if (!string.IsNullOrEmpty(form.tbWebName1.Text) && !string.IsNullOrEmpty(form.tbWeb1.Text))
+                    {
+                        gl.Website[0] = form.tbWebName1.Text + ";" + form.tbWeb1.Text;
+                    }
+
+                    if (!string.IsNullOrEmpty(form.tbWebName2.Text) && !string.IsNullOrEmpty(form.tbWeb2.Text))
+                    {
+                        gl.Website[1] = form.tbWebName2.Text + ";" + form.tbWeb2.Text;
+                    }
+
+                    if (!string.IsNullOrEmpty(form.tbWebName3.Text) && !string.IsNullOrEmpty(form.tbWeb3.Text) && form.tbWeb3.IsEnabled)
+                    {
+                        gl.Website[2] = form.tbWebName3.Text + ";" + form.tbWeb3.Text;
+                    }
 
                     // Sort GameList
                     FilterSort();
@@ -1092,10 +1175,9 @@ namespace TMP.NET
                     labelGameTitle.Text = gl.GameName;
                     label_DevName.Text = gl.GameDev;
 
-                    if (gl.BackgroundPath() == null)
-                        ArtworkImg.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
-                    else
-                        ArtworkImg.Source = gl.BackgroundPath();
+                    // Refresh Content
+                    _contentControl.DeInit();
+                    _contentControl.Init(_lastSelectedList);
 
                     SerializeData(_ListData_n);
                 }
@@ -1104,8 +1186,10 @@ namespace TMP.NET
 
         private void btnSetting_Click(object sender, RoutedEventArgs e)
         {
-            SettingWindow form = new SettingWindow(setting);
+            SettingWindow form = new SettingWindow(setting, cc);
             form.Owner = this;
+            form.Height = 550;
+            form.Width = 450;
             var res = form.ShowDialog() ?? false;
             if (res)
             {
@@ -1124,6 +1208,10 @@ namespace TMP.NET
                         setting.AutoCheckUpdate = form.cbAutoCheckUpdate.IsChecked ?? true;
                         setting.UncompressedArtwork = form.cbUncompressedArtwork.IsChecked ?? false;
                         setting.EnabledScreenshot = form.cbEnableScreenshot.IsChecked ?? true;
+                        setting.LowSpecMode = form.cbLowSpecMode.IsChecked ?? false;
+                        setting.ScreenshotFolderDir = form.tbScreenshotDir.Text;
+                        setting.ScreenshotApiIndex = form.cboxScreenshotApiMethod.SelectedIndex;
+
                         SerializeSetting(_Config);
 
                         ProcessStartInfo Info = new ProcessStartInfo();
@@ -1146,9 +1234,17 @@ namespace TMP.NET
                 setting.AutoCheckUpdate = form.cbAutoCheckUpdate.IsChecked ?? true;
                 setting.UncompressedArtwork = form.cbUncompressedArtwork.IsChecked ?? false;
                 setting.EnabledScreenshot = form.cbEnableScreenshot.IsChecked ?? true;
+                setting.LowSpecMode = form.cbLowSpecMode.IsChecked ?? false;
+                setting.ScreenshotFolderDir = form.tbScreenshotDir.Text;
+                setting.ScreenshotApiIndex = form.cboxScreenshotApiMethod.SelectedIndex;
 
                 if (!setting.EnabledRichPresence)
                     discord.Deinitialize();
+
+                if (setting.LowSpecMode)
+                    SolidCommandBrush.Opacity = 1;
+                else
+                    SolidCommandBrush.Opacity = 0.6;
 
                 SerializeSetting(_Config);
             }
@@ -1419,7 +1515,7 @@ namespace TMP.NET
                 label_Playtime.Content = "0h 0m 0s";
                 label_LastPlayed.Content = "Never";
 
-                ArtworkImg.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
+                //ArtworkImg.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
 
                 SerializeData(_ListData_n);
                 return;
