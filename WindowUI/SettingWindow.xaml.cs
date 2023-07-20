@@ -16,17 +16,40 @@ namespace TMP.NET.WindowUI
         // Weight: 500
 
         Config setting;
+        Config.ContentConfig cc;
         AboutWindow aboutWindow;
         UpdateChecker _chk = new UpdateChecker();
-        public SettingWindow(Config setting)
+        private AdminChecker _adChk = new AdminChecker();
+
+        private double oldBackgroundOpacity;
+        private double oldBackgroundBlur;
+
+        private string[] screenshotApiList = { "User32 Extended", "User32 Full", "Legacy" };
+        private string screenshotApiToolTip = "Change screenshot API Mode\n\n- User32 Extended: The standard for capturing a process\n" +
+            "- User32 Full: Capture the entire screen\n- Legacy: Use this if you're having trouble with the User32 API\n\nKeep in mind that this screenshot feature is still not perfect and there are some games \nthat are not supported, especially DirectX games that run in fullscreen mode\n\nIf you get blackscreen on capture result," +
+            " why not try Legacy API mode?";
+        public SettingWindow(Config setting, Config.ContentConfig cc)
         {
             InitializeComponent();
+
             this.setting = setting;
+            this.cc = cc;
+
+            foreach(var item in screenshotApiList)
+            {
+                cboxScreenshotApiMethod.Items.Add(item);
+            }
+
+            cboxScreenshotApiMethod.ToolTip = screenshotApiToolTip;
+
             FirstLoad();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
+            cc.BackgroundBlurValue = oldBackgroundBlur;
+            cc.BackgroundOpacityValue = oldBackgroundOpacity;
+
             this.DialogResult = false;
         }
 
@@ -80,6 +103,13 @@ namespace TMP.NET.WindowUI
             cbAutoCheckUpdate.IsChecked = setting.AutoCheckUpdate;
             cbUncompressedArtwork.IsChecked = setting.UncompressedArtwork;
             cbEnableScreenshot.IsChecked = setting.EnabledScreenshot;
+            sliderBackgroundBlur.Value = cc.BackgroundBlurValue;
+            sliderBackgroundOpacity.Value = cc.BackgroundOpacityValue;
+            cbLowSpecMode.IsChecked = setting.LowSpecMode;
+            oldBackgroundBlur = cc.BackgroundBlurValue;
+            oldBackgroundOpacity = cc.BackgroundOpacityValue;
+            tbScreenshotDir.Text = setting.ScreenshotFolderDir;
+            cboxScreenshotApiMethod.SelectedIndex = setting.ScreenshotApiIndex;
         }
 
         private void btnBrowseX86_Click(object sender, RoutedEventArgs e)
@@ -159,6 +189,42 @@ namespace TMP.NET.WindowUI
                 if (aboutWindow.WindowState == WindowState.Minimized)
                     aboutWindow.WindowState = WindowState.Normal;
                 aboutWindow.Focus();
+            }
+        }
+
+        private void sliderBackgroundBlur_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            labelBackgroundBlurValue.Content = Math.Round(sliderBackgroundBlur.Value) + "%";
+            cc.BackgroundBlurValue = Math.Round(sliderBackgroundBlur.Value);
+        }
+
+        private void sliderBackgroundOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            labelBackgroundOpacityValue.Content = Math.Round(sliderBackgroundOpacity.Value * 100) + "%";
+            cc.BackgroundOpacityValue = sliderBackgroundOpacity.Value;
+        }
+
+        private void btnScreenshotBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new FolderPicker();
+
+            if (Directory.Exists(Path.GetDirectoryName(tbScreenshotDir.Text)))
+                dialog.InputPath = Path.GetDirectoryName(tbScreenshotDir.Text);
+            else
+                dialog.InputPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+
+            dialog.Multiselect = false;
+            dialog.Title = "Select screenshot output directory";
+            dialog.OkButtonLabel = "Select";
+            if(dialog.ShowDialog() == true)
+            {
+                if (!_adChk.CheckWritePermission(dialog.ResultPath))
+                {
+                    MessageBox.Show("This directory cannot be used, please select another folder", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                tbScreenshotDir.Text = dialog.ResultPath + @"\Track My Playtime";
             }
         }
     }
