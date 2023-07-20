@@ -1,17 +1,20 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using TMP.NET.Modules;
-using System.Windows.Interop;
-using System.Linq;
 
 namespace TMP.NET.WindowUI
 {
@@ -30,6 +33,47 @@ namespace TMP.NET.WindowUI
         private GameList _currentSelectedList;
 
         private GUIDGen.ShortcutCreator _gen = new GUIDGen.ShortcutCreator();
+
+        [DllImport("user32.dll")]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        private const int GWL_STYLE = -16;
+        private const int WS_MAXIMIZEBOX = 0x10000;
+
+        private void Window_SourceInitialized(object sender, EventArgs e)
+        {
+            var hwnd = new WindowInteropHelper((Window)sender).Handle;
+            var value = GetWindowLong(hwnd, GWL_STYLE);
+            SetWindowLong(hwnd, GWL_STYLE, (int)(value & ~WS_MAXIMIZEBOX));
+        }
+
+        public string GetFlowDocumentText(FlowDocument flowDocument)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            int totalParagraphs = flowDocument.Blocks.Count;
+
+            for (int i = 0; i < totalParagraphs; i++)
+            {
+                Block block = flowDocument.Blocks.ElementAt(i);
+                if (block is Paragraph paragraph)
+                {
+                    foreach (Inline inline in paragraph.Inlines)
+                    {
+                        if (inline is Run run)
+                            stringBuilder.Append(run.Text);
+                    }
+
+                    if (i < totalParagraphs - 1)
+                        stringBuilder.AppendLine();
+                }
+            }
+
+            return stringBuilder.ToString();
+        }
+
 
         public Bitmap ResizeImage(Image image, int width, int height)
         {
@@ -269,7 +313,7 @@ namespace TMP.NET.WindowUI
                 var chk = new BitmapImage(new Uri(ofd.FileName));
                 if (chk.PixelWidth > 1920 || chk.PixelHeight > 1080)
                 {
-                    if(!setting.UncompressedArtwork)
+                    if (!setting.UncompressedArtwork)
                         imgBitmap = ToBitmapImage(ResizeImage(BitmapImage2Bitmap(chk), 1280, 720));
                     else
                         imgBitmap = chk;
@@ -331,6 +375,9 @@ namespace TMP.NET.WindowUI
         private GameList v_GL;
 
         #region EDIT
+        /// <summary>
+        /// Load value
+        /// </summary>
         private void LoadValue()
         {
             tbGameTitle.Text = v_GL.GameName;
@@ -357,6 +404,69 @@ namespace TMP.NET.WindowUI
             tbImageKey.Text = v_GL.ImageKey;
             cbHideGameTitle.IsChecked = v_GL.HideGameTitle;
             cbHideImageKey.IsChecked = v_GL.HideImageKey;
+            rtbDescription.AppendText(v_GL.Description);
+
+            if(v_GL.Tag != null)
+                tbTag.Text = string.Join(",", v_GL.Tag);
+
+            if (v_GL.ReleaseDate == DateTime.MinValue)
+                datePickerReleaseDate.SelectedDate = null;
+            else
+                datePickerReleaseDate.SelectedDate = v_GL.ReleaseDate;
+
+            if(v_GL.Website != null)
+            {
+                string[] webNames = new string[v_GL.Website.Length];
+                string[] webUrls = new string[v_GL.Website.Length];
+                for(int i = 0; i < v_GL.Website.Length; i++)
+                {
+                    if (!string.IsNullOrEmpty(v_GL.Website[i]))
+                    {
+                        string[] parts = v_GL.Website[i].Split(';');
+
+                        if (parts.Length == 2)
+                        {
+                            webNames[i] = parts[0];
+                            webUrls[i] = parts[1];
+                        }
+                        else
+                        {
+                            Console.WriteLine("Unsupported format" + i);
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(v_GL.Website[0]))
+                {
+                    tbWebName1.Text = webNames[0];
+                    tbWeb1.Text = webUrls[0];
+                }
+                else
+                {
+                    tbWebName1.Text = string.Empty;
+                    tbWeb1.Text = string.Empty;
+                }
+                if (!string.IsNullOrEmpty(v_GL.Website[1]))
+                {
+                    tbWebName2.Text = webNames[1];
+                    tbWeb2.Text = webUrls[1];
+                }
+                else
+                {
+                    tbWebName2.Text = string.Empty;
+                    tbWeb2.Text = string.Empty;
+                }
+                if (!string.IsNullOrEmpty(v_GL.Website[2]))
+                {
+                    tbWebName3.Text = webNames[2];
+                    tbWeb3.Text = webUrls[2];
+                }
+                else
+                {
+                    tbWebName3.Text = string.Empty;
+                    tbWeb3.Text = string.Empty;
+                }
+            }
         }
         #endregion
 
@@ -364,7 +474,7 @@ namespace TMP.NET.WindowUI
         {
             imgDir = null;
             imgBitmap = null;
-            imgArtwork.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/add-image.png"));
+            imgArtwork.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
             imgOverlay.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/overlay.png"));
         }
 
@@ -398,7 +508,129 @@ namespace TMP.NET.WindowUI
                 }
             }
 
+            if(string.IsNullOrEmpty(tbWebName1.Text) && !string.IsNullOrEmpty(tbWeb1.Text) || string.IsNullOrEmpty(tbWebName2.Text) && !string.IsNullOrEmpty(tbWeb2.Text) || string.IsNullOrEmpty(tbWebName3.Text) && !string.IsNullOrEmpty(tbWeb3.Text))
+            {
+                MessageBox.Show("Please enter website name\t", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(tbWeb1.Text))
+            {
+                if (!Uri.IsWellFormedUriString(tbWeb1.Text, UriKind.Absolute))
+                {
+                    MessageBox.Show($"Website \"{tbWebName1.Text}\" has a invalid url\t", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(tbWeb2.Text))
+            {
+                if (!Uri.IsWellFormedUriString(tbWeb2.Text, UriKind.Absolute))
+                {
+                    MessageBox.Show($"Website \"{tbWebName2.Text}\" has a invalid url\t", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(tbWeb3.Text))
+            {
+                if (!Uri.IsWellFormedUriString(tbWeb3.Text, UriKind.Absolute))
+                {
+                    MessageBox.Show($"Website \"{tbWebName3.Text}\" has a invalid url\t", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+            }
+
             return true;
+        }
+
+        private void btnTagSelector_Click(object sender, RoutedEventArgs e)
+        {
+            // This function is on development and may not be implement for this time
+            TagSelectorWindow form = new TagSelectorWindow();
+            form.ShowDialog();
+        }
+
+        private void tbWebName1_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tbWebName1.Text) && !string.IsNullOrEmpty(tbWeb1.Text))
+            {
+                tbWebName2.IsEnabled = true;
+                tbWeb2.IsEnabled = true;
+
+                if (!string.IsNullOrEmpty(tbWebName2.Text) && !string.IsNullOrEmpty(tbWeb2.Text))
+                {
+                    tbWebName3.IsEnabled = true;
+                    tbWeb3.IsEnabled = true;
+                }
+                else
+                {
+                    tbWebName3.IsEnabled = false;
+                    tbWeb3.IsEnabled = false;
+                }
+            }
+            else
+            {
+                tbWebName2.IsEnabled = false;
+                tbWeb2.IsEnabled = false;
+                tbWebName3.IsEnabled = false;
+                tbWeb3.IsEnabled = false;
+            }
+        }
+
+        private void tbWeb1_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tbWebName1.Text) && !string.IsNullOrEmpty(tbWeb1.Text))
+            {
+                tbWebName2.IsEnabled = true;
+                tbWeb2.IsEnabled = true;
+
+                if (!string.IsNullOrEmpty(tbWebName2.Text) && !string.IsNullOrEmpty(tbWeb2.Text))
+                {
+                    tbWebName3.IsEnabled = true;
+                    tbWeb3.IsEnabled = true;
+                }
+                else
+                {
+                    tbWebName3.IsEnabled = false;
+                    tbWeb3.IsEnabled = false;
+                }
+            }
+            else
+            {
+                tbWebName2.IsEnabled = false;
+                tbWeb2.IsEnabled = false;
+                tbWebName3.IsEnabled = false;
+                tbWeb3.IsEnabled = false;
+            }
+        }
+
+        private void tbWebName2_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tbWebName2.Text) && !string.IsNullOrEmpty(tbWeb2.Text))
+            {
+                tbWebName3.IsEnabled = true;
+                tbWeb3.IsEnabled = true;
+            }
+            else
+            {
+                tbWebName3.IsEnabled = false;
+                tbWeb3.IsEnabled = false;
+            }
+        }
+
+        private void tbWeb2_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tbWebName2.Text) && !string.IsNullOrEmpty(tbWeb2.Text))
+            {
+                tbWebName3.IsEnabled = true;
+                tbWeb3.IsEnabled = true;
+            }
+            else
+            {
+                tbWebName3.IsEnabled = false;
+                tbWeb3.IsEnabled = false;
+            }
         }
     }
 }
