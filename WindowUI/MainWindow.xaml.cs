@@ -676,8 +676,12 @@ namespace TMP.NET
                     });
                 }
 
-                _contentControl.DeInit();
-                _contentControl.FreshInit();
+                if(LV_List.SelectedItem == null)
+                {
+                    _contentControl.DeInit();
+                    _contentControl.FreshInit();
+                }
+
                 ContentArea.Content = _contentControl;
 
                 if (!setting.FirstTimeInfo)
