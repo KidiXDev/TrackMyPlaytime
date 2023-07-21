@@ -16,7 +16,7 @@ namespace TMPUninstaller.GUI.ContentPage
         private string[] fileList =
         {
             "tmp.exe", "DiscordRPC.dll", "handler.exe", "log4net.dll", "Newtonsoft.Json.dll", "TMP.NET.exe.config",
-            "tmp.exe.config", "Microsoft.Toolkit.Uwp.Notifications.dll", "System.ValueTuple.dll"
+            "tmp.exe.config", "Microsoft.Toolkit.Uwp.Notifications.dll", "System.ValueTuple.dll", "VndbSharp.dll"
         };
 
         bool keepGameList, keepConfig;
