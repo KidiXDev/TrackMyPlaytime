@@ -14,7 +14,7 @@ namespace TMP.NET.WindowUI
             InitializeComponent();
 
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            labelVersion.Content = $"Version: v{version.Major}.{version.Minor}.{version.Build}";
+            labelVersion.Content = $"Version: v{version.Major}.{version.Minor}.{version.Build} beta";
 
         }
 

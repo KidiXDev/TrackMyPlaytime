@@ -37,7 +37,6 @@
                     Link
                 </Hyperlink>
             </TextBlock>
-            <Label Content="(Beta)" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Margin="225,10,0,0" VerticalAlignment="Top"/>
             <Label Content="Private beta build 7" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="10" HorizontalAlignment="Left" Margin="73,50,0,0" VerticalAlignment="Top"/>
         </Grid>
 
