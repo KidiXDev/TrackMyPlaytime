@@ -113,7 +113,24 @@
  *       
  *       New Minor Feature:
  *       - Added new Date Created sort menu
- *      
+ *       
+ *       [21 July 2023]
+ *       ==============
+ *       v2.0.0 beta
+ *       ============
+ *       MAJOR UPDATE
+ *       ============
+ *       New feature:
+ *       - New Home Screen UI Rework
+ *       You can now provide a description, game tag, release date, and link to a specific website, then display it to the library
+ *       - The level of opcity and the intensity of the blur on background image can be fully customized via the settings
+ *       - VNDB integrity support (Work in progress)
+ *       - Difference screenshot API
+ *       - Custom screenshot output directory
+ *       - Changed image artwork type from landscape to portrait
+ *       - Performance improvement
+ *       - Setting UI Rework
+ *       - Game setting UI Rework
 */
 
 using log4net;
