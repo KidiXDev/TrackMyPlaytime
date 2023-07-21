@@ -386,9 +386,6 @@ namespace TMP.NET
                 /*var img = DXScreenCapture.CaptureProcessScreenshot(proc);
                 img.Save(combined, ImageFormat.Png);*/
 
-                /*DXScreenCapture dxsc = new DXScreenCapture();
-                dxsc.SCaptureEx();*/
-
                 // Play capture sfx.
                 var str = Application.GetResourceStream(new Uri("pack://application:,,,/TMP.NET;component/Resources/capture-sfx.wav")).Stream;
                 SoundPlayer sp = new SoundPlayer(str);
@@ -661,6 +658,16 @@ namespace TMP.NET
                         await update.CheckForUpdateOnBackground();
                     });
                 }
+
+                _contentControl.DeInit();
+                _contentControl.FreshInit();
+                ContentArea.Content = _contentControl;
+
+                if (!setting.FirstTimeInfo)
+                {
+                    MessageBox.Show("You are using the beta version of \"Track My Playtime\",\nIf you encounter a problem, you can immediately report it to the issues section.\n\nYour feedback has a big impact here...", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    setting.FirstTimeInfo = true;
+                }
             }));
         }
 
@@ -755,7 +762,6 @@ namespace TMP.NET
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
                     log.Error("Failed to update tracker", ex);
                 }
             });
@@ -1032,7 +1038,6 @@ namespace TMP.NET
 
                 _contentControl.DeInit();
                 _contentControl.Init(l_gameList);
-                ContentArea.Content = _contentControl;
 
                 updateTracker(l_gameList, LV_List.SelectedItem);
                 _lastSelectedList = l_gameList;
@@ -1114,6 +1119,9 @@ namespace TMP.NET
 
 
                 LV_List.SelectedItem = gl;
+
+                if(!btnEdit.IsEnabled)
+                    btnEdit.IsEnabled = true;
 
                 SerializeData(_ListData_n);
 
@@ -1510,12 +1518,15 @@ namespace TMP.NET
                 // Sort GameList
                 FilterSort();
 
+                // Refresh content page
+                _contentControl.FreshInit();
+
                 labelGameTitle.Text = "Game Title";
                 label_DevName.Text = "Developer Name";
                 label_Playtime.Content = "0h 0m 0s";
                 label_LastPlayed.Content = "Never";
 
-                //ArtworkImg.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/no-image.png"));
+                btnEdit.IsEnabled = false;
 
                 SerializeData(_ListData_n);
                 return;

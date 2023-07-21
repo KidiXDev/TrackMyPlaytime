@@ -128,7 +128,7 @@
             </Setter>
         </Style>
 
-        <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
+        <Style x:Key="TextBoxStyle" TargetType="{x:Type Control}">
             <Setter Property="ContextMenu">
                 <Setter.Value>
                     <ContextMenu Style="{StaticResource {x:Type ContextMenu}}">

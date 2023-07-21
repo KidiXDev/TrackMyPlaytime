@@ -632,5 +632,10 @@ namespace TMP.NET.WindowUI
                 tbWeb3.IsEnabled = false;
             }
         }
+
+        private void btnMetadataDownload_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("This feature is work on progress...\nStay tune on next update!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 }

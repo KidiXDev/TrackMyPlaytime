@@ -1,0 +1,157 @@
+﻿<UserControl x:Class="TMP.NET.WindowUI.ContentWindow.GameListContentControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TMP.NET.WindowUI.ContentWindow"
+             xmlns:ext="clr-namespace:TMP.NET.Modules"
+             mc:Ignorable="d" 
+             d:DesignHeight="770" d:DesignWidth="1280">
+    <UserControl.Resources>
+        <!--Add shadow effect-->
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="2" Direction="330" BlurRadius="3" Opacity="0.3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border Background="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" CornerRadius="10"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="rectangle" Background="#0D1430" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}" CornerRadius="8"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="rectangle" Value="#0D1430"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="true">
+                                <Setter Property="Background" TargetName="rectangle" Value="#0D1430"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Background Image  Opacity="{Binding Path=(local:GameListContentControl.BGOpacity)}"-->
+        <Image x:Name="BackgroundImg" Source="/TMP.NET;component/Resources/no-img-added.png" Stretch="UniformToFill" Opacity="{Binding Path=(local:GameListContentControl.BGOpacity)}">
+            <Image.Effect>
+                <BlurEffect Radius="{Binding BGBlur}"/>
+            </Image.Effect>
+        </Image>
+        <!-- Vignette Effect -->
+        <Image Source="E:\Visual Studio Project\Asset\vignette.png" Margin="-2,0,688,0" Stretch="Fill" Opacity="0.5"/>
+        <!-- <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="-2,0,10,122" VirtualizingPanel.ScrollUnit="Pixel"> -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="-2,0,10,122" VirtualizingPanel.ScrollUnit="Pixel">
+            <ScrollViewer.Resources>
+                <Style TargetType="{x:Type ScrollBar}">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                <Grid x:Name="Bg" SnapsToDevicePixels="true">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                        <RowDefinition Height="0.00001*"/>
+                                        <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                    </Grid.RowDefinitions>
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
+                                    <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
+                                        </Track.DecreaseRepeatButton>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
+                                        </Track.IncreaseRepeatButton>
+                                        <Track.Thumb>
+                                            <Thumb Style="{StaticResource ScrollBarThumbVertical}" Margin="2"/>
+                                        </Track.Thumb>
+                                    </Track>
+                                </Grid>
+
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ScrollViewer.Resources>
+            <Grid>
+                <TextBlock Height="33" Margin="341,52,0,0" FontSize="24" TextWrapping="Wrap" Text="Description" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" Width="168"/>
+                <ScrollViewer Margin="341,85,65,0" VerticalScrollBarVisibility="Hidden" VirtualizingPanel.ScrollUnit="Pixel" Height="303" VerticalAlignment="Top" SnapsToDevicePixels="True" UseLayoutRounding="True">
+                    <TextBlock x:Name="tblockDescription" TextWrapping="Wrap" TextAlignment="Left" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light">
+                    Those who live on the island of Kagamijima are used to the sight of the ‘large cherry blossom that floats in the sky’ rising out of the middle of the Mikagami lake. Such beautiful scenery had been the lone draw for the island, but lately a new sightseeing spot was born with the opening of a theme park based on Wonderland. The main character and humanoid AI Alice charms everyone with her lovely smile, while artificial faeries dance around the island like fireflies.
+<LineBreak/><LineBreak/>
+Ichito, a young man with an incomplete fairy tale-like skill.
+Nino, his mischievous younger sister who won’t show her true side to anyone else.
+Sorane, his neighbour that loves the siblings a lot and helps them out all the time.
+Hiyori, his trouble-making classmate who has a surprisingly good record in helping people fall in love.
+Shiina, a taciturn transfer student with a sharp tongue.
+Suginami, his buddy who’s always aware of the latest mysteries.
+Then there was Arisu, an ojousama with the same name as the protagonist from Wonderland.
+<LineBreak/><LineBreak/>
+As the sakura petals flutter and artificial faeries dance, a tender love story begins on the island closest to the sky.
+                    </TextBlock>
+                </ScrollViewer>
+                <TextBlock Margin="45,437,0,0" FontSize="24" TextWrapping="Wrap" Text="Tags:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold" HorizontalAlignment="Left" Width="157" Height="28" VerticalAlignment="Top"/>
+                <TextBlock x:Name="tblockTag" Margin="45,470,0,0" FontSize="14" TextWrapping="Wrap" Text="Visual Novel, Drama, Romance, Nakige" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" HorizontalAlignment="Left" Width="244" Height="50" VerticalAlignment="Top"/>
+                <Grid Margin="45,52,0,0" HorizontalAlignment="Left" Width="258" Height="363" VerticalAlignment="Top">
+                    <Border>
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="20" Direction="330" ShadowDepth="10" Color="Black"/>
+                        </Border.Effect>
+                        <Image x:Name="CoverImg" Source="/TMP.NET;component/Resources/no-img-added.png" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+                    </Border>
+                </Grid>
+                <TextBlock Margin="45,529,0,0" FontSize="24" TextWrapping="Wrap" Text="Release date:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold" HorizontalAlignment="Left" Width="169" Height="28" VerticalAlignment="Top"/>
+                <TextBlock x:Name="tblockReleaseDate" Margin="45,559,0,0" FontSize="14" TextWrapping="Wrap" Text="12 Apr, 2019" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" HorizontalAlignment="Left" Width="251" Height="20" VerticalAlignment="Top"/>
+                <TextBlock Margin="359,437,0,0" FontSize="24" TextWrapping="Wrap" Text="Website:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold" HorizontalAlignment="Left" Width="169" Height="28" VerticalAlignment="Top"/>
+
+                <Grid HorizontalAlignment="Left" Margin="359,470,0,0" Width="327" Height="84" VerticalAlignment="Top">
+                    <TextBlock HorizontalAlignment="Left" Margin="0,0,0,68">
+                        <Hyperlink x:Name="web1link" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="None">
+                            <TextBlock x:Name="web1Text" Text="VNDB" Foreground="White" FontSize="14" TextWrapping="Wrap" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" TextDecorations="Underline"/>
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="0,26,0,42">
+                        <Hyperlink x:Name="web2link" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="None">
+                            <TextBlock x:Name="web2Text" Text="Official Web" Foreground="White" FontSize="14" TextWrapping="Wrap" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" TextDecorations="Underline"/>
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Margin="0,52,0,16">
+                        <Hyperlink x:Name="web3link" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="None">
+                            <TextBlock x:Name="web3Text" Text="Steam" Foreground="White" FontSize="14" TextWrapping="Wrap" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" TextDecorations="Underline"/>
+                        </Hyperlink>
+                    </TextBlock>
+                </Grid>
+                <Grid x:Name="screenshotGrid" HorizontalAlignment="Left" Height="268" Margin="36,592,0,0" VerticalAlignment="Top" Width="350">
+                    <TextBlock Margin="10,9,0,0" FontSize="24" TextWrapping="Wrap" Text="Screenshots:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold" HorizontalAlignment="Left" Width="168" Height="28" VerticalAlignment="Top"/>
+                    <Image x:Name="ssArea1" Source="C:\Users\ACER\Pictures\Track My Playtime\koikake 18-Juni-2023 00-14-45.png" HorizontalAlignment="Left" Height="165" Margin="10,0,0,0" VerticalAlignment="Center" Width="290"/>
+                    <Image x:Name="ssArea2" Source="C:\Users\ACER\Pictures\Track My Playtime\koikake 18-Juni-2023 00-27-30.png" HorizontalAlignment="Left" Height="165" Margin="24,64,0,0" VerticalAlignment="Top" Width="290"/>
+                    <Image x:Name="ssArea3" Source="C:\Users\ACER\Pictures\Track My Playtime\koikake 19-Juni-2023 23-35-52.png" HorizontalAlignment="Left" Height="165" Margin="38,77,0,0" VerticalAlignment="Top" Width="292"/>
+                    <TextBlock Cursor="Hand" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Margin="154,246,0,0" FontSize="14" TextWrapping="Wrap" Text="Open Screenshot Folder" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="SemiBold" HorizontalAlignment="Left" Width="169" Height="19" VerticalAlignment="Top"/>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

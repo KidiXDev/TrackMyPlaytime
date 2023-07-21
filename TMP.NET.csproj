@@ -60,6 +60,15 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\AdminChecker.cs" />
+    <Compile Include="Modules\FolderPicker.cs" />
+    <Compile Include="Modules\ScreenCapture.cs" />
+    <Compile Include="WindowUI\TagSelectorWindow.xaml.cs">
+      <DependentUpon>TagSelectorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowUI\VNDBMetadataDownloaderWindow.xaml.cs">
+      <DependentUpon>VNDBMetadataDownloaderWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -79,6 +88,9 @@
     <Compile Include="WindowUI\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowUI\ContentWindow\GameListContentControl.xaml.cs">
+      <DependentUpon>GameListContentControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowUI\ExportWindow.xaml.cs">
       <DependentUpon>ExportWindow.xaml</DependentUpon>
     </Compile>
@@ -92,6 +104,10 @@
       <DependentUpon>SettingWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="WindowUI\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowUI\ContentWindow\GameListContentControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -129,6 +145,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WindowUI\SettingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowUI\TagSelectorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowUI\VNDBMetadataDownloaderWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -234,6 +258,9 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
+    <PackageReference Include="VndbSharp">
+      <Version>1.1.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\capture-sfx.wav" />
@@ -252,6 +279,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\folder_open_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\no-img-added.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

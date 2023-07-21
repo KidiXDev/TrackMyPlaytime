@@ -1,0 +1,27 @@
+﻿<Window x:Class="TMP.NET.WindowUI.VNDBMetadataDownloaderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TMP.NET.WindowUI"
+        mc:Ignorable="d"
+        Background="#0A2647"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
+        Title="VNDBMetadataDownloaderWindow" Height="450" Width="600">
+    <Grid>
+        <Grid HorizontalAlignment="Center" Height="414" VerticalAlignment="Center" Width="580">
+            <ListView HorizontalAlignment="Center" Height="328" Margin="0,10,0,0" VerticalAlignment="Top" Width="560" d:ItemsSource="{d:SampleData ItemCount=5}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <TextBox HorizontalAlignment="Left" Height="22" Margin="10,381,0,0" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" BorderThickness="0" VerticalAlignment="Top" Width="358"/>
+            <Button x:Name="btnFind" Content="Find" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="378,0,0,10" Padding="0,0,0,2" HorizontalAlignment="Left" Width="90" Height="24" VerticalAlignment="Bottom"/>
+            <Button x:Name="btnCancel" Content="Cancel" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="479,0,0,10" Padding="0,0,0,2" HorizontalAlignment="Left" Width="91" Height="24" VerticalAlignment="Bottom"/>
+        </Grid>
+
+    </Grid>
+</Window>
