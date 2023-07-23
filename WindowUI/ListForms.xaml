@@ -114,7 +114,7 @@
                     <Label Content="Metadata" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="18" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                     <Separator HorizontalAlignment="Left" Height="1" Margin="10,42,0,0" VerticalAlignment="Top" Width="89"/>
                     <Label Content="Description:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="25" Margin="10,56,0,0" VerticalAlignment="Top" Width="135"/>
-                    <RichTextBox x:Name="rtbDescription" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="187" Margin="16,86,0,0" VerticalAlignment="Top" BorderThickness="0" FontSize="14" Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Width="357">
+                    <RichTextBox x:Name="rtbDescription" ToolTip="Enter game description" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="187" Margin="16,86,0,0" VerticalAlignment="Top" BorderThickness="0" FontSize="14" Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Width="357">
                         <RichTextBox.Resources>
                             <Style TargetType="{x:Type Paragraph}">
                                 <Setter Property="Margin" Value="0"/>
@@ -152,7 +152,7 @@
                         <Separator Background="Gray" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                     </StackPanel>
                     <Separator HorizontalAlignment="Center" Height="10" Margin="0,478,0,0" VerticalAlignment="Top" Width="570"/>
-                    <DatePicker x:Name="datePickerReleaseDate" Height="26" Style="{StaticResource RoundedBorder}" FontSize="12" Margin="0,330,53,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="230"/>
+                    <DatePicker x:Name="datePickerReleaseDate" ToolTip="Game release date" Height="26" Style="{StaticResource RoundedBorder}" FontSize="12" Margin="0,330,53,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="230"/>
                     <Label Content="Release Date:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" Height="24" Margin="0,306,153,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="134"/>
                     <Label Content="Website:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="24" Margin="12,368,0,0" VerticalAlignment="Top" Width="68"/>
                     <TextBox x:Name="tbWebName1" ToolTip="Web Name" TextChanged="tbWebName1_TextChanged" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="64,400,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="121"/>

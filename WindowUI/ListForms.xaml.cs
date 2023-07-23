@@ -635,7 +635,26 @@ namespace TMP.NET.WindowUI
 
         private void btnMetadataDownload_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("This feature is work on progress...\nStay tune on next update!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            var form = new VNDBMetadataDownloaderWindow();
+            var res = form.ShowDialog() ?? false;
+            if (res)
+            {
+                tbGameTitle.Text = form.GameTitle;
+                tbDeveloper.Text = form.Developer;
+                rtbDescription.Document.Blocks.Clear();
+                rtbDescription.AppendText(form.Description);
+                tbTag.Text = "Visual Novel";
+                imgBitmap = new BitmapImage(new Uri(form.ImageURL));
+                imgOverlay.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/overlay2.png"));
+                imgArtwork.Source = imgBitmap;
+                DateTime rel = DateTime.Parse(form.ReleaseDate);
+                Console.WriteLine("RELEASE DATE: " + form.ReleaseDate);
+                datePickerReleaseDate.SelectedDate = rel;
+                tbWebName1.Text = "VNDB";
+                tbWeb1.Text = form.Web1;
+                tbWebName2.Text = "Official Web";
+                tbWeb2.Text = form.Web2;
+            }
         }
     }
 }

@@ -4,23 +4,132 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TMP.NET.WindowUI"
+        xmlns:local2="clr-namespace:TMP.NET.Modules"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Background="#0A2647"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="CanResize"
-        Title="VNDBMetadataDownloaderWindow" Height="450" Width="600">
+        SizeToContent="WidthAndHeight"
+        ResizeMode="CanMinimize"
+        Title="VNDB Metadata Downloader" Height="450" Width="600">
+    <Window.Resources>
+        <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Background" Value="#0A2647"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border Background="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" CornerRadius="10"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="rectangle" Background="#0D1430" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}" CornerRadius="8"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="rectangle" Value="#0D1430"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="true">
+                                <Setter Property="Background" TargetName="rectangle" Value="#0D1430"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid HorizontalAlignment="Center" Height="414" VerticalAlignment="Center" Width="580">
-            <ListView HorizontalAlignment="Center" Height="328" Margin="0,10,0,0" VerticalAlignment="Top" Width="560" d:ItemsSource="{d:SampleData ItemCount=5}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn/>
-                    </GridView>
-                </ListView.View>
+            <ListView x:Name="lv_list" MouseDoubleClick="lv_list_MouseDoubleClick" HorizontalAlignment="Center" Height="328" Margin="0,10,0,0" VerticalAlignment="Top" Width="560" d:ItemsSource="{d:SampleData ItemCount=5}" FontFamily="{StaticResource GlobalFont}" Background="#0A2647" Foreground="White" BorderThickness="1" VirtualizingPanel.ScrollUnit="Pixel">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Kolom Pertama (Gambar) -->
+                            <Image Source="{Binding CoverURL}" Width="72" Height="100" Stretch="UniformToFill" Grid.RowSpan="2"/>
+
+                            <!-- Kolom Kedua (TextBlock) -->
+                            <TextBlock Text="{Binding Title}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" />
+                            <TextBlock Text="{Binding OriginalTitle}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-35,0,0" />
+                            <TextBlock Text="{Binding VNID}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-15,0,0" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.Resources>
+                    <ContextMenu x:Key="ItemContextMenu" FontFamily="{StaticResource GlobalFont}">
+                        <MenuItem x:Name="ctxSelect" Header="Select this item" Click="ctxSelect_Click">
+                            <MenuItem.Icon>
+                                <Image Width="15" Height="15" Source="/TMP.NET;component/Resources/import_icon.png" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+
+                    <Style TargetType="{x:Type ScrollBar}">
+                        <Setter Property="Background" Value="#0A2647"/>
+                        <Setter Property="BorderBrush" Value="#0A2647"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                    <Grid x:Name="Bg" SnapsToDevicePixels="true">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                            <RowDefinition Height="0.00001*"/>
+                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
+                                        <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
+                                            <Track.DecreaseRepeatButton>
+                                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
+                                            </Track.DecreaseRepeatButton>
+                                            <Track.IncreaseRepeatButton>
+                                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
+                                            </Track.IncreaseRepeatButton>
+                                            <Track.Thumb>
+                                                <Thumb Style="{StaticResource ScrollBarThumbVertical}" Margin="2"/>
+                                            </Track.Thumb>
+                                        </Track>
+                                    </Grid>
+
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.Resources>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}" >
+                        <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.Style>
+                    <Style TargetType="ListView">
+                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+                    </Style>
+                </ListView.Style>
             </ListView>
-            <TextBox HorizontalAlignment="Left" Height="22" Margin="10,381,0,0" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" BorderThickness="0" VerticalAlignment="Top" Width="358"/>
-            <Button x:Name="btnFind" Content="Find" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="378,0,0,10" Padding="0,0,0,2" HorizontalAlignment="Left" Width="90" Height="24" VerticalAlignment="Bottom"/>
-            <Button x:Name="btnCancel" Content="Cancel" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="479,0,0,10" Padding="0,0,0,2" HorizontalAlignment="Left" Width="91" Height="24" VerticalAlignment="Bottom"/>
+            <TextBox x:Name="tbSearch" HorizontalAlignment="Left" Height="22" Margin="10,381,0,0" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" FontFamily="{StaticResource GlobalFont}" FontSize="18" BorderThickness="0" VerticalAlignment="Top" Width="358"/>
+            <Button x:Name="btnFind" Click="btnFind_Click" Content="Find" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="378,0,0,10" Padding="0,0,0,2" HorizontalAlignment="Left" Width="90" Height="24" VerticalAlignment="Bottom"/>
+            <Button x:Name="btnCancel" Click="btnCancel_Click" Content="Cancel" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="479,0,0,10" Padding="0,0,0,2" HorizontalAlignment="Left" Width="91" Height="24" VerticalAlignment="Bottom"/>
+            <TextBlock Text="{Binding Path=(local:VNDBMetadataDownloaderWindow.CurrentStatus)}" Foreground="White" HorizontalAlignment="Center" Margin="0,360,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="560"/>
+            <TextBlock Text="Double click to select" Foreground="White" TextAlignment="Right" HorizontalAlignment="Center" Margin="0,343,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="560"/>
         </Grid>
 
     </Grid>
