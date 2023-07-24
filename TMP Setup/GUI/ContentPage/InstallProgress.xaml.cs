@@ -18,10 +18,11 @@ namespace TMP_Setup.GUI.ContentPage
         string dir;
         bool type;
         bool createShortcut;
+        bool createFolder;
 
         private RegisterProgram _reg = new RegisterProgram();
 
-        public InstallProgress(string dir, bool type, bool createDesktop)
+        public InstallProgress(string dir, bool type, bool createDesktop, bool createStartMenuFolder)
         {
             InitializeComponent();
 
@@ -29,6 +30,7 @@ namespace TMP_Setup.GUI.ContentPage
             this.dir = dir;
             this.type = type;
             this.createShortcut = createDesktop;
+            this.createFolder = createStartMenuFolder;
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -59,6 +61,12 @@ namespace TMP_Setup.GUI.ContentPage
                 {
                     Directory.CreateDirectory(dir);
                 }
+
+                if (System.IO.File.Exists(dir + "\\tmp.exe"))
+                    System.IO.File.Delete(dir + "\\tmp.exe");
+
+                if (System.IO.File.Exists(dir + "\\tmp.exe.config"))
+                    System.IO.File.Delete(dir + "\\tmp.exe.config");
 
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 using (Stream resourceStream = assembly.GetManifestResourceStream("TMP_Setup.Resources.tmp.zip"))
@@ -104,26 +112,55 @@ namespace TMP_Setup.GUI.ContentPage
 
                 if (type)
                 {
-                    _reg.RegisterCurrentUser(dir + "\\tmp.exe");
-                    _reg.RegisterCurrentUserUninstaller(dir + "\\tmp.exe", dir, dir + "\\uninstall.exe");
+                    _reg.RegisterCurrentUser(dir + "\\TMP.NET.exe");
+                    _reg.RegisterCurrentUserUninstaller(dir + "\\TMP.NET.exe", dir, dir + "\\uninstall.exe");
                 }
                 else
                 {
                     _reg.RegisterAllUser(dir + "\\tmp.exe");
-                    _reg.RegisterAllUserUninstaller(dir + "\\tmp.exe", dir, dir + "\\uninstall.exe");
+                    _reg.RegisterAllUserUninstaller(dir + "\\TMP.NET.exe", dir, dir + "\\uninstall.exe");
                 }
 
                 if(createShortcut)
                 {
-                    string targetExePath = dir + "\\tmp.exe";
+                    string targetExePath = dir + "\\TMP.NET.exe";
                     string shortcutPath;
-                    string iconPath = dir + "\\tmp.exe";
+                    string iconPath = dir + "\\TMP.NET.exe";
                     if (type)
                         shortcutPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Track My Playtime.lnk";
                     else
                         shortcutPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory) + "\\Track My Playtime.lnk";
 
                     CreateShortcut(targetExePath, shortcutPath, iconPath, null);
+                }
+
+                if (createFolder)
+                {
+                    string targetExePath = dir + "\\TMP.NET.exe";
+                    string targetUninstallerExePath = dir + "\\uninstall.exe";
+                    string shortcutPath;
+                    string shortcutUninstallerPath;
+                    string iconPath = dir + "\\TMP.NET.exe";
+                    string iconUninstallerPath = dir + "\\uninstall.exe";
+                    if (type)
+                    {
+                        if(!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu) + "\\Programs\\KidiXDev"))
+                            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu) + "\\Programs\\KidiXDev");
+
+                        shortcutPath = Environment.GetFolderPath(Environment.SpecialFolder.StartMenu) + "\\Programs\\KidiXDev\\Track My Playtime.lnk";
+                        shortcutUninstallerPath = Environment.GetFolderPath(Environment.SpecialFolder.StartMenu) + "\\Programs\\KidiXDev\\uninstall.lnk";
+                    }
+                    else
+                    {
+                        if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + "\\Programs\\KidiXDev"))
+                            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + "\\Programs\\KidiXDev");
+
+                        shortcutPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + "\\Programs\\KidiXDev\\Track My Playtime.lnk";
+                        shortcutUninstallerPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + "\\Programs\\KidiXDev\\uninstall.lnk";
+                    }
+
+                    CreateShortcut(targetExePath, shortcutPath, iconPath, null);
+                    CreateShortcut(targetUninstallerExePath, shortcutUninstallerPath, iconUninstallerPath, null);
                 }
 
                 Dispatcher.Invoke(() =>

@@ -106,12 +106,12 @@ namespace TMP_Setup.GUI.ContentPage
         {
             if (!ProcessChecker())
                 return;
-            this.NavigationService.Navigate(new InstallProgress(InstallDir, currentUser, cboxCreateShortcut.IsChecked ?? true));
+            this.NavigationService.Navigate(new InstallProgress(InstallDir, currentUser, cboxCreateShortcut.IsChecked ?? true, cboxCreateStartMenuFolder.IsChecked ?? true));
         }
 
         private bool ProcessChecker()
         {
-            var process = Process.GetProcessesByName("tmp");
+            var process = Process.GetProcessesByName("TMP.NET");
             if (process.Length > 0)
             {
                 MessageBox.Show("Please close \"Track My Playtime\" First.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);

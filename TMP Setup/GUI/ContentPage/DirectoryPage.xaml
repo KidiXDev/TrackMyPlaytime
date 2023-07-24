@@ -10,11 +10,7 @@
       Title="DirectoryPage">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="7*"/>
-            <ColumnDefinition Width="493*"/>
-        </Grid.ColumnDefinitions>
-        <Grid HorizontalAlignment="Left" Height="300" VerticalAlignment="Center" Width="480" Grid.Column="1" Margin="3,0,0,0">
+        <Grid HorizontalAlignment="Center" Height="300" VerticalAlignment="Center" Width="480">
             <Grid HorizontalAlignment="Center" Height="163" Margin="0,10,0,0" VerticalAlignment="Top" Width="460">
                 <TextBox x:Name="tbInstallDir" Foreground="Black" Text="{Binding InstallDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=RoundedBorder}" BorderThickness="0" FontSize="16" Height="22" Margin="10,93,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="356"/>
                 <Button x:Name="btnBrowse" Click="btnBrowse_Click" Content="Browse" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderThickness="0" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=ButtonBasic}" Height="22" Margin="371,93,0,0" VerticalAlignment="Top" Width="79"/>
@@ -24,6 +20,7 @@
             </Grid>
             <Grid HorizontalAlignment="Center" Height="85" Margin="0,178,0,0" VerticalAlignment="Top" Width="460">
                 <CheckBox x:Name="cboxCreateShortcut" Content="Create Shortcut"  IsChecked="True" BorderThickness="0" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <CheckBox x:Name="cboxCreateStartMenuFolder" Content="Create start menu folder"  IsChecked="True" BorderThickness="0" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top"/>
             </Grid>
             <Button x:Name="btnInstall" Click="btnInstall_Click" Content="Install" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" BorderThickness="0" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=ButtonBasic}" Height="22" Margin="387,268,0,0" VerticalAlignment="Top" Width="83"/>
             <Label Content="*Requires at least 100MB of available free space" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="10" HorizontalAlignment="Left" Margin="10,271,0,0" VerticalAlignment="Top"/>
