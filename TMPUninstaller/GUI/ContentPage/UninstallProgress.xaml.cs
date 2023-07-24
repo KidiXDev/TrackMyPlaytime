@@ -16,7 +16,7 @@ namespace TMPUninstaller.GUI.ContentPage
         private string[] fileList =
         {
             "tmp.exe", "DiscordRPC.dll", "handler.exe", "log4net.dll", "Newtonsoft.Json.dll", "TMP.NET.exe.config",
-            "tmp.exe.config", "Microsoft.Toolkit.Uwp.Notifications.dll", "System.ValueTuple.dll", "VndbSharp.dll"
+            "tmp.exe.config", "Microsoft.Toolkit.Uwp.Notifications.dll", "System.ValueTuple.dll", "VndbSharp.dll","TMP.NET.exe"
         };
 
         bool keepGameList, keepConfig;
@@ -88,11 +88,17 @@ namespace TMPUninstaller.GUI.ContentPage
                 {
                     if(File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Track My Playtime.lnk"))
                         File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Track My Playtime.lnk");
+
+                    if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu) + "\\Programs\\KidiXDev"))
+                        Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu) + "\\Programs\\KidiXDev", true);
                 }
                 else
                 {
                     if(File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory) + "\\Track My Playtime.lnk"))
                         File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory) + "\\Track My Playtime.lnk");
+
+                    if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + "\\Programs\\KidiXDev"))
+                        Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + "\\Programs\\KidiXDev", true);
                 }
 
                 Application.Current.Dispatcher.Invoke(() =>
