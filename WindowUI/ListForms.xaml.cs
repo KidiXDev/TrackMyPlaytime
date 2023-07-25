@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -642,7 +643,7 @@ namespace TMP.NET.WindowUI
                 tbGameTitle.Text = form.GameTitle;
                 tbDeveloper.Text = form.Developer;
                 rtbDescription.Document.Blocks.Clear();
-                rtbDescription.AppendText(form.Description);
+                rtbDescription.AppendText(GetFilteredString(RemoveTags(form.Description)));
                 tbTag.Text = "Visual Novel";
                 imgBitmap = new BitmapImage(new Uri(form.ImageURL));
                 imgOverlay.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/overlay2.png"));
@@ -655,6 +656,34 @@ namespace TMP.NET.WindowUI
                 tbWebName2.Text = "Official Web";
                 tbWeb2.Text = form.Web2;
             }
+        }
+
+        public string GetFilteredString(string input)
+        {
+            Regex regex = new Regex(@"\[url=([^]]+)\](.*?)\[/url\]");
+            string result = regex.Replace(input, "$2");
+            return result;
+        }
+
+        public string RemoveTags(string input)
+        {
+            // Define regex pattern for each tag
+            string[] tags = { @"\[b\](.*?)\[/b\]",
+                          @"\[i\](.*?)\[/i\]",
+                          @"\[u\](.*?)\[/u\]",
+                          @"\[s\](.*?)\[/s\]",
+                          @"\[spoiler\](.*?)\[/spoiler\]",
+                          @"\[quote\](.*?)\[/quote\]",
+                          @"\[raw\](.*?)\[/raw\]",
+                          @"\[code\](.*?)\[/code\]" };
+
+            // Remove all the tags from the input
+            foreach (string tag in tags)
+            {
+                input = Regex.Replace(input, tag, "$1");
+            }
+
+            return input;
         }
     }
 }
