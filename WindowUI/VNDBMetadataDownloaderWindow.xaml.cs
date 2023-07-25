@@ -77,7 +77,7 @@ namespace TMP.NET.WindowUI
             lv_list.ItemsSource = _result;
             _client = new Vndb();
 
-            CurrentStatus = "Welcome";
+            CurrentStatus = string.Empty;
         }
 
         public class VNResult
@@ -174,6 +174,9 @@ namespace TMP.NET.WindowUI
         {
             if (_client != null)
                 _client.Dispose();
+
+            if (_result != null)
+                _result.Clear();
 
             this.DialogResult = status;
             this.Close();
@@ -309,6 +312,14 @@ namespace TMP.NET.WindowUI
             if (item != null)
             {
                 DownloadMetadata(item);
+            }
+        }
+
+        private async void tbSearch_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == System.Windows.Input.Key.Return)
+            {
+                await FindVN();
             }
         }
     }

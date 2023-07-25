@@ -125,11 +125,11 @@
                     </Style>
                 </ListView.Style>
             </ListView>
-            <TextBox x:Name="tbSearch" HorizontalAlignment="Left" Height="22" Margin="10,381,0,0" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" FontFamily="{StaticResource GlobalFont}" FontSize="18" BorderThickness="0" VerticalAlignment="Top" Width="358"/>
+            <TextBox x:Name="tbSearch" KeyDown="tbSearch_KeyDown" HorizontalAlignment="Left" Height="22" Margin="10,381,0,0" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" FontFamily="{StaticResource GlobalFont}" FontSize="18" BorderThickness="0" VerticalAlignment="Top" Width="358"/>
             <Button x:Name="btnFind" Click="btnFind_Click" Content="Find" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="378,0,0,10" Padding="0,0,0,2" HorizontalAlignment="Left" Width="90" Height="24" VerticalAlignment="Bottom"/>
             <Button x:Name="btnCancel" Click="btnCancel_Click" Content="Cancel" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="479,0,0,10" Padding="0,0,0,2" HorizontalAlignment="Left" Width="91" Height="24" VerticalAlignment="Bottom"/>
-            <TextBlock Text="{Binding Path=(local:VNDBMetadataDownloaderWindow.CurrentStatus)}" Foreground="White" HorizontalAlignment="Center" Margin="0,360,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="560"/>
-            <TextBlock Text="Double click to select" Foreground="White" TextAlignment="Right" HorizontalAlignment="Center" Margin="0,343,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="560"/>
+            <TextBlock Text="{Binding Path=(local:VNDBMetadataDownloaderWindow.CurrentStatus)}" Foreground="White" HorizontalAlignment="Left" Margin="10,360,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="358"/>
+            <TextBlock Text="Double click to select" Foreground="White" TextAlignment="Right" HorizontalAlignment="Left" Margin="452,343,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="114"/>
         </Grid>
 
     </Grid>
