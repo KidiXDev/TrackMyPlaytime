@@ -143,6 +143,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Media;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -151,11 +152,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
 using TMP.NET.Modules;
 using TMP.NET.WindowUI;
 using TMP.NET.WindowUI.ContentWindow;
@@ -181,19 +179,19 @@ namespace TMP.NET
 
         //private ObservableCollection<GameListContentControl> _contentControll = new ObservableCollection<GameListContentControl>();
         private GameListContentControl _contentControl;
-        private ObservableCollection<GameList> i_List = new ObservableCollection<GameList>();
+        private ObservableCollection<GameList> i_List;
         public ObservableCollection<GameList> i_listv { get { return i_List; } }
 
-        private WindowExtension _wext;
+        private readonly WindowExtension _wext;
 
         private List<ImportList> importList;
 
-        private Config setting = new Config();
-        private Config.FilterConfig filterSetting = new Config.FilterConfig();
-        private Config.ContentConfig cc = new Config.ContentConfig();
+        private Config setting;
+        private Config.FilterConfig filterSetting;
+        private Config.ContentConfig cc;
 
         private DateTime _dateTime;
-        private GUIDGen _gen = new GUIDGen();
+        private readonly GUIDGen _gen = new GUIDGen();
 
         private Modules.DiscordRPC discord = new Modules.DiscordRPC();
 
@@ -255,48 +253,6 @@ namespace TMP.NET
         /// </summary>
         /// <param name="filePath"></param>
         /// <remarks><see langword="GameList"/> is <see cref="i_List"/>.</remarks>
-        private void DeserializeData(string filePath)
-        {
-            try
-            {
-                if (File.Exists(filePath))
-                {
-                    using (var m_FStream = new FileStream(filePath, FileMode.Open))
-                    {
-                        var m_BFormatter = new BinaryFormatter();
-                        i_List = (ObservableCollection<GameList>)m_BFormatter.Deserialize(m_FStream);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Failed to load Game List\nIt is possible that it is caused by a corrupted file\nInfo: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                log.Error("Failed to load Game List", ex);
-            }
-        }
-        /// <summary>
-        /// Used to load <see langword="Configuration"/> from specified directory <paramref name="filePath"/>.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <remarks>See also <see cref="Config"/>.</remarks>
-        private void DeserializeSetting(string filePath)
-        {
-            try
-            {
-                if (File.Exists(filePath))
-                {
-                    setting = JsonConvert.DeserializeObject<Config>(File.ReadAllText(filePath));
-
-                    filterSetting = setting.filterConfig;
-                    cc = setting.contentConfig;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Failed to load Setting\nIt is possible that it is caused by a corrupted file\nInfo: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                log.Error("Failed load setting", ex);
-            }
-        }
 
         private bool DeserializeImportList(string dir)
         {
@@ -328,8 +284,8 @@ namespace TMP.NET
         /// <remarks>This method used to run before <see cref="Window_Loaded(object, RoutedEventArgs)"/>.</remarks>
         private void FirstLoad()
         {
-            DeserializeData(_ListData_n);
-            DeserializeSetting(_Config);
+            //DeserializeData(_ListData_n);
+            //DeserializeSetting(_Config);
             _contentControl = new GameListContentControl(setting, cc);
 
             this.Width = setting.Width;
@@ -380,12 +336,12 @@ namespace TMP.NET
                 string combined = Path.Combine(imagePath, fileName);
 
                 // Capture screen based on what API is used
-                if(setting.ScreenshotApiIndex == 0)
+                if (setting.ScreenshotApiIndex == 0)
                 {
                     var img = CaptureHandler.TakeScreenshot(proc);
                     img.Save(combined, ImageFormat.Png);
                 }
-                else if(setting.ScreenshotApiIndex == 1)
+                else if (setting.ScreenshotApiIndex == 1)
                 {
                     var img = ScreenCapture.CaptureDesktop();
                     img.Save(combined, ImageFormat.Png);
@@ -594,10 +550,14 @@ namespace TMP.NET
                 return ((item as GameList).GameName.IndexOf(tbSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
-        public MainWindow()
+        public MainWindow(ObservableCollection<GameList> list, Config setting, Config.FilterConfig filterSetting, Config.ContentConfig cc)
         {
             InitializeComponent();
 
+            this.i_List = list;
+            this.setting = setting;
+            this.filterSetting = filterSetting;
+            this.cc = cc;
 
             this.Loaded += (s, e) =>
             {
@@ -667,16 +627,7 @@ namespace TMP.NET
                 else
                     btnEdit.IsEnabled = true;
 
-                if (setting.AutoCheckUpdate)
-                {
-                    Task.Run(async () =>
-                    {
-                        UpdateChecker update = new UpdateChecker();
-                        await update.CheckForUpdateOnBackground();
-                    });
-                }
-
-                if(LV_List.SelectedItem == null)
+                if (LV_List.SelectedItem == null)
                 {
                     _contentControl.DeInit();
                     _contentControl.FreshInit();
@@ -706,7 +657,7 @@ namespace TMP.NET
                 Modules.Keyboard.KeyboardHook.Stop();
 
                 if (setting.EnabledRichPresence)
-                    discord.updatePresence(null, null, "tmp_logo", "Track My Playtime");
+                    discord.ClearCurrentPresence();
 
                 if (ProcessExtension.IsRunning(proc))
                     proc.Kill();
@@ -735,7 +686,7 @@ namespace TMP.NET
         }
 
         #region UI Update & Process Logic
-        private void updateTracker(GameList game, object selected) // Update Date and Playtime UI
+        private void UpdateTracker(GameList game, object selected) // Update Date and Playtime UI
         {
             this.Dispatcher.Invoke(() =>
             {
@@ -788,7 +739,7 @@ namespace TMP.NET
             });
         }
 
-        private void updatePresenceOnPlay(GameList game)
+        private void UpdatePresenceOnPlay(GameList game)
         {
             if (!setting.EnabledRichPresence)
                 return;
@@ -799,28 +750,28 @@ namespace TMP.NET
 
             if (game.HideGameTitle && game.HideImageKey)
             {
-                discord.updatePresence("Playing a game", null, "tmp_logo", null);
+                discord.UpdatePresence("Playing a game", null, "tmp_logo", null);
             }
             else if (game.HideGameTitle)
             {
-                discord.updatePresence("Playing a game", null, imageKey, null, "tmp_logo", "Track My Playtime");
+                discord.UpdatePresence("Playing a game", null, imageKey, null, "tmp_logo", "Track My Playtime");
             }
             else if (game.HideImageKey)
             {
-                discord.updatePresence($"Playing {gameName}", null, "tmp_logo", null);
+                discord.UpdatePresence($"Playing {gameName}", null, "tmp_logo", null);
             }
             else
             {
                 if (!string.IsNullOrEmpty(game.ImageKey))
-                    discord.updatePresence($"Playing {gameName}", null, imageKey, gameName, "tmp_logo", trackMyPlaytime);
+                    discord.UpdatePresence($"Playing {gameName}", null, imageKey, gameName, "tmp_logo", trackMyPlaytime);
                 else
-                    discord.updatePresence($"Playing {gameName}", null, "tmp_logo", gameName);
+                    discord.UpdatePresence($"Playing {gameName}", null, "tmp_logo", gameName);
             }
         }
 
         private Process proc = new Process();
 
-        private void textractorExec(GameList game)
+        private void TextractorExec(GameList game)
         {
             new Thread(() =>
             {
@@ -891,23 +842,26 @@ namespace TMP.NET
                     if (!File.Exists(list.GamePath))
                         throw new FileNotFoundException($"Removed or Missing Program Directory:\n{list.GamePath}");
 
+                    if (!File.Exists(launcherHandlerDir))
+                        throw new FileNotFoundException($"Launcher Handler Executable not found.");
+
                     proc.Start();
 
                     _runningGame = list;
                     _dateTime = DateTime.Now;
                     list.Tracker = _dateTime;
-                    updateTracker(list, selected);
+                    UpdateTracker(list, selected);
 
                     timer.Start();
                     this.Dispatcher.Invoke(() =>
                     {
                         Title = $"Track My Playtime | Running: {list.GameName}";
-                        updatePresenceOnPlay(list);
+                        UpdatePresenceOnPlay(list);
 
                     });
                     state = AppState.Running;
 
-                    textractorExec(list);
+                    TextractorExec(list);
 
                     proc.WaitForExit();
                     timer.Stop();
@@ -940,7 +894,7 @@ namespace TMP.NET
                     list.Playtime += ts;
 
                 // Update UI
-                updateTracker(list, selected);
+                UpdateTracker(list, selected);
 
                 // Save changes
                 SerializeData(_ListData_n);
@@ -961,32 +915,58 @@ namespace TMP.NET
                     else
                         proc.StartInfo.Verb = string.Empty;
 
+                    // start process
                     proc.Start();
 
                     _runningGame = l_gameList;
                     _dateTime = DateTime.Now;
                     l_gameList.Tracker = _dateTime;
-                    updateTracker(l_gameList, selected);
+                    UpdateTracker(l_gameList, selected);
 
-                    timer.Start();
+                    timer.Start(); // start time tracking
                     this.Dispatcher.Invoke(() =>
                     {
                         Title = $"Track My Playtime | Running: {l_gameList.GameName}";
-                        updatePresenceOnPlay(l_gameList);
+                        UpdatePresenceOnPlay(l_gameList);
 
                     });
                     state = AppState.Running;
 
-                    textractorExec(l_gameList);
+                    // launch textractor
+                    TextractorExec(l_gameList);
 
                     proc.WaitForExit();
-                    timer.Stop();
+
+                    var procByName = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(l_gameList.GamePath));
+                    if (procByName.Length > 0)
+                    {
+                        proc = procByName.FirstOrDefault();
+                        proc.WaitForExit();
+                    }
+                    else
+                    {
+                        // some vn games sometimes not run with the main executable process, but with a child of the main executable with the ".log" extension
+                        // so in order to keep track of playtime, the process needs to be found and then wait for it to exit
+                        // if it still doesn't work then a Launcher Handler is needed to keep the time tracked
+                        var another = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(l_gameList.GamePath) + ".log");
+                        if (another.Length > 0)
+                        {
+                            proc = another.FirstOrDefault();
+                            proc.WaitForExit(); // wait for process to exit
+                        }
+                    }
+
+                    timer.Stop(); // stop time tracking
+
                     this.Dispatcher.Invoke(() =>
                     {
                         if (state == AppState.Idle)
                             return;
                         StateChecker();
                     });
+
+                    // dispose to clear memory
+                    proc.Dispose();
                 }
                 catch (Exception ex)
                 {
@@ -1009,7 +989,7 @@ namespace TMP.NET
                     l_gameList.Playtime += ts;
 
                 // Update UI
-                updateTracker(l_gameList, selected);
+                UpdateTracker(l_gameList, selected);
 
                 // Save changes
                 SerializeData(_ListData_n);
@@ -1026,6 +1006,7 @@ namespace TMP.NET
                 var timer = new Stopwatch();
 
                 _currentSelectedList = l_gameList;
+                proc = new Process();
 
                 if (!l_gameList.UseLauncherHandler)
                 {
@@ -1051,6 +1032,7 @@ namespace TMP.NET
         {
             if (LV_List.SelectedItem != null)
             {
+                btnEdit.IsEnabled = true;
                 var l_gameList = (GameList)LV_List.SelectedItem;
                 var selectedItem = LV_List.SelectedIndex;
 
@@ -1060,7 +1042,7 @@ namespace TMP.NET
                 _contentControl.DeInit();
                 _contentControl.Init(l_gameList);
 
-                updateTracker(l_gameList, LV_List.SelectedItem);
+                UpdateTracker(l_gameList, LV_List.SelectedItem);
                 _lastSelectedList = l_gameList;
                 setting.SelectedIndex = selectedItem;
             }
@@ -1141,13 +1123,19 @@ namespace TMP.NET
 
                 LV_List.SelectedItem = gl;
 
-                if(!btnEdit.IsEnabled)
+                if (!btnEdit.IsEnabled)
                     btnEdit.IsEnabled = true;
 
+                // Save
                 SerializeData(_ListData_n);
 
                 if (form.cbCreateShortcut.IsChecked ?? false)
                     form.CreateShortcut(gl);
+
+                // Clear memory
+                form.Close();
+                form = null;
+                System.GC.Collect();
             }
         }
 
@@ -1208,7 +1196,13 @@ namespace TMP.NET
                     _contentControl.DeInit();
                     _contentControl.Init(_lastSelectedList);
 
+                    // Save
                     SerializeData(_ListData_n);
+
+                    // Clear memory
+                    form.Close();
+                    form = null;
+                    System.GC.Collect();
                 }
             }
         }
