@@ -30,15 +30,19 @@ namespace TMP.NET.Modules
 
             _client.Initialize();
 
-            updatePresence(null, null, "tmp_logo", "Track My Playtime");
+            //updatePresence(null, null, "tmp_logo", "Track My Playtime");
         }
 
         public void Deinitialize()
         {
             try
             {
-                if(_client != null )
+                if(_client != null)
+                {
+                    _client.ClearPresence();
+                    _client.Deinitialize();
                     _client.Dispose();
+                }
             }
             catch (Exception ex)
             {
@@ -47,10 +51,11 @@ namespace TMP.NET.Modules
             }
         }
 
-        public void updatePresence(string details, string state)
+        public void UpdatePresence(string details, string state)
         {
             if (_client.IsDisposed)
                 return;
+
 
             _client.SetPresence(new RichPresence()
             {
@@ -63,7 +68,7 @@ namespace TMP.NET.Modules
             });
         }
 
-        public void updatePresence(string details, string state, string large_image_key, string large_image_text)
+        public void UpdatePresence(string details, string state, string large_image_key, string large_image_text)
         {
             if (_client.IsDisposed)
                 return;
@@ -84,7 +89,7 @@ namespace TMP.NET.Modules
             });
         }
 
-        public void updatePresence(string details, string state, string large_image_key, string large_image_text, string small_image_key, string small_image_text)
+        public void UpdatePresence(string details, string state, string large_image_key, string large_image_text, string small_image_key, string small_image_text)
         {
             if (_client.IsDisposed)
                 return;
@@ -105,6 +110,11 @@ namespace TMP.NET.Modules
                     Start = DateTime.UtcNow
                 }
             });
+        }
+
+        public void ClearCurrentPresence()
+        {
+            _client.ClearPresence();
         }
     }
 }
