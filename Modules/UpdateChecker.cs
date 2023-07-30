@@ -67,16 +67,17 @@ namespace TMP.NET.Modules
             }
         }
 
-        public async Task CheckForUpdateOnBackground()
+        public async Task<bool> CheckForUpdateOnBackground()
         {
             if (updateAvailable)
             {
-                return;
+                return true;
             }
 
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)");
+                client.Timeout = TimeSpan.FromSeconds(5000);
                 try
                 {
                     HttpResponseMessage hrm = await client.GetAsync(repoURL);
@@ -94,12 +95,15 @@ namespace TMP.NET.Modules
                     if (latestVersion > currentVersion)
                     {
                         updateAvailable = true;
-                        ShowUpdateNotification("Update is available", "Click this notification to visit the download page");
+                        return true;
                     }
+
+                    return false;
                 }
                 catch (Exception ex)
                 {
                     MainWindow.log.Warn("Checking update failed", ex);
+                    return false;
                 }
             }
         }
