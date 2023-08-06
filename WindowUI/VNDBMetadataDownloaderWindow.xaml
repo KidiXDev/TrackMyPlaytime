@@ -11,7 +11,7 @@
         WindowStartupLocation="CenterScreen"
         SizeToContent="WidthAndHeight"
         ResizeMode="CanMinimize"
-        Title="VNDB Metadata Downloader" Height="450" Width="600">
+        Title="VNDB Metadata Downloader" Height="500" Width="600">
     <Window.Resources>
         <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
             <Setter Property="OverridesDefaultStyle" Value="true"/>
@@ -49,87 +49,101 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Grid HorizontalAlignment="Center" Height="414" VerticalAlignment="Center" Width="580">
-            <ListView x:Name="lv_list" MouseDoubleClick="lv_list_MouseDoubleClick" HorizontalAlignment="Center" Height="328" Margin="0,10,0,0" VerticalAlignment="Top" Width="560" d:ItemsSource="{d:SampleData ItemCount=5}" FontFamily="{StaticResource GlobalFont}" Background="#0A2647" Foreground="White" BorderThickness="1" VirtualizingPanel.ScrollUnit="Pixel">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+        <Grid Margin="10,10,10,10">
+            <StackPanel>
+                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                    <TextBox Grid.Column="0" x:Name="tbSearch" Width="470" KeyDown="tbSearch_KeyDown" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" FontFamily="{StaticResource GlobalFont}" FontSize="18" BorderThickness="0" VerticalAlignment="Top"/>
+                    <Button Grid.Column="1" x:Name="btnFind" Margin="10,0,0,0" Click="btnFind_Click" Content="Find" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Padding="0,0,0,2" Height="24" Width="100" VerticalAlignment="Top"/>
+                </StackPanel>
+                <ListView x:Name="lv_list" MouseDoubleClick="lv_list_MouseDoubleClick" Height="328" Margin="0,20,0,0" VerticalAlignment="Top" d:ItemsSource="{d:SampleData ItemCount=5}" FontFamily="{StaticResource GlobalFont}" Background="#0A2647" Foreground="White" BorderThickness="1" VirtualizingPanel.ScrollUnit="Pixel">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                            <!-- Kolom Pertama (Gambar) -->
-                            <Image Source="{Binding CoverURL}" Width="72" Height="100" Stretch="UniformToFill" Grid.RowSpan="2"/>
+                                <!-- Kolom Pertama (Gambar) -->
+                                <Image Source="{Binding CoverURL}" Width="72" Height="100" Stretch="UniformToFill" Grid.RowSpan="2"/>
 
-                            <!-- Kolom Kedua (TextBlock) -->
-                            <TextBlock Text="{Binding Title}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" />
-                            <TextBlock Text="{Binding OriginalTitle}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-35,0,0" />
-                            <TextBlock Text="{Binding VNID}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-15,0,0" />
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <ListView.Resources>
-                    <ContextMenu x:Key="ItemContextMenu" FontFamily="{StaticResource GlobalFont}">
-                        <MenuItem x:Name="ctxSelect" Header="Select this item" Click="ctxSelect_Click">
-                            <MenuItem.Icon>
-                                <Image Width="15" Height="15" Source="/TMP.NET;component/Resources/import_icon.png" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
-                    </ContextMenu>
+                                <!-- Kolom Kedua (TextBlock) -->
+                                <TextBlock Text="{Binding Title}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" />
+                                <TextBlock Text="{Binding OriginalTitle}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-35,0,0" />
+                                <TextBlock Text="{Binding VNID}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-15,0,0" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.Resources>
+                        <ContextMenu x:Key="ItemContextMenu" FontFamily="{StaticResource GlobalFont}">
+                            <MenuItem x:Name="ctxSelect" Header="Select this item" Click="ctxSelect_Click">
+                                <MenuItem.Icon>
+                                    <Image Width="15" Height="15" Source="/TMP.NET;component/Resources/import_icon.png" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
 
-                    <Style TargetType="{x:Type ScrollBar}">
-                        <Setter Property="Background" Value="#0A2647"/>
-                        <Setter Property="BorderBrush" Value="#0A2647"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type ScrollBar}">
-                                    <Grid x:Name="Bg" SnapsToDevicePixels="true">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
-                                            <RowDefinition Height="0.00001*"/>
-                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
-                                        </Grid.RowDefinitions>
-                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
-                                        <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
-                                            <Track.DecreaseRepeatButton>
-                                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
-                                            </Track.DecreaseRepeatButton>
-                                            <Track.IncreaseRepeatButton>
-                                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                                            </Track.IncreaseRepeatButton>
-                                            <Track.Thumb>
-                                                <Thumb Style="{StaticResource ScrollBarThumbVertical}" Margin="2"/>
-                                            </Track.Thumb>
-                                        </Track>
-                                    </Grid>
-
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.Resources>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}" >
-                        <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <ListView.Style>
-                    <Style TargetType="ListView">
-                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-                    </Style>
-                </ListView.Style>
-            </ListView>
-            <TextBox x:Name="tbSearch" KeyDown="tbSearch_KeyDown" HorizontalAlignment="Left" Height="22" Margin="10,381,0,0" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" FontFamily="{StaticResource GlobalFont}" FontSize="18" BorderThickness="0" VerticalAlignment="Top" Width="358"/>
-            <Button x:Name="btnFind" Click="btnFind_Click" Content="Find" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="378,0,0,10" Padding="0,0,0,2" HorizontalAlignment="Left" Width="90" Height="24" VerticalAlignment="Bottom"/>
-            <Button x:Name="btnCancel" Click="btnCancel_Click" Content="Cancel" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="479,0,0,10" Padding="0,0,0,2" HorizontalAlignment="Left" Width="91" Height="24" VerticalAlignment="Bottom"/>
-            <TextBlock Text="{Binding Path=(local:VNDBMetadataDownloaderWindow.CurrentStatus)}" Foreground="White" HorizontalAlignment="Left" Margin="10,360,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="358"/>
-            <TextBlock Text="Double click to select" Foreground="White" TextAlignment="Right" HorizontalAlignment="Left" Margin="452,343,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="114"/>
+                        <Style TargetType="{x:Type ScrollBar}">
+                            <Setter Property="Background" Value="#0A2647"/>
+                            <Setter Property="BorderBrush" Value="#0A2647"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                        <Grid x:Name="Bg" SnapsToDevicePixels="true">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                                <RowDefinition Height="0.00001*"/>
+                                                <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                            </Grid.RowDefinitions>
+                                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
+                                            <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
+                                                <Track.DecreaseRepeatButton>
+                                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
+                                                </Track.DecreaseRepeatButton>
+                                                <Track.IncreaseRepeatButton>
+                                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
+                                                </Track.IncreaseRepeatButton>
+                                                <Track.Thumb>
+                                                    <Thumb Style="{StaticResource ScrollBarThumbVertical}" Margin="2"/>
+                                                </Track.Thumb>
+                                            </Track>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}" >
+                            <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.Style>
+                        <Style TargetType="ListView">
+                            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+                            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+                        </Style>
+                    </ListView.Style>
+                </ListView>
+                <TextBlock HorizontalAlignment="Right" Margin="0,10,15,0" Text="Double click to select" Foreground="White" TextAlignment="Right" TextWrapping="NoWrap" VerticalAlignment="Top" Width="114"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="65*"/>
+                        <ColumnDefinition Width="51*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="0,30,0,0" Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Grid.ColumnSpan="2">
+                        <ProgressBar x:Name="pbProgress" Margin="0,10,0,0" HorizontalAlignment="Left" Height="16" VerticalAlignment="Top" Width="130"/>
+                        <TextBlock Margin="10,10,0,0" Text="{Binding Path=(local:VNDBMetadataDownloaderWindow.CurrentStatus)}" d:Text="Downloading Metadata..." Foreground="White" HorizontalAlignment="Left" TextWrapping="NoWrap" VerticalAlignment="Top" Width="250"/>
+                    </StackPanel>
+                    <Grid Grid.Column="1" Margin="90,0,0,5">
+                        <Button x:Name="btnCancel" Margin="0,0,10,0" Click="btnCancel_Click" Content="Cancel" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" HorizontalAlignment="Right" Width="90" Height="24" VerticalAlignment="Bottom"/>
+                    </Grid>
+                </Grid>
+            </StackPanel>
         </Grid>
 
     </Grid>

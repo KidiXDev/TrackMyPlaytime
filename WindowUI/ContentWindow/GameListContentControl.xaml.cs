@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using TMP.NET.Modules;
@@ -202,11 +203,17 @@ namespace TMP.NET.WindowUI.ContentWindow
             }
 
             ssArea1.Source = null;
+            ssArea1.UpdateLayout();
             ssArea2.Source = null;
+            ssArea2.UpdateLayout();
             ssArea3.Source = null;
+            ssArea3.UpdateLayout();
 
             CoverImg.Source = null;
+            CoverImg.UpdateLayout();
             BackgroundImg.Source = null;
+            BackgroundImg.UpdateLayout();
+
             gl = null;
         }
 
@@ -248,7 +255,7 @@ namespace TMP.NET.WindowUI.ContentWindow
             {
                 From = 0,
                 To = cc.BackgroundOpacityValue,
-                Duration = TimeSpan.FromSeconds(1),
+                Duration = TimeSpan.FromSeconds(0.5),
                 EasingFunction = new CubicEase(),
             };
 
@@ -354,6 +361,16 @@ namespace TMP.NET.WindowUI.ContentWindow
         private System.Windows.Media.ImageSource LoadImage(string imagePath)
         {
             return new BitmapImage(new Uri(imagePath));
+        }
+
+        private void tblockVndbChars_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (Application.Current?.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.ContentArea.Content = new WikiContentControl(gl);
+                mainWindow.CommandBar.Visibility = Visibility.Collapsed;
+
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using TMP.NET.Modules;
+using TMP.NET.WindowUI.CustomDialogWindow;
 
 namespace TMP.NET.WindowUI
 {
@@ -32,6 +33,7 @@ namespace TMP.NET.WindowUI
         public bool isValid;
         private Config setting;
         private GameList _currentSelectedList;
+        public uint vnid { get; set; }
 
         private GUIDGen.ShortcutCreator _gen = new GUIDGen.ShortcutCreator();
 
@@ -211,12 +213,19 @@ namespace TMP.NET.WindowUI
             }
         }
 
+        /// <summary>
+        /// Check if Image URL is valid
+        /// </summary>
+        /// <param name="uriToImage"></param>
+        /// <returns><see langword="TRUE"/> if <paramref name="uriToImage"/> is valid image url</returns>
         public bool m_CheckImageURL(string uriToImage)
         {
+            HttpWebRequest request;
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create(uriToImage);
+                request = (HttpWebRequest)WebRequest.Create(uriToImage);
                 request.Method = "HEAD";
+                request.Timeout = 15000;
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
                     if (response.StatusCode == HttpStatusCode.OK && response.ContentType == "image/jpeg" ||
@@ -230,9 +239,18 @@ namespace TMP.NET.WindowUI
                     }
                 }
             }
-            catch
+            catch (TimeoutException ex)
+            {
+                MessageBox.Show($"Failed to check image key\nInfo: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            catch (Exception)
             {
                 return false;
+            }
+            finally
+            {
+                request = null;
             }
         }
         /// <summary>
@@ -292,6 +310,14 @@ namespace TMP.NET.WindowUI
             }
         }
 
+        private void DeInit()
+        {
+            imgArtwork.Source = null;
+            imgArtwork.UpdateLayout();
+            imgOverlay.Source = null;
+            imgOverlay.UpdateLayout();
+        }
+
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -331,6 +357,7 @@ namespace TMP.NET.WindowUI
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
+            DeInit();
             this.DialogResult = false;
         }
 
@@ -349,6 +376,14 @@ namespace TMP.NET.WindowUI
                 v_ProgramType = "x86";
 
             v_LaunchParameter = tbLaunchParameter.Text.Split(' ');
+
+            DeInit();
+
+
+            var wd = new DownloadMetadataDlgWindow(vnid);
+            wd.Owner = this;
+            wd.ShowDialog();
+
             this.DialogResult = true;
         }
 
@@ -406,6 +441,7 @@ namespace TMP.NET.WindowUI
             cbHideGameTitle.IsChecked = v_GL.HideGameTitle;
             cbHideImageKey.IsChecked = v_GL.HideImageKey;
             rtbDescription.AppendText(v_GL.Description);
+            vnid = v_GL.VNID;
 
             if(v_GL.Tag != null)
                 tbTag.Text = string.Join(",", v_GL.Tag);
@@ -643,7 +679,8 @@ namespace TMP.NET.WindowUI
                 tbGameTitle.Text = form.GameTitle;
                 tbDeveloper.Text = form.Developer;
                 rtbDescription.Document.Blocks.Clear();
-                rtbDescription.AppendText(GetFilteredString(RemoveTags(form.Description)));
+                if(!string.IsNullOrEmpty(form.Description))
+                    rtbDescription.AppendText(GetFilteredString(RemoveTags(form.Description)));
                 tbTag.Text = "Visual Novel";
                 imgBitmap = new BitmapImage(new Uri(form.ImageURL));
                 imgOverlay.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/overlay2.png"));
@@ -655,6 +692,7 @@ namespace TMP.NET.WindowUI
                 tbWeb1.Text = form.Web1;
                 tbWebName2.Text = "Official Web";
                 tbWeb2.Text = form.Web2;
+                vnid = form.VNID;
             }
         }
 

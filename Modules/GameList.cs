@@ -137,5 +137,6 @@ namespace TMP.NET.Modules
         public string[] Tag { get; set; }
         public string[] Website { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public uint VNID { get; set; }
     }
 }

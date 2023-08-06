@@ -13,8 +13,8 @@
         WindowStartupLocation="CenterScreen"
         Background="#0A2647"
         Icon="/TMP.NET;component/Resources/icon.ico"
-        MinHeight="627"
-        MinWidth="1115"
+        MinHeight="680"
+        MinWidth="1208"
         Loaded="Window_Loaded">
     <Window.Resources>
         <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
@@ -55,12 +55,6 @@
 
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
         <Grid Margin="267,0,0,0">
             <ContentControl x:Name="ContentArea"/>
             <!-- <Image x:Name="ArtworkImg" Source="/TMP.NET;component/Resources/no-image.png" Stretch="UniformToFill" StretchDirection="Both" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/> -->

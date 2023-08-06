@@ -55,7 +55,7 @@
 
     <Grid>
         <!-- Background Image  Opacity="{Binding Path=(local:GameListContentControl.BGOpacity)}"-->
-        <Image x:Name="BackgroundImg" Source="/TMP.NET;component/Resources/no-img-added.png" Stretch="UniformToFill" Opacity="{Binding Path=(local:GameListContentControl.BGOpacity)}">
+        <Image x:Name="BackgroundImg" Source="/TMP.NET;component/Resources/no-img-added.png" Stretch="UniformToFill" Opacity="{Binding Path=(local:GameListContentControl.BGOpacity)}" RenderOptions.BitmapScalingMode="LowQuality">
             <Image.Effect>
                 <BlurEffect Radius="{Binding BGBlur}"/>
             </Image.Effect>
@@ -127,7 +127,7 @@ As the sakura petals flutter and artificial faeries dance, a tender love story b
                 <TextBlock x:Name="tblockReleaseDate" Margin="45,559,0,0" FontSize="14" TextWrapping="Wrap" Text="12 Apr, 2019" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" HorizontalAlignment="Left" Width="251" Height="20" VerticalAlignment="Top"/>
                 <TextBlock Margin="359,437,0,0" FontSize="24" TextWrapping="Wrap" Text="Website:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold" HorizontalAlignment="Left" Width="169" Height="28" VerticalAlignment="Top"/>
 
-                <Grid HorizontalAlignment="Left" Margin="359,470,0,0" Width="327" Height="84" VerticalAlignment="Top">
+                <Grid HorizontalAlignment="Left" Margin="359,470,0,0" Width="150" Height="84" VerticalAlignment="Top">
                     <TextBlock HorizontalAlignment="Left" Margin="0,0,0,68">
                         <Hyperlink x:Name="web1link" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="None">
                             <TextBlock x:Name="web1Text" Text="VNDB" Foreground="White" FontSize="14" TextWrapping="Wrap" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" TextDecorations="Underline"/>
@@ -150,6 +150,10 @@ As the sakura petals flutter and artificial faeries dance, a tender love story b
                     <Image x:Name="ssArea2" Source="C:\Users\ACER\Pictures\Track My Playtime\koikake 18-Juni-2023 00-27-30.png" HorizontalAlignment="Left" Height="165" Margin="24,64,0,0" VerticalAlignment="Top" Width="290"/>
                     <Image x:Name="ssArea3" Source="C:\Users\ACER\Pictures\Track My Playtime\koikake 19-Juni-2023 23-35-52.png" HorizontalAlignment="Left" Height="165" Margin="38,77,0,0" VerticalAlignment="Top" Width="292"/>
                     <TextBlock Cursor="Hand" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Margin="154,246,0,0" FontSize="14" TextWrapping="Wrap" Text="Open Screenshot Folder" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="SemiBold" HorizontalAlignment="Left" Width="169" Height="19" VerticalAlignment="Top"/>
+                </Grid>
+                <TextBlock Margin="572,437,0,0" FontSize="24" TextWrapping="Wrap" Text="VNDB :" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold" HorizontalAlignment="Left" Width="170" Height="28" VerticalAlignment="Top"/>
+                <Grid HorizontalAlignment="Left" Margin="572,470,0,0" Width="150" Height="84" VerticalAlignment="Top">
+                    <TextBlock x:Name="tblockVndbChars" Foreground="White" FontSize="14" TextWrapping="Wrap" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" TextDecorations="Underline" MouseDown="tblockVndbChars_MouseDown" Text="Characters"/>
                 </Grid>
             </Grid>
         </ScrollViewer>

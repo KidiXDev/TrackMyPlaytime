@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using TMP.NET.Modules;
+using TMP.NET.Modules.Ext;
+using TMP.NET.WindowUI.SplashScreenWindow;
 
 namespace TMP.NET
 {
@@ -25,9 +27,11 @@ namespace TMP.NET
             {
                 var app = new App();
                 app.InitializeComponent();
-                var window = new MainWindow();
-                MainWindow.HandleParameter(args);
-                app.Run(window);
+                //var window = new MainWindow();
+                //MainWindow.HandleParameter(args);
+                //app.Run(window);
+                var splashScreen = new SplashScreenUI(args);
+                app.Run(splashScreen);
                 return;
             }
 
@@ -45,11 +49,14 @@ namespace TMP.NET
         void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             TMP.NET.MainWindow.log.Fatal("PROGRAM CRASH", e.Exception);
-            MessageBox.Show("Unhandled exception occurred: \n" + e.Exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("Unhandled exception occurred: \n" + e.Exception.Message, "Crash Report", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
+#if DEBUG
+            ConsoleManager.Show();
+#endif
             ToastNotificationManagerCompat.OnActivated += toastArgs =>
             {
                 ToastArguments args = ToastArguments.Parse(toastArgs.Argument);

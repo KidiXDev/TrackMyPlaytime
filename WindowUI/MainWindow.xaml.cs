@@ -180,6 +180,7 @@ namespace TMP.NET
         //private ObservableCollection<GameListContentControl> _contentControll = new ObservableCollection<GameListContentControl>();
         private GameListContentControl _contentControl;
         private ObservableCollection<GameList> i_List;
+        public GameListContentControl GetContentControl { get { return _contentControl; } }
         public ObservableCollection<GameList> i_listv { get { return i_List; } }
 
         private readonly WindowExtension _wext;
@@ -1099,6 +1100,7 @@ namespace TMP.NET
                 gl.Description = form.GetFlowDocumentText(form.rtbDescription.Document);
                 gl.Tag = form.tbTag.Text.Split(',');
                 gl.Website = new string[3];
+                gl.VNID = form.vnid;
 
                 if (!string.IsNullOrEmpty(form.tbWebName1.Text) && !string.IsNullOrEmpty(form.tbWeb1.Text))
                 {
@@ -1170,6 +1172,7 @@ namespace TMP.NET
                     gl.Description = form.GetFlowDocumentText(form.rtbDescription.Document);
                     gl.Tag = form.tbTag.Text.Split(',');
                     gl.Website = new string[3];
+                    gl.VNID = form.vnid;
 
                     if (!string.IsNullOrEmpty(form.tbWebName1.Text) && !string.IsNullOrEmpty(form.tbWeb1.Text))
                     {

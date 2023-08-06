@@ -30,6 +30,7 @@ namespace TMP.NET.WindowUI
         public string Web2 { get; set; }
         public string Web3 { get; set; }
         public string ReleaseDate { get; set; }
+        public uint VNID { get; set; }
 
         private enum ProgState
         {
@@ -73,6 +74,8 @@ namespace TMP.NET.WindowUI
             InitializeComponent();
 
             this.DataContext = this;
+
+            pbProgress.Visibility = Visibility.Collapsed;
 
             lv_list.ItemsSource = _result;
             _client = new Vndb();
@@ -245,7 +248,9 @@ namespace TMP.NET.WindowUI
                 timer.Start();
 
                 var resVn = await _client.GetVisualNovelAsync(VndbFilters.Id.Equals(item.vnid), VndbFlags.FullVisualNovel);
+                pbProgress.Value = 50;
                 var resRelease = await _client.GetReleaseAsync(VndbFilters.VisualNovel.Equals(item.vnid), VndbFlags.FullRelease);
+                pbProgress.Value = 100;
                 await GetProducers(item);
 
                 timer.Stop();
@@ -270,6 +275,7 @@ namespace TMP.NET.WindowUI
                 var vndbUrl = "https://vndb.org/v" + resVn.Select(x => x.Id).FirstOrDefault();
                 var officialWeb = resRelease.Select(x => x.Website).FirstOrDefault();
                 var imgUrl = resVn.Select(x => x.Image).FirstOrDefault();
+                var vnid = resVn.Select(x => x.Id).FirstOrDefault();
 
                 this.GameTitle = title;
                 this.Description = description;
@@ -277,6 +283,7 @@ namespace TMP.NET.WindowUI
                 this.ImageURL = imgUrl;
                 this.Web1 = $"{vndbUrl}";
                 this.Web2 = $"{officialWeb}";
+                this.VNID = vnid;
 
                 CurrentStatus = "Done";
 
@@ -301,6 +308,8 @@ namespace TMP.NET.WindowUI
                 return;
 
             _state = ProgState.Downloading;
+
+            pbProgress.Visibility = Visibility.Visible;
 
             CurrentStatus = "Downloading Metadata...";
             await BasicItem(item);

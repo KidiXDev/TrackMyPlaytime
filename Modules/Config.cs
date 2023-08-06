@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using TMP.NET.WindowUI.ContentWindow;
+using VndbSharp.Models.Common;
 
 namespace TMP.NET.Modules
 {
@@ -21,6 +22,7 @@ namespace TMP.NET.Modules
         private int _ScreenshotApiIndex = 0;
         private FilterConfig _FilterConfig = new FilterConfig();
         private ContentConfig _ContentConfig = new ContentConfig();
+        private VndbConfig _VndbConfig = new VndbConfig();
         private string _ScreenshotFolderDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Track My Playtime");
         private double _Width = 1280;
         private double _Height = 720;
@@ -45,6 +47,7 @@ namespace TMP.NET.Modules
         public FilterConfig filterConfig { get { return _FilterConfig; } set { _FilterConfig = value; } }
         public ContentConfig contentConfig { get { return _ContentConfig; } set { _ContentConfig = value; } }
         public bool FirstTimeInfo { get; set; }
+        public VndbConfig vndbConfig { get { return _VndbConfig; } set { _VndbConfig = value; } }
 
         /// <summary>
         /// Stores information for filter and sort settings in the library view
@@ -90,6 +93,13 @@ namespace TMP.NET.Modules
                     }
                 } 
             }
+        }
+
+        public class VndbConfig
+        {
+            private SpoilerLevel _SpoilerLevel = SpoilerLevel.Major;
+            public SpoilerLevel SpoilerSetting { get { return _SpoilerLevel; } set { _SpoilerLevel = value; } }
+            public bool ShowSexualTrait { get; set; }
         }
     }
 }

@@ -1,16 +1,16 @@
-﻿using System.Reflection;
-using System.Threading;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows;
-using TMP.NET.Modules;
-using System;
-using Newtonsoft.Json;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using TMP.NET.Properties;
-using System.Net;
 using System.Windows.Media.Animation;
+using TMP.NET.Modules;
+using TMP.NET.Modules.Ext;
 
 namespace TMP.NET.WindowUI.SplashScreenWindow
 {
@@ -105,8 +105,10 @@ namespace TMP.NET.WindowUI.SplashScreenWindow
 
             Task.Run(async () =>
             {
+                this.Dispatcher.Invoke(() => labelProgress.Content = "Verifying file integrity...");
+                await VerifyFileIntegrity();
+
                 this.Dispatcher.Invoke(() => labelProgress.Content = "Loading Configuration...");
-                await Task.Delay(300);
                 await LoadingSetting();
 
                 this.Dispatcher.Invoke(() => labelProgress.Content = "Checking for updates...");
@@ -115,7 +117,7 @@ namespace TMP.NET.WindowUI.SplashScreenWindow
                     await CheckForUpdate(); // Check for available update
                 }
 
-                this.Dispatcher.Invoke(() => labelProgress.Content = "Loading Data..." );
+                this.Dispatcher.Invoke(() => labelProgress.Content = "Loading Data...");
                 await LoadingData(); // Loading game library data
 
                 this.Dispatcher.Invoke(() =>
@@ -173,7 +175,8 @@ namespace TMP.NET.WindowUI.SplashScreenWindow
                 }
                 else
                 {
-                    this.Dispatcher.Invoke(() => {
+                    this.Dispatcher.Invoke(() =>
+                    {
                         labelProgress.Content = "Update Complete...";
                         pbProgress.Value = 0;
                         pbProgress.IsIndeterminate = true;
@@ -195,6 +198,32 @@ namespace TMP.NET.WindowUI.SplashScreenWindow
         private async Task LoadingSetting()
         {
             await DeserializeSetting(_Config);
+        }
+
+        private async Task VerifyFileIntegrity()
+        {
+            CheckIntegrity chk = new CheckIntegrity();
+            var missingFile = await chk.VerifyFileAsync();
+
+            if (missingFile.Count > 0)
+            {
+                Console.WriteLine(missingFile.Count + " Missing File Found!");
+                this.Dispatcher.Invoke(() => labelProgress.Content = "Repairing file integrity...");
+                await chk.RepairingMissingFile(missingFile, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\orig.zip"), AppDomain.CurrentDomain.BaseDirectory);
+
+                this.Dispatcher.Invoke(() => labelProgress.Content = "Verifying file integrity...");
+                await VerifyFileIntegrity();
+                this.Dispatcher.Invoke(() =>
+                {
+                    ProcessStartInfo Info = new ProcessStartInfo();
+                    Info.Arguments = "/C choice /C Y /N /D Y /T 2 & START \"\" \"" + Assembly.GetEntryAssembly().Location + "\"";
+                    Info.WindowStyle = ProcessWindowStyle.Hidden;
+                    Info.CreateNoWindow = true;
+                    Info.FileName = "cmd.exe";
+                    Process.Start(Info);
+                    Application.Current.Shutdown();
+                });
+            }
         }
     }
 }
