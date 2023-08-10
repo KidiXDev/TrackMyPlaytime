@@ -1,9 +1,11 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using TMP.NET.Modules;
+using VndbSharp.Models.Common;
 
 namespace TMP.NET.WindowUI
 {
@@ -17,6 +19,7 @@ namespace TMP.NET.WindowUI
 
         Config setting;
         Config.ContentConfig cc;
+        Config.VndbConfig vndb;
         AboutWindow aboutWindow;
         UpdateChecker _chk = new UpdateChecker();
         private AdminChecker _adChk = new AdminChecker();
@@ -28,17 +31,23 @@ namespace TMP.NET.WindowUI
         private string screenshotApiToolTip = "Change screenshot API Mode\n\n- User32 Extended: The standard for capturing a process\n" +
             "- User32 Full: Capture the entire screen\n- Legacy: Use this if you're having trouble with the User32 API\n\nKeep in mind that this screenshot feature is still not perfect and there are some games \nthat are not supported, especially DirectX games that run in fullscreen mode\n\nIf you get blackscreen on capture result," +
             " why not try Legacy API mode?";
-        public SettingWindow(Config setting, Config.ContentConfig cc)
+        public SettingWindow(Config setting, Config.ContentConfig cc, Config.VndbConfig vndb)
         {
             InitializeComponent();
 
             this.setting = setting;
             this.cc = cc;
+            this.vndb = vndb;
 
             foreach(var item in screenshotApiList)
             {
                 cboxScreenshotApiMethod.Items.Add(item);
             }
+
+            var spoilerLevelValue = Enum.GetValues(typeof(SpoilerLevel)).Cast<SpoilerLevel>();
+            cboxSpoilerSetting.ItemsSource = spoilerLevelValue;
+            //cboxSpoilerSetting.DisplayMemberPath = "Content";
+            //cboxSpoilerSetting.SelectedValue = "Content";
 
             cboxScreenshotApiMethod.ToolTip = screenshotApiToolTip;
 
@@ -110,6 +119,8 @@ namespace TMP.NET.WindowUI
             oldBackgroundOpacity = cc.BackgroundOpacityValue;
             tbScreenshotDir.Text = setting.ScreenshotFolderDir;
             cboxScreenshotApiMethod.SelectedIndex = setting.ScreenshotApiIndex;
+            cboxSpoilerSetting.SelectedValue = vndb.SpoilerSetting;
+            cbShowExplicitContent.IsChecked = vndb.ShowExplicitContent;
         }
 
         private void btnBrowseX86_Click(object sender, RoutedEventArgs e)
@@ -194,13 +205,13 @@ namespace TMP.NET.WindowUI
 
         private void sliderBackgroundBlur_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            labelBackgroundBlurValue.Content = Math.Round(sliderBackgroundBlur.Value) + "%";
+            labelBackgroundBlurValue.Text = Math.Round(sliderBackgroundBlur.Value) + "%";
             cc.BackgroundBlurValue = Math.Round(sliderBackgroundBlur.Value);
         }
 
         private void sliderBackgroundOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            labelBackgroundOpacityValue.Content = Math.Round(sliderBackgroundOpacity.Value * 100) + "%";
+            labelBackgroundOpacityValue.Text = Math.Round(sliderBackgroundOpacity.Value * 100) + "%";
             cc.BackgroundOpacityValue = sliderBackgroundOpacity.Value;
         }
 
