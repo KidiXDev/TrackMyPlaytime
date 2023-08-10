@@ -120,7 +120,7 @@ namespace TMP.NET.Modules
         // Summary:
         //     List of Visual Novels linked to this character
         [JsonProperty("vns")]
-        public ReadOnlyCollection<CustomVisualNovelMetadata> VisualNovels { get; set; }
+        public List<CustomVisualNovelMetadata> VisualNovels { get; set; }
 
         //
         // Summary:
@@ -133,6 +133,67 @@ namespace TMP.NET.Modules
         //     List of instances of this character (excluding the character entry itself)
         [JsonProperty("instances")]
         public ReadOnlyCollection<CharacterInstances> CharacterInstances { get; set; }
+
+        public int GroupOrder
+        {
+            get
+            {
+                switch (CharacterRole)
+                {
+                    case "Protagonist":
+                        return 1;
+                    case "Main Characters":
+                        return 2;
+                    case "Side Characters":
+                        return 3;
+                    case "Make an Appearance":
+                        return 4;
+                    case "No Role":
+                        return 5;
+                    default:
+                        return int.MaxValue;
+                }
+            }
+        }
+
+        public string CharacterRole 
+        {
+            get
+            {
+                foreach (var vn in VisualNovels)
+                {
+                    if (vn.Id.Equals(VNID))
+                    {
+                        if (vn.Role == VndbSharp.Models.Character.CharacterRole.Main)
+                            return "Protagonist";
+                        else if (vn.Role == VndbSharp.Models.Character.CharacterRole.Primary)
+                            return "Main Characters";
+                        else if (vn.Role == VndbSharp.Models.Character.CharacterRole.Side)
+                            return "Side Characters";
+                        else if (vn.Role == VndbSharp.Models.Character.CharacterRole.Appears)
+                            return "Make an Appearance";
+                    }
+                }
+
+                return "No Role";
+            }
+        }
+
+        public SpoilerLevel CharacterSpoiler
+        {
+            get
+            {
+                foreach(var vn in VisualNovels)
+                {
+                    if(vn.Id.Equals(VNID))
+                    {
+                        return vn.SpoilerLevel;
+                    }
+                }
+
+                return SpoilerLevel.None;
+            }
+        }
 
         public ImageSource GenderSelector { get { return _genderSelector(); } }
         public Visibility GenderVisible { get { return _GenderVisible(); } }
@@ -278,7 +339,7 @@ namespace TMP.NET.Modules
             }
         }
 
-        public Config.VndbConfig setting = new Config.VndbConfig();
+        public Config.VndbConfig setting;
 
         public Inline[] GetDescription
         {

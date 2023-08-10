@@ -14,6 +14,42 @@
     <!--d:DesignHeight="800" d:DesignWidth="1280">-->
     <UserControl.Resources>
         <conv:NullToEmptyStringConverter x:Key="NullToEmptyStringConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border Background="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" CornerRadius="10"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="rectangle" Background="#0D1430" Height="{TemplateBinding Height}" SnapsToDevicePixels="True" Width="{TemplateBinding Width}" CornerRadius="8"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="rectangle" Value="#0D1430"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="true">
+                                <Setter Property="Background" TargetName="rectangle" Value="#0D1430"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -22,7 +58,7 @@
         </Grid.RowDefinitions>
 
         <!--Background Image-->
-        <Image Grid.Row="1" x:Name="BackgroundImg" Source="/TMP.NET;component/Resources/no-img-added.png" Stretch="UniformToFill" Opacity="0.5">
+        <Image Grid.Row="1" x:Name="BackgroundImg" d:Source="/TMP.NET;component/Resources/no-img-added.png" Stretch="UniformToFill" Opacity="0.3">
             <Image.Effect>
                 <BlurEffect Radius="50"/>
             </Image.Effect>
@@ -59,6 +95,54 @@
                     <TextBox d:Text="Search" Margin="0,5,0,5" Style="{StaticResource TextBoxStyle}"/>
                 </Grid>
                 <ListView x:Name="lv_charlist" SelectionChanged="lv_charlist_Selected" SelectedItem="{Binding SelectedCharacter, Mode=TwoWay}" VerticalAlignment="Stretch" Background="Transparent" Foreground="White" Grid.Row="1" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=1}">
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type ScrollBar}">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                        <Grid x:Name="Bg" SnapsToDevicePixels="true">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                                <RowDefinition Height="0.00001*"/>
+                                                <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                            </Grid.RowDefinitions>
+                                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
+                                            <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
+                                                <Track.DecreaseRepeatButton>
+                                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
+                                                </Track.DecreaseRepeatButton>
+                                                <Track.IncreaseRepeatButton>
+                                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
+                                                </Track.IncreaseRepeatButton>
+                                                <Track.Thumb>
+                                                    <Thumb Style="{StaticResource ScrollBarThumbVertical}" Margin="2"/>
+                                                </Track.Thumb>
+                                            </Track>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.Style>
+                        <Style TargetType="ListView">
+                            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+                            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+                        </Style>
+                    </ListView.Style>
+
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Name}" Background="#2F6EA6" Foreground="White" BorderBrush="#031A4D" BorderThickness="0" d:Content="Main Character"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -71,17 +155,50 @@
 
             <!-- BODY -->
             <ScrollViewer Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" VirtualizingPanel.ScrollUnit="Pixel">
+                <ScrollViewer.Resources>
+                    <Style TargetType="{x:Type ScrollBar}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                    <Grid x:Name="Bg" SnapsToDevicePixels="true">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                            <RowDefinition Height="0.00001*"/>
+                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
+                                        <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
+                                            <Track.DecreaseRepeatButton>
+                                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
+                                            </Track.DecreaseRepeatButton>
+                                            <Track.IncreaseRepeatButton>
+                                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
+                                            </Track.IncreaseRepeatButton>
+                                            <Track.Thumb>
+                                                <Thumb Style="{StaticResource ScrollBarThumbVertical}" Margin="2"/>
+                                            </Track.Thumb>
+                                        </Track>
+                                    </Grid>
+
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ScrollViewer.Resources>
                 <Grid Margin="0,0,20,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+                    
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Column="0" MaxWidth="280" HorizontalAlignment="Left" Margin="0,0,0,0">
+                    <Grid Grid.Column="0" Grid.Row="0" Width="320" HorizontalAlignment="Left" Margin="0,0,0,0">
                         <!-- Profile -->
                         <StackPanel HorizontalAlignment="Left" Margin="30,0,30,0">
                             <Image x:Name="CharImg" d:Source="https://t.vndb.org/ch/44/103244.jpg" Margin="0,30,0,0" HorizontalAlignment="Center" Stretch="UniformToFill" Height="260" Width="222"/>
@@ -89,13 +206,15 @@
                                 <TextBlock Text="{Binding SelectedCharacter.Name, Converter={StaticResource NullToEmptyStringConverter}}" FontSize="22" TextAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Shirakawa Hiyori"/>
                                 <Image Visibility="{Binding SelectedCharacter.GenderVisible}" Source="{Binding SelectedCharacter.GenderSelector}" d:Source="/TMP.NET;component/Resources/female-icon.png" Width="18" Height="18" HorizontalAlignment="Center" Margin="8,0,8,0" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
                             </WrapPanel>
-                            <WrapPanel Orientation="Vertical" HorizontalAlignment="Left">
+                            <WrapPanel HorizontalAlignment="Center">
                                 <TextBlock Text="{Binding SelectedCharacter.GetAliases}" FontSize="12" TextAlignment="Center" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Hiyorin, ひよりん, Zannen Bijin, 残念美人"/>
+                            </WrapPanel>
+                            <WrapPanel Orientation="Vertical" HorizontalAlignment="Left">
                                 <TextBlock Text="Original Name:" FontSize="16" FontWeight="SemiBold" Margin="0,10,0,0" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Original Name:"/>
                                 <TextBlock Text="{Binding SelectedCharacter.OriginalName}" FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="白河 ひより"/>
-                                <TextBlock Text="Birthday:" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Birthday:"/>
+                                <TextBlock Text="Birthday:" FontSize="16" FontWeight="SemiBold" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Birthday:"/>
                                 <TextBlock Text="{Binding SelectedCharacter.GetBirthday}" FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="16 September"/>
-                                <TextBlock Text="Voiced By:" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Voiced By:"/>
+                                <TextBlock Text="Voiced By:" FontSize="16" FontWeight="SemiBold" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Voiced By:"/>
                                 <TextBlock Text="{Binding SelectedCharacter.GetVoiced}" FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Asumi Kana &#10;Shirayuki Midori (Plus Harmony ver.)"/>
                             </WrapPanel>
                         </StackPanel>
@@ -106,57 +225,57 @@
                         <StackPanel HorizontalAlignment="Left">
                             <TextBlock Text="Measurements:" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Measurements:"/>
                             <TextBlock Text="{Binding SelectedCharacter.GetMeasurements}" FontSize="14" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Height: 157cm, Weight: 47kg"/>
-                            <TextBlock Text="Hair:" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Hair:"/>
+                            <TextBlock Text="Hair:" FontSize="18" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Hair:"/>
                             <TextBlock FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
                                         <Run Text="{Binding SelectedCharacter.GetHairWithNoSpoiler, Mode=OneWay}" d:Text="Intake, Pink, Shaggy, Twin Tails, V Bangs, Waist Length+" Foreground="White" /><Run Text="{Binding SelectedCharacter.GetHairWithMinorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Yellow" /><Run Text="{Binding SelectedCharacter.GetHairWithMajorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Red" />
                             </TextBlock>
                             <!--<TextBlock Text="{Binding SelectedCharacter.GetHair}" FontSize="14" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Intake, Pink, Shaggy, Twin Tails, V Bangs, Waist Length+"/>-->
-                            <TextBlock Text="Eyes:" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Eyes:"/>
+                            <TextBlock Text="Eyes:" FontSize="18" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Eyes:"/>
                             <TextBlock FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
                                         <Run Text="{Binding SelectedCharacter.GetEyesWithNoSpoiler, Mode=OneWay}" d:Text="Pale, Slim, Teen" Foreground="White" /><Run Text="{Binding SelectedCharacter.GetEyesWithMinorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Yellow" /><Run Text="{Binding SelectedCharacter.GetEyesWithMajorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Red" />
                             </TextBlock>
-                            <TextBlock Text="Body:" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Body:"/>
+                            <TextBlock Text="Body:" FontSize="18" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Body:"/>
                             <TextBlock FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
                                         <Run Text="{Binding SelectedCharacter.GetBodyWithNoSpoiler, Mode=OneWay}" d:Text="Blue, Jitome" Foreground="White" /><Run Text="{Binding SelectedCharacter.GetBodyWithMinorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Yellow" /><Run Text="{Binding SelectedCharacter.GetBodyWithMajorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Red" />
                             </TextBlock>
-                            <TextBlock Text="Clothes:" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Clothes:"/>
+                            <TextBlock Text="Clothes:" FontSize="18" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Clothes:"/>
                             <TextBlock FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
                                         <Run Text="{Binding SelectedCharacter.GetClothesWithNoSpoiler, Mode=OneWay}" d:Text="Ankle Boots, Ankle Socks, Blazer, Boots, Cape, Cuffs, Dress, Garter, Hairpin, Miniskirt, Pleated Skirt, Ribbon Hair Tie, Ribbon Tie, Sandals, School Uniform, Thigh-high Stockings" Foreground="White" /><Run Text="{Binding SelectedCharacter.GetClothesWithMinorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Yellow" /><Run Text="{Binding SelectedCharacter.GetClothesWithMajorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Red" />
                             </TextBlock>
-                            <TextBlock Text="Items:" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Items:"/>
+                            <TextBlock Text="Items:" FontSize="18" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Items:"/>
                             <TextBlock FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
                                         <Run Text="{Binding SelectedCharacter.GetItemWithNoSpoiler, Mode=OneWay}" d:Text="Handgun" Foreground="White" /><Run Text="{Binding SelectedCharacter.GetItemWithMinorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Yellow" /><Run Text="{Binding SelectedCharacter.GetItemWithMajorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Red" />
                             </TextBlock>
-                            <TextBlock Text="Personality:" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Personality:"/>
+                            <TextBlock Text="Personality:" FontSize="18" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Personality:"/>
                             <TextBlock FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
                                         <Run Text="{Binding SelectedCharacter.GetPersonalityWithNoSpoiler, Mode=OneWay}" d:Text="Boku, Carefree, Friendly, Funny, Mischievous, Strange" Foreground="White" /><Run Text="{Binding SelectedCharacter.GetPersonalityWithMinorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Yellow" /><Run Text="{Binding SelectedCharacter.GetPersonalityWithMajorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Red" />
                             </TextBlock>
-                            <TextBlock Text="Role:" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Role:"/>
+                            <TextBlock Text="Role:" FontSize="18" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Role:"/>
                             <TextBlock FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
                                         <Run Text="{Binding SelectedCharacter.GetRoleWithNoSpoiler, Mode=OneWay}" d:Text="Classmate, High School Student, Popular, " Foreground="White" /><Run Text="{Binding SelectedCharacter.GetRoleWithMinorSpoiler, Mode=OneWay}" d:Text="Some Spoiler, " Foreground="Yellow" /><Run Text="{Binding SelectedCharacter.GetRoleWithMajorSpoiler, Mode=OneWay}" d:Text="Another Spoiler" Foreground="Red" />
                             </TextBlock>
                             <!--<TextBlock FontSize="14" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Classmate, High School Student, Popular"/>-->
-                            <TextBlock Text="Engages in:" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Engages in:"/>
+                            <TextBlock Text="Engages in:" FontSize="18" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Engages in:"/>
                             <TextBlock FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
                                         <Run Text="{Binding SelectedCharacter.GetEngagesInWithNoSpoiler, Mode=OneWay}" d:Text="Teasing" Foreground="White" /><Run Text="{Binding SelectedCharacter.GetEngagesInWithMinorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Yellow" /><Run Text="{Binding SelectedCharacter.GetEngagesInWithMajorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Red" />
                             </TextBlock>
-                            <TextBlock Text="Subject of:" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Subject of:"/>
+                            <TextBlock Text="Subject of:" FontSize="18" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Subject of:"/>
                             <TextBlock FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
                                         <Run Text="{Binding SelectedCharacter.GetSubjectOfWithNoSpoiler, Mode=OneWay}" d:Text="Unknown" Foreground="White" /><Run Text="{Binding SelectedCharacter.GetSubjectOfWithMinorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Yellow" /><Run Text="{Binding SelectedCharacter.GetSubjectOfWithMajorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Red" />
                             </TextBlock>
-                            <TextBlock Text="Engages in (Sexual):" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Engages in (Sexual):"/>
-                            <TextBlock FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
+                            <TextBlock Visibility="{Binding ExplicitTraits, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Engages in (Sexual):" FontSize="18" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Engages in (Sexual):"/>
+                            <TextBlock Visibility="{Binding ExplicitTraits, Converter={StaticResource BooleanToVisibilityConverter}}" FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
                                         <Run Text="{Binding SelectedCharacter.GetEngagesSexualWithNoSpoiler, Mode=OneWay}" d:Text="Not Sexually Involved" Foreground="Violet" /><Run Text="{Binding SelectedCharacter.GetEngagesSexualWithMinorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Yellow" /><Run Text="{Binding SelectedCharacter.GetEngagesSexualWithMajorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Red" />
                             </TextBlock>
-                            <TextBlock Text="Subject of (Sexual):" FontSize="18" Margin="0,0,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Subject of (Sexual):"/>
-                            <TextBlock FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
+                            <TextBlock Visibility="{Binding ExplicitTraits, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Subject of (Sexual):" FontSize="18" Margin="0,5,0,0" TextAlignment="Left" TextWrapping="Wrap" FontWeight="SemiBold" FontFamily="{StaticResource GlobalFont}" d:Text="Subject of (Sexual):"/>
+                            <TextBlock Visibility="{Binding ExplicitTraits, Converter={StaticResource BooleanToVisibilityConverter}}" FontSize="14" TextAlignment="Left" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}">
                                         <Run Text="{Binding SelectedCharacter.GetSubjectSexualWithNoSpoiler, Mode=OneWay}" d:Text="Not Sexually Involved" Foreground="Violet" /><Run Text="{Binding SelectedCharacter.GetSubjectSexualWithMinorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Yellow" /><Run Text="{Binding SelectedCharacter.GetSubjectSexualWithMajorSpoiler, Mode=OneWay}" d:Text=", Some Spoiler, Another Spoiler" Foreground="Red" />
                             </TextBlock>
                         </StackPanel>
                     </Grid>
 
                     <!-- Description -->
-                    <Grid Grid.Column="0" Grid.ColumnSpan="3" Margin="0,518,0,30">
+                    <Grid Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,0,0,30">
                         <WrapPanel Orientation="Vertical">
                             <TextBlock Text="Description:" FontWeight="SemiBold" Margin="30,15,0,0" FontSize="24" d:Text="Description:"/>
                             <TextBlock conv:TextblockExtension.Inlines="{Binding SelectedCharacter.GetDescription}" Margin="30,4,0,0" TextWrapping="Wrap" FontSize="14" d:Text="She have an ability to see other people flag with other people and manipulate it, but she can't see her flag with her ability. To manipulate other people flag to have strong connection with other people flag, she use 2 gun where the left gun is targeted flag and right gun is herself. Because her ability is not perfect and it is the result of mana unstable state in Mizu country, she must use another connection to manipulate other people flag. But to cover this demerit, she use her connection itself every time she want to make other people romantic feeling become more solid. Based on Ichito, her ability is not from magic category."/>

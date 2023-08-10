@@ -33,6 +33,7 @@ namespace TMP.NET.WindowUI.SplashScreenWindow
         private Config setting = new Config();
         private Config.FilterConfig filterSetting = new Config.FilterConfig();
         private Config.ContentConfig cc = new Config.ContentConfig();
+        private Config.VndbConfig vndb = new Config.VndbConfig();
 
         /// <summary>
         /// Used to load <see langword="GameList"/> or <see langword="Library"/> from specified directory <paramref name="filePath"/>.
@@ -78,6 +79,7 @@ namespace TMP.NET.WindowUI.SplashScreenWindow
 
                         filterSetting = setting.filterConfig;
                         cc = setting.contentConfig;
+                        vndb = setting.vndbConfig;
                     }
                 }
                 catch (Exception ex)
@@ -123,7 +125,8 @@ namespace TMP.NET.WindowUI.SplashScreenWindow
                 this.Dispatcher.Invoke(() =>
                 {
                     labelProgress.Content = "Load Complete.";
-                    var window = new MainWindow(i_List, setting, filterSetting, cc);
+                    Console.WriteLine($"Spoiler Level: {vndb.SpoilerSetting} Explicit Content: {vndb.ShowExplicitContent}");
+                    var window = new MainWindow(i_List, setting, filterSetting, cc, vndb);
                     MainWindow.HandleParameter(args);
                     Application.Current.MainWindow = window;
                     window.Show(); // show MainWindow

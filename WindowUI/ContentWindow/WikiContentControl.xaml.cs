@@ -10,9 +10,10 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using TMP.NET.Modules;
-using VndbSharp.Models.Dumps;
+using VndbSharp.Models.Common;
 
 namespace TMP.NET.WindowUI.ContentWindow
 {
@@ -33,6 +34,7 @@ namespace TMP.NET.WindowUI.ContentWindow
         }
 
         string dataPath;
+        private Config.VndbConfig vndbConfig;
         private GameList gl;
         private ObservableCollection<CharacterMetadata> _cList;
         private List<CustomStaffMetadata> _staffData;
@@ -47,6 +49,9 @@ namespace TMP.NET.WindowUI.ContentWindow
             }
         }
         public ObservableCollection<CharacterMetadata> CList { get { return _cList; } }
+        private CollectionViewSource collectionViewSource;
+        private ICollectionView collectionView;
+
 
         private CharacterMetadata _selectedCharacter;
         public CharacterMetadata SelectedCharacter
@@ -58,17 +63,30 @@ namespace TMP.NET.WindowUI.ContentWindow
                 character.StaffMetadata = _staffData;
                 character.VNID = gl.VNID;
                 character.traitDumps = _traitDumps;
+                character.setting = vndbConfig;
                 _selectedCharacter = character;
                 OnPropertyChanged(nameof(SelectedCharacter));
             }
         }
 
-        public WikiContentControl(GameList gl)
+        public bool ExplicitTraits
+        {
+            get
+            {
+                if (vndbConfig.ShowExplicitContent)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        public WikiContentControl(GameList gl, Config.VndbConfig vndbConfig)
         {
             InitializeComponent();
 
             this.DataContext = this;
             this.gl = gl;
+            this.vndbConfig = vndbConfig;
         }
 
         private void btnHome_Click(object sender, RoutedEventArgs e)
@@ -76,10 +94,17 @@ namespace TMP.NET.WindowUI.ContentWindow
             var window = (MainWindow)Application.Current.MainWindow;
             window.ContentArea.Content = window.GetContentControl;
             window.CommandBar.Visibility = Visibility.Visible;
+            this.gl = null;
+            this.collectionViewSource = null;
+            this._staffData = null;
+            this._traitDumps = null;
+            this._cList = null;
+
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            BackgroundImg.Source = gl.BackgroundPath();
             var task = Task.Run(async () =>
             {
                 var ch = await LoadCharData(gl.VNID);
@@ -94,7 +119,7 @@ namespace TMP.NET.WindowUI.ContentWindow
                 _cList = new ObservableCollection<CharacterMetadata>(ch);
                 _staffData = cs;
                 _traitDumps = trait;
-                this.Dispatcher.Invoke(() => lv_charlist.ItemsSource = CList);
+                this.Dispatcher.Invoke(() => LoadCharacterList());
             });
         }
 
@@ -190,6 +215,8 @@ namespace TMP.NET.WindowUI.ContentWindow
 
                 var selectedChar = (CharacterMetadata)lv_charlist.SelectedItem;
 
+                //Console.WriteLine("Name: " + selectedChar.Name + " Role: " + selectedChar.CharacterRole);
+
                 foreach (var chars in CList)
                 {
                     if (chars.Id.Equals(selectedChar.Id))
@@ -217,5 +244,49 @@ namespace TMP.NET.WindowUI.ContentWindow
                 Console.WriteLine(ex.Message);
             }
         }
+
+        private void LoadCharacterRole()
+        {
+            foreach (var c in _cList)
+            {
+                c.VNID = gl.VNID;
+            }
+        }
+
+        private bool CharacterFilter(object item)
+        {
+            if (item is CharacterMetadata character)
+            {
+                // Filter out characters with higher spoiler levels
+                return character.CharacterSpoiler <= vndbConfig.SpoilerSetting;
+            }
+
+            return true;
+        }
+
+        private void LoadCharacterList()
+        {
+            LoadCharacterRole();
+            collectionViewSource = new CollectionViewSource();
+            collectionViewSource.Source = CList;
+
+            // Add the grouping based on CharacterRole
+            collectionViewSource.GroupDescriptions.Add(new PropertyGroupDescription("CharacterRole"));
+
+            // Sort the groups based on the custom order
+            collectionViewSource.SortDescriptions.Add(new SortDescription("GroupOrder", ListSortDirection.Ascending));
+            collectionViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+
+            // Set the CollectionView for the ListView's ItemsSource
+            collectionView = collectionViewSource.View;
+            lv_charlist.ItemsSource = collectionView;
+
+            // Set the Filter for the CollectionView to hide characters with higher spoiler levels
+            collectionView.Filter = CharacterFilter;
+
+            // Select the first item in the ListView (optional)
+            lv_charlist.SelectedIndex = 0;
+        }
+
     }
 }

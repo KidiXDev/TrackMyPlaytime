@@ -97,9 +97,9 @@ namespace TMP.NET.Modules
 
         public class VndbConfig
         {
-            private SpoilerLevel _SpoilerLevel = SpoilerLevel.Major;
+            private SpoilerLevel _SpoilerLevel = SpoilerLevel.None;
             public SpoilerLevel SpoilerSetting { get { return _SpoilerLevel; } set { _SpoilerLevel = value; } }
-            public bool ShowSexualTrait { get; set; }
+            public bool ShowExplicitContent { get; set; }
         }
     }
 }

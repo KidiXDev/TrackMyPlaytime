@@ -157,6 +157,7 @@ using System.Windows.Media.Animation;
 using TMP.NET.Modules;
 using TMP.NET.WindowUI;
 using TMP.NET.WindowUI.ContentWindow;
+using VndbSharp.Models.Common;
 
 namespace TMP.NET
 {
@@ -190,6 +191,7 @@ namespace TMP.NET
         private Config setting;
         private Config.FilterConfig filterSetting;
         private Config.ContentConfig cc;
+        private Config.VndbConfig vc;
 
         private DateTime _dateTime;
         private readonly GUIDGen _gen = new GUIDGen();
@@ -246,6 +248,7 @@ namespace TMP.NET
 
             setting.filterConfig = filterSetting;
             setting.contentConfig = cc;
+            setting.vndbConfig = vc;
 
             File.WriteAllText(filePath, JsonConvert.SerializeObject(setting, Formatting.Indented));
         }
@@ -287,7 +290,7 @@ namespace TMP.NET
         {
             //DeserializeData(_ListData_n);
             //DeserializeSetting(_Config);
-            _contentControl = new GameListContentControl(setting, cc);
+            _contentControl = new GameListContentControl(setting, cc, vc);
 
             this.Width = setting.Width;
             this.Height = setting.Height;
@@ -551,7 +554,7 @@ namespace TMP.NET
                 return ((item as GameList).GameName.IndexOf(tbSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
-        public MainWindow(ObservableCollection<GameList> list, Config setting, Config.FilterConfig filterSetting, Config.ContentConfig cc)
+        public MainWindow(ObservableCollection<GameList> list, Config setting, Config.FilterConfig filterSetting, Config.ContentConfig cc, Config.VndbConfig vc)
         {
             InitializeComponent();
 
@@ -559,6 +562,7 @@ namespace TMP.NET
             this.setting = setting;
             this.filterSetting = filterSetting;
             this.cc = cc;
+            this.vc = vc;
 
             this.Loaded += (s, e) =>
             {
@@ -574,6 +578,7 @@ namespace TMP.NET
             FirstLoad();
 
             DatabaseUpdater();
+            this.vc = vc;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1212,7 +1217,7 @@ namespace TMP.NET
 
         private void btnSetting_Click(object sender, RoutedEventArgs e)
         {
-            SettingWindow form = new SettingWindow(setting, cc);
+            SettingWindow form = new SettingWindow(setting, cc, vc);
             form.Owner = this;
             form.Height = 550;
             form.Width = 450;
@@ -1237,6 +1242,8 @@ namespace TMP.NET
                         setting.LowSpecMode = form.cbLowSpecMode.IsChecked ?? false;
                         setting.ScreenshotFolderDir = form.tbScreenshotDir.Text;
                         setting.ScreenshotApiIndex = form.cboxScreenshotApiMethod.SelectedIndex;
+                        vc.SpoilerSetting = (SpoilerLevel)form.cboxSpoilerSetting.SelectedValue;
+                        vc.ShowExplicitContent = form.cbShowExplicitContent.IsChecked ?? false;
 
                         SerializeSetting(_Config);
 
@@ -1263,6 +1270,9 @@ namespace TMP.NET
                 setting.LowSpecMode = form.cbLowSpecMode.IsChecked ?? false;
                 setting.ScreenshotFolderDir = form.tbScreenshotDir.Text;
                 setting.ScreenshotApiIndex = form.cboxScreenshotApiMethod.SelectedIndex;
+                vc.SpoilerSetting = (SpoilerLevel)form.cboxSpoilerSetting.SelectedValue;
+                vc.ShowExplicitContent = form.cbShowExplicitContent.IsChecked ?? false;
+                
 
                 if (!setting.EnabledRichPresence)
                     discord.Deinitialize();

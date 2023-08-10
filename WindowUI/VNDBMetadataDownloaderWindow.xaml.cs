@@ -14,6 +14,7 @@ using VndbSharp;
 using VndbSharp.Models;
 using VndbSharp.Models.Common;
 using VndbSharp.Models.Release;
+using VndbSharp.Models.VisualNovel;
 
 namespace TMP.NET.WindowUI
 {
@@ -130,7 +131,12 @@ namespace TMP.NET.WindowUI
 
                 timer.Start();
 
-                var vns = await _client.GetVisualNovelAsync(VndbFilters.Search.Fuzzy(tbSearch.Text), VndbFlags.FullVisualNovel);
+                VndbResponse<VisualNovel> vns;
+
+                if(int.TryParse(tbSearch.Text, out _))
+                    vns = await _client.GetVisualNovelAsync(VndbFilters.Id.Equals(Convert.ToUInt32(tbSearch.Text)), VndbFlags.FullVisualNovel);
+                else
+                    vns = await _client.GetVisualNovelAsync(VndbFilters.Search.Fuzzy(tbSearch.Text), VndbFlags.FullVisualNovel);
 
                 timer.Stop();
 

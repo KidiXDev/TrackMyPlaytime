@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VndbSharp.Models.Character;
+﻿using VndbSharp.Models.Character;
 using VndbSharp.Models.Common;
 
 namespace TMP.NET.Modules
@@ -13,21 +8,21 @@ namespace TMP.NET.Modules
         //
         // Summary:
         //     Visual Novel ID
-        public uint Id { get; private set; }
+        public uint Id { get; set; }
 
         //
         // Summary:
         //     Visual Novel Release ID
-        public uint ReleaseId { get; private set; }
+        public uint ReleaseId { get; set; }
 
         //
         // Summary:
         //     Visual Novel Spoiler Level
-        public SpoilerLevel SpoilerLevel { get; private set; }
+        public SpoilerLevel SpoilerLevel { get; set; }
 
         //
         // Summary:
         //     Character Role
-        public CharacterRole Role { get; private set; }
+        public CharacterRole Role { get; set; }
     }
 }

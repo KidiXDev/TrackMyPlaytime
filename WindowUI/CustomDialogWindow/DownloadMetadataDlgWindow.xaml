@@ -9,6 +9,7 @@
         FontSize="14"
         Background="Transparent"
         WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False"
         WindowStyle="None"
         AllowsTransparency="True"
         Loaded="Window_Loaded"
@@ -85,9 +86,6 @@
     </Window.Resources>
 
     <Border CornerRadius="20" Background="#0A2647" BorderBrush="White" BorderThickness="1">
-        <Border.Effect>
-            <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" ShadowDepth="2"/>
-        </Border.Effect>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock x:Name="tblockProgress" Text="{Binding CurrentStatus}" Margin="15,0,0,0" d:Text="Downloading Metadata..."/>
             <ProgressBar x:Name="pbProgress" d:Value="40" Margin="15,5,15,0" Height="10" Width="368" Foreground="#BEE6FD" Background="#2F6EA6" BorderThickness="0" Style="{DynamicResource RoundedProgressBar}"/>

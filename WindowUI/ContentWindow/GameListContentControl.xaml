@@ -152,8 +152,8 @@ As the sakura petals flutter and artificial faeries dance, a tender love story b
                     <TextBlock Cursor="Hand" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown" Margin="154,246,0,0" FontSize="14" TextWrapping="Wrap" Text="Open Screenshot Folder" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="SemiBold" HorizontalAlignment="Left" Width="169" Height="19" VerticalAlignment="Top"/>
                 </Grid>
                 <TextBlock Margin="572,437,0,0" FontSize="24" TextWrapping="Wrap" Text="VNDB :" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold" HorizontalAlignment="Left" Width="170" Height="28" VerticalAlignment="Top"/>
-                <Grid HorizontalAlignment="Left" Margin="572,470,0,0" Width="150" Height="84" VerticalAlignment="Top">
-                    <TextBlock x:Name="tblockVndbChars" Foreground="White" FontSize="14" TextWrapping="Wrap" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" TextDecorations="Underline" MouseDown="tblockVndbChars_MouseDown" Text="Characters"/>
+                <Grid HorizontalAlignment="Left" Margin="572,470,0,0" Width="150" Height="25" VerticalAlignment="Top">
+                    <TextBlock x:Name="tblockVndbChars" Foreground="White" FontSize="14" TextWrapping="Wrap" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" TextDecorations="Underline" MouseDown="tblockVndbChars_MouseDown" Cursor="Hand" Text="Characters"/>
                 </Grid>
             </Grid>
         </ScrollViewer>

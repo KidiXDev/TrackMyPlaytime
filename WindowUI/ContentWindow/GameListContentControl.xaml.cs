@@ -22,6 +22,7 @@ namespace TMP.NET.WindowUI.ContentWindow
         private GameList gl;
         private Config.ContentConfig cc;
         private Config setting;
+        private Config.VndbConfig vndbConfig;
         FileSystemWatcher watcher;
 
         private string folderPath;
@@ -53,12 +54,14 @@ namespace TMP.NET.WindowUI.ContentWindow
             }
         }
 
-        public GameListContentControl(Config setting, Config.ContentConfig cc)
+        public GameListContentControl(Config setting, Config.ContentConfig cc, Config.VndbConfig vndbConfig)
         {
             InitializeComponent();
 
             this.setting = setting;
             this.cc = cc;
+            this.vndbConfig = vndbConfig;
+
             cc.PropertyChanged += CcInstance_PropertyChanged;
 
             DataContext = this;
@@ -367,9 +370,8 @@ namespace TMP.NET.WindowUI.ContentWindow
         {
             if (Application.Current?.MainWindow is MainWindow mainWindow)
             {
-                mainWindow.ContentArea.Content = new WikiContentControl(gl);
+                mainWindow.ContentArea.Content = new WikiContentControl(gl, vndbConfig);
                 mainWindow.CommandBar.Visibility = Visibility.Collapsed;
-
             }
         }
     }
