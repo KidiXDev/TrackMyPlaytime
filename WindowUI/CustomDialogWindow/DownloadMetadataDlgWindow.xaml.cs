@@ -1,26 +1,20 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
-using System.Windows.Media.TextFormatting;
 using TMP.NET.Modules;
 using VndbSharp;
 using VndbSharp.Interfaces;
 using VndbSharp.Models;
 using VndbSharp.Models.Character;
-using VndbSharp.Models.Dumps;
 using VndbSharp.Models.Errors;
 using VndbSharp.Models.Staff;
-using VndbSharp.Models.VisualNovel;
 
 namespace TMP.NET.WindowUI.CustomDialogWindow
 {
@@ -45,8 +39,9 @@ namespace TMP.NET.WindowUI.CustomDialogWindow
         private List<CharacterMetadata> charData = new List<CharacterMetadata>();
         private string _outDir;
         private int _stateIndex = 0;
-        private int awaitableTask = 5;
+        private int awaitableTask = 4;
         private string _CurrentStatus = "Connecting to server...";
+        private bool IsRepairing;
         public string CurrentStatus
         {
             get { return _CurrentStatus; }
@@ -64,7 +59,6 @@ namespace TMP.NET.WindowUI.CustomDialogWindow
         {
             "Downloading Character Data",
             "Downloading Staff Data",
-            "Downloading Traits Dumps",
             "Saving Data",
             "Preparing"
         };
@@ -88,6 +82,12 @@ namespace TMP.NET.WindowUI.CustomDialogWindow
             if (_vnid == 0)
             {
                 MessageBox.Show("Failed to retreive metadata", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+                return;
+            }
+
+            if (!IsRepairing && Directory.Exists(Path.Combine(PathFinderManager.VndbDataPath, $"{_vnid}")))
+            {
                 this.Close();
                 return;
             }
@@ -132,16 +132,7 @@ namespace TMP.NET.WindowUI.CustomDialogWindow
                     _stateIndex++;
                     tblockTaskProgress.Text = $"{_stateIndex + 1}/{awaitableTask}";
                 });
-                var traitDump = await GetTraitDumps();
-
-                this.Dispatcher.Invoke(() =>
-                {
-                    pbProgress.Value = 0;
-                    pbProgress.IsIndeterminate = true;
-                    _stateIndex++;
-                    tblockTaskProgress.Text = $"{_stateIndex + 1}/{awaitableTask}";
-                });
-                await SerializeWikiData(chData, stData, traitDump);
+                await SerializeWikiData(chData, stData);
 
                 timer.Stop();
                 this.Dispatcher.Invoke(() =>
@@ -195,11 +186,7 @@ namespace TMP.NET.WindowUI.CustomDialogWindow
 
         private async Task DownloadCharacterImageAsync(List<Character> ch)
         {
-#if DEBUG
-            string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"KidiXDev\\TrackMyPlaytime\\Debug\\data\\vndb\\{_vnid}\\character");
-#else
-            string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\Debug\\config.cfg");
-#endif
+            string dir = Path.Combine(PathFinderManager.VndbDataPath, $"{_vnid}\\character");
 
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
@@ -288,7 +275,7 @@ namespace TMP.NET.WindowUI.CustomDialogWindow
 
         private async Task<List<Staff>> GetStaffData(List<Character> ch)
         {
-            using(Vndb client = new Vndb())
+            using (Vndb client = new Vndb())
             {
                 int page = 1;
                 bool morePage = true;
@@ -360,7 +347,7 @@ namespace TMP.NET.WindowUI.CustomDialogWindow
                 waitTime = Math.Abs(waitTime);
                 var timeSpan = TimeSpan.FromSeconds(waitTime);
                 await Task.Delay(timeSpan);
-            }   
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
@@ -368,21 +355,11 @@ namespace TMP.NET.WindowUI.CustomDialogWindow
 
         }
 
-        private async Task<List<Trait>> GetTraitDumps()
+        private async Task SerializeWikiData(List<Character> chData, List<Staff> stData)
         {
-            Console.WriteLine("Updating Trait Dumps...");
-            return (await VndbUtils.GetTraitsDumpAsync()).ToList();
-        }
+            string filePath = Path.Combine(PathFinderManager.VndbDataPath, $"{_vnid}\\metadata.kdm");
+            string filePathStaff = Path.Combine(PathFinderManager.VndbDataPath, $"{_vnid}\\stdata.kdm");
 
-        private async Task SerializeWikiData(List<Character> chData, List<Staff> stData, List<Trait> traits)
-        {
-#if DEBUG
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"KidiXDev\\TrackMyPlaytime\\Debug\\data\\vndb\\{_vnid}\\metadata.kdm");
-            string filePathStaff = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"KidiXDev\\TrackMyPlaytime\\Debug\\data\\vndb\\{_vnid}\\stdata.kdm");
-            string fileTraitDumps = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"KidiXDev\\TrackMyPlaytime\\Debug\\data\\traitdumps.kdm");
-#else
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\Debug\\config.cfg");
-#endif
             try
             {
                 if (!Directory.Exists(Path.GetDirectoryName(filePath)))
@@ -407,13 +384,6 @@ namespace TMP.NET.WindowUI.CustomDialogWindow
                 using (StreamWriter file = new StreamWriter(filePathStaff))
                 {
                     await file.WriteAsync(jsonStaffData);
-                }
-
-                string jsonTraitsData = JsonConvert.SerializeObject(traits, Formatting.Indented);
-
-                using (StreamWriter file = new StreamWriter(fileTraitDumps))
-                {
-                    await file.WriteAsync(jsonTraitsData);
                 }
             }
             catch (Exception ex)

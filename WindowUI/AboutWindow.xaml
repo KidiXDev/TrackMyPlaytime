@@ -8,6 +8,7 @@
         Title="About" Height="280" Width="480"
         Icon="/TMP.NET;component/Resources/icon.ico"
         Background="#0A2647"
+        ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanMinimize">
     <Grid>
@@ -37,7 +38,7 @@
                     Link
                 </Hyperlink>
             </TextBlock>
-            <Label Content="Private beta build 7" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="10" HorizontalAlignment="Left" Margin="73,50,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="labelBeta" Content="Private beta build 9" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="10" HorizontalAlignment="Left" Margin="73,50,0,0" VerticalAlignment="Top"/>
         </Grid>
 
     </Grid>

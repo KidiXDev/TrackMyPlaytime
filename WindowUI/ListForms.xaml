@@ -9,6 +9,7 @@
         MinWidth="650" MaxWidth="650" MaxHeight="1000" MinHeight="620"
         WindowStartupLocation="CenterScreen"
         SourceInitialized="Window_SourceInitialized"
+        ShowInTaskbar="False"
         Background="#0A2647">
     <Window.Resources>
         <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
@@ -126,7 +127,7 @@
                             </Paragraph>
                         </FlowDocument>
                     </RichTextBox>
-                    <Label Content="Tag:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="26" Margin="10,283,0,0" VerticalAlignment="Top" Width="48"/>
+                    <Label Content="Tag:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="27" Margin="10,282,0,0" VerticalAlignment="Top" Width="48"/>
                     <TextBox x:Name="tbTag" ToolTip="Enter game tag&#10;Separate with ," Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="42" Margin="16,314,299,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
                     <Button x:Name="btnTagSelector" Visibility="Collapsed" ToolTip="Select game tag" Content="Select" Click="btnTagSelector_Click" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="0,331,218,0" Padding="0,0,0,2" VerticalAlignment="Top" Height="24" HorizontalAlignment="Right" Width="80"/>
                     <Image x:Name="imgArtwork" Source="/TMP.NET;component/Resources/no-image.png" Height="184" Margin="432,89,0,0" VerticalAlignment="Top" Stretch="UniformToFill" StretchDirection="Both" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Left" Width="131"/>
@@ -154,17 +155,17 @@
                     <Separator HorizontalAlignment="Center" Height="10" Margin="0,478,0,0" VerticalAlignment="Top" Width="570"/>
                     <DatePicker x:Name="datePickerReleaseDate" ToolTip="Game release date" Height="26" Style="{StaticResource RoundedBorder}" FontSize="12" Margin="0,330,53,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="230"/>
                     <Label Content="Release Date:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" Height="24" Margin="0,306,153,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="134"/>
-                    <Label Content="Website:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="24" Margin="12,368,0,0" VerticalAlignment="Top" Width="68"/>
-                    <TextBox x:Name="tbWebName1" ToolTip="Web Name" TextChanged="tbWebName1_TextChanged" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="64,400,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="121"/>
-                    <TextBox x:Name="tbWeb1" ToolTip="Web URL" TextChanged="tbWeb1_TextChanged" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="239,400,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="324"/>
+                    <Label Content="Website:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="24" Margin="12,366,0,0" VerticalAlignment="Top" Width="68"/>
+                    <TextBox x:Name="tbWebName1" ToolTip="Web Name" TextChanged="tbWebName1_TextChanged" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="64,397,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="121"/>
+                    <TextBox x:Name="tbWeb1" ToolTip="Web URL" TextChanged="tbWeb1_TextChanged" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="239,397,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="324"/>
                     <TextBox x:Name="tbWebName2" IsEnabled="False" ToolTip="Web Name" TextChanged="tbWebName2_TextChanged" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="64,424,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="121"/>
                     <TextBox x:Name="tbWeb2" IsEnabled="False" ToolTip="Web URL" TextChanged="tbWeb2_TextChanged" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="239,424,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="324"/>
                     <TextBox x:Name="tbWebName3" IsEnabled="False" ToolTip="Web Name" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="64,450,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="121"/>
                     <TextBox x:Name="tbWeb3" IsEnabled="False" ToolTip="Web URL" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="239,450,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="324"/>
-                    <Label Content="Name:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="12,398,0,0" VerticalAlignment="Top" Width="48"/>
+                    <Label Content="Name:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="12,395,0,0" VerticalAlignment="Top" Width="48"/>
                     <Label Content="Name:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="12,422,0,0" VerticalAlignment="Top" Width="48"/>
                     <Label Content="Name:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="12,448,0,0" VerticalAlignment="Top" Width="48"/>
-                    <Label Content="URL:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="195,400,0,0" VerticalAlignment="Top" Width="38"/>
+                    <Label Content="URL:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="195,397,0,0" VerticalAlignment="Top" Width="38"/>
                     <Label Content="URL:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="195,422,0,0" VerticalAlignment="Top" Width="38"/>
                     <Label Content="URL:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="195,448,0,0" VerticalAlignment="Top" Width="38"/>
                 </Grid>

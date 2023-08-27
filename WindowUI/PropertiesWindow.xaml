@@ -11,6 +11,9 @@
         WindowStartupLocation="CenterScreen"
         Background="#0A2647"
         Loaded="Window_Loaded">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+    </Window.Resources>
     <Grid>
         <Grid HorizontalAlignment="Center" Height="314" VerticalAlignment="Center" Width="380">
             <Image x:Name="ExecutableIcon" HorizontalAlignment="Left" Height="47" Margin="10,10,0,0" VerticalAlignment="Top" Width="47" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
@@ -34,8 +37,9 @@
             <TextBlock x:Name="tblockPlaytime" HorizontalAlignment="Left" Height="16" Margin="112,204,0,0" TextWrapping="NoWrap" Text="92h 12m 22s" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" VerticalAlignment="Top" Width="258"/>
             <Button x:Name="btnClose" Click="btnClose_Click" Content="Close" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" HorizontalAlignment="Left" Margin="290,280,0,0" Padding="0,0,0,2" VerticalAlignment="Top" Width="80" Height="24"/>
             <Label Content="GUID:" FontSize="11" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,281,0,0" VerticalAlignment="Top" Width="39"/>
-            <TextBlock x:Name="tblockGUID" HorizontalAlignment="Left" Height="12" Margin="47,286,0,0" TextWrapping="NoWrap" Text="G8US76" FontSize="11" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" VerticalAlignment="Top" Width="223"/>
+            <TextBlock x:Name="tblockGUID" HorizontalAlignment="Left" Height="12" Margin="47,286,0,0" TextWrapping="NoWrap" d:Text="G8US76" FontSize="11" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" VerticalAlignment="Top" Width="223"/>
+            <Label Visibility="{Binding VnidChecker, Converter={StaticResource BoolToVisibility}}" Content="Vndb Id:" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,226,0,0" VerticalAlignment="Top" Width="97"/>
+            <TextBlock Visibility="{Binding VnidChecker, Converter={StaticResource BoolToVisibility}}" x:Name="tblockVNID" HorizontalAlignment="Left" Height="16" Margin="112,231,0,0" TextWrapping="NoWrap" d:Text="24351" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" VerticalAlignment="Top" Width="258"/>
         </Grid>
-
     </Grid>
 </Window>

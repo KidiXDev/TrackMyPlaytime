@@ -69,7 +69,7 @@
 
         <!--Content-->
         <StackPanel Grid.Row="0" VerticalAlignment="Top">
-            <Grid Height="50" Background="#0F386A" Margin="0,0,0,10">
+            <Grid Height="50" Background="#0F386A">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="btnHome" Width="30" Height="30" Margin="20,5,0,5" Click="btnHome_Click" Background="Transparent" BorderThickness="0">
                         <Button.Content>
@@ -86,13 +86,29 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Grid VerticalAlignment="Stretch" Grid.Column="0" Margin="10,0,0,40" Width="200" HorizontalAlignment="Left">
+            <Grid VerticalAlignment="Stretch" Grid.Column="0" Margin="10,10,0,40" Width="200" HorizontalAlignment="Left">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" Height="30">
-                    <TextBox d:Text="Search" Margin="0,5,0,5" Style="{StaticResource TextBoxStyle}"/>
+                    <TextBox x:Name="tbSearch" Margin="0,5,0,5" Background="#0D1430" Foreground="White" Padding="22,2,0,0" TextChanged="tbSearch_TextChanged" Style="{StaticResource TextBoxStyle}" FontSize="12" BorderThickness="1" BorderBrush="#0C1A35"/>
+                    <Image Source="/TMP.NET;component/Resources/search_icon.png" Width="12" Height="12" HorizontalAlignment="Left" Margin="8,0,0,0" VerticalAlignment="Center" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>
+                    <TextBlock IsHitTestVisible="False" d:Visibility="Visible" Text="Search" Padding="25,0,0,0" VerticalAlignment="Center" Foreground="DarkGray" FontSize="12" TextWrapping="Wrap">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=tbSearch}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsKeyboardFocusWithin, ElementName=tbSearch}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                 </Grid>
                 <ListView x:Name="lv_charlist" SelectionChanged="lv_charlist_Selected" SelectedItem="{Binding SelectedCharacter, Mode=TwoWay}" VerticalAlignment="Stretch" Background="Transparent" Foreground="White" Grid.Row="1" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=1}">
                     <ListView.Resources>
@@ -201,7 +217,7 @@
                     <Grid Grid.Column="0" Grid.Row="0" Width="320" HorizontalAlignment="Left" Margin="0,0,0,0">
                         <!-- Profile -->
                         <StackPanel HorizontalAlignment="Left" Margin="30,0,30,0">
-                            <Image x:Name="CharImg" d:Source="https://t.vndb.org/ch/44/103244.jpg" Margin="0,30,0,0" HorizontalAlignment="Center" Stretch="UniformToFill" Height="260" Width="222"/>
+                            <Image x:Name="CharImg" d:Source="https://t.vndb.org/ch/44/103244.jpg" Margin="0,30,0,0" HorizontalAlignment="Center" Stretch="Fill" Height="260" Width="222"/>
                             <WrapPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                 <TextBlock Text="{Binding SelectedCharacter.Name, Converter={StaticResource NullToEmptyStringConverter}}" FontSize="22" TextAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" FontFamily="{StaticResource GlobalFont}" d:Text="Shirakawa Hiyori"/>
                                 <Image Visibility="{Binding SelectedCharacter.GenderVisible}" Source="{Binding SelectedCharacter.GenderSelector}" d:Source="/TMP.NET;component/Resources/female-icon.png" Width="18" Height="18" HorizontalAlignment="Center" Margin="8,0,8,0" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased"/>

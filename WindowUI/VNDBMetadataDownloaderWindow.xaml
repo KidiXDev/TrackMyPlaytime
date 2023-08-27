@@ -50,9 +50,9 @@
     </Window.Resources>
     <Grid>
         <Grid Margin="10,10,10,10">
-            <StackPanel>
+            <StackPanel VerticalAlignment="Top">
                 <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-                    <TextBox Grid.Column="0" x:Name="tbSearch" Width="470" KeyDown="tbSearch_KeyDown" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" FontFamily="{StaticResource GlobalFont}" FontSize="18" BorderThickness="0" VerticalAlignment="Top"/>
+                    <TextBox Grid.Column="0" x:Name="tbSearch" Width="470" KeyDown="tbSearch_KeyDown" TextWrapping="NoWrap" Style="{StaticResource TextBoxStyle}" FontFamily="{StaticResource GlobalFont}" FontSize="18" BorderThickness="0" VerticalAlignment="Center"/>
                     <Button Grid.Column="1" x:Name="btnFind" Margin="10,0,0,0" Click="btnFind_Click" Content="Find" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Padding="0,0,0,2" Height="24" Width="100" VerticalAlignment="Top"/>
                 </StackPanel>
                 <ListView x:Name="lv_list" MouseDoubleClick="lv_list_MouseDoubleClick" Height="328" Margin="0,20,0,0" VerticalAlignment="Top" d:ItemsSource="{d:SampleData ItemCount=5}" FontFamily="{StaticResource GlobalFont}" Background="#0A2647" Foreground="White" BorderThickness="1" VirtualizingPanel.ScrollUnit="Pixel">
@@ -72,9 +72,11 @@
                                 <Image Source="{Binding CoverURL}" Width="72" Height="100" Stretch="UniformToFill" Grid.RowSpan="2"/>
 
                                 <!-- Kolom Kedua (TextBlock) -->
-                                <TextBlock Text="{Binding Title}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" />
-                                <TextBlock Text="{Binding OriginalTitle}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-35,0,0" />
-                                <TextBlock Text="{Binding VNID}" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,-15,0,0" />
+                                <StackPanel Margin="10,0,0,0" Grid.Column="1">
+                                    <TextBlock Text="{Binding Title}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    <TextBlock Text="{Binding OriginalTitle}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    <TextBlock Text="{Binding VNID}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                </StackPanel>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

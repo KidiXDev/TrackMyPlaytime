@@ -13,7 +13,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using TMP.NET.Modules;
-using VndbSharp.Models.Common;
 
 namespace TMP.NET.WindowUI.ContentWindow
 {
@@ -59,13 +58,16 @@ namespace TMP.NET.WindowUI.ContentWindow
             get { return _selectedCharacter; }
             set
             {
-                var character = value;
-                character.StaffMetadata = _staffData;
-                character.VNID = gl.VNID;
-                character.traitDumps = _traitDumps;
-                character.setting = vndbConfig;
-                _selectedCharacter = character;
-                OnPropertyChanged(nameof(SelectedCharacter));
+                if (lv_charlist.SelectedItems != null && value != null)
+                {
+                    var character = value;
+                    character.StaffMetadata = _staffData;
+                    character.VNID = gl.VNID;
+                    character.traitDumps = _traitDumps;
+                    character.setting = vndbConfig;
+                    _selectedCharacter = character;
+                    OnPropertyChanged(nameof(SelectedCharacter));
+                }
             }
         }
 
@@ -125,12 +127,8 @@ namespace TMP.NET.WindowUI.ContentWindow
 
         private Task<List<CharacterMetadata>> LoadCharData(uint vnid)
         {
-#if DEBUG
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"KidiXDev\\TrackMyPlaytime\\Debug\\data\\vndb\\{vnid}\\metadata.kdm");
-            //string filePathStaff = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"KidiXDev\\TrackMyPlaytime\\Debug\\data\\vndb\\{vnid}\\stdata.kdm");
-#else
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\Debug\\config.cfg");
-#endif
+            string filePath = Path.Combine(PathFinderManager.VndbDataPath, $"{vnid}\\metadata.kdm");
+
             List<CharacterMetadata> ca = new List<CharacterMetadata>();
             try
             {
@@ -153,9 +151,8 @@ namespace TMP.NET.WindowUI.ContentWindow
 
         private Task<List<CustomStaffMetadata>> LoadStaffData(uint vnid)
         {
-#if DEBUG
-            string filePathStaff = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"KidiXDev\\TrackMyPlaytime\\Debug\\data\\vndb\\{vnid}\\stdata.kdm");
-#endif
+            string filePathStaff = Path.Combine(PathFinderManager.VndbDataPath, $"{vnid}\\stdata.kdm");
+
             List<CustomStaffMetadata> cs = new List<CustomStaffMetadata>();
             try
             {
@@ -176,9 +173,8 @@ namespace TMP.NET.WindowUI.ContentWindow
 
         private Task<List<CustomTraits>> LoadTraitDumps()
         {
-#if DEBUG
-            string traitDumpsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"KidiXDev\\TrackMyPlaytime\\Debug\\data\\traitdumps.kdm");
-#endif
+            string traitDumpsPath = PathFinderManager.TraitDumpsDir;
+
             List<CustomTraits> trait = new List<CustomTraits>();
             try
             {
@@ -210,34 +206,37 @@ namespace TMP.NET.WindowUI.ContentWindow
         {
             try
             {
-                CharImg.Source = null;
-                CharImg.UpdateLayout();
-
-                var selectedChar = (CharacterMetadata)lv_charlist.SelectedItem;
-
-                //Console.WriteLine("Name: " + selectedChar.Name + " Role: " + selectedChar.CharacterRole);
-
-                foreach (var chars in CList)
+                if (lv_charlist.SelectedItems != null)
                 {
-                    if (chars.Id.Equals(selectedChar.Id))
-                    {
-                        CharImg.Source = new BitmapImage(new Uri(Path.Combine(dataPath, $"character\\{chars.Id}.jpg")));
-                    }
-                }
+                    CharImg.Source = null;
+                    CharImg.UpdateLayout();
 
-                /*foreach (var chars in CList)
-                {
-                    if(chars.Id.Equals(selectedChar.Id))
+                    var selectedChar = (CharacterMetadata)lv_charlist.SelectedItem;
+
+                    //Console.WriteLine("Name: " + selectedChar.Name + " Role: " + selectedChar.CharacterRole);
+
+                    foreach (var chars in CList)
                     {
-                        var vn = chars.VoiceActorMetadata;
-                        foreach (var st in vn)
+                        if (chars.Id.Equals(selectedChar.Id))
                         {
-                            Console.WriteLine(st.StaffId);
-                            Console.WriteLine("Alias Id: " + st.AliasId);
-                            Console.WriteLine("Character Id: " + chars.Id);
+                            CharImg.Source = new BitmapImage(new Uri(Path.Combine(dataPath, $"character\\{chars.Id}.jpg")));
                         }
                     }
-                }*/
+
+                    /*foreach (var chars in CList)
+                    {
+                        if(chars.Id.Equals(selectedChar.Id))
+                        {
+                            var vn = chars.VoiceActorMetadata;
+                            foreach (var st in vn)
+                            {
+                                Console.WriteLine(st.StaffId);
+                                Console.WriteLine("Alias Id: " + st.AliasId);
+                                Console.WriteLine("Character Id: " + chars.Id);
+                            }
+                        }
+                    }*/
+                }
             }
             catch (Exception ex)
             {
@@ -255,13 +254,13 @@ namespace TMP.NET.WindowUI.ContentWindow
 
         private bool CharacterFilter(object item)
         {
-            if (item is CharacterMetadata character)
+            if (item is CharacterMetadata character && string.IsNullOrEmpty(tbSearch.Text))
             {
                 // Filter out characters with higher spoiler levels
                 return character.CharacterSpoiler <= vndbConfig.SpoilerSetting;
             }
-
-            return true;
+            else
+                return ((item as CharacterMetadata).Name.IndexOf(tbSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         private void LoadCharacterList()
@@ -270,23 +269,29 @@ namespace TMP.NET.WindowUI.ContentWindow
             collectionViewSource = new CollectionViewSource();
             collectionViewSource.Source = CList;
 
-            // Add the grouping based on CharacterRole
             collectionViewSource.GroupDescriptions.Add(new PropertyGroupDescription("CharacterRole"));
 
-            // Sort the groups based on the custom order
             collectionViewSource.SortDescriptions.Add(new SortDescription("GroupOrder", ListSortDirection.Ascending));
             collectionViewSource.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
 
-            // Set the CollectionView for the ListView's ItemsSource
             collectionView = collectionViewSource.View;
             lv_charlist.ItemsSource = collectionView;
 
-            // Set the Filter for the CollectionView to hide characters with higher spoiler levels
             collectionView.Filter = CharacterFilter;
-
-            // Select the first item in the ListView (optional)
             lv_charlist.SelectedIndex = 0;
         }
 
+        private void tbSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                if (lv_charlist.ItemsSource != null)
+                    collectionView.Refresh();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
     }
 }

@@ -81,6 +81,7 @@
     <Compile Include="Modules\Ext\TextblockExtension.cs" />
     <Compile Include="Modules\Ext\TextExt.cs" />
     <Compile Include="Modules\FolderPicker.cs" />
+    <Compile Include="Modules\PathFinderManager.cs" />
     <Compile Include="Modules\PrivateConstructorContractResolver .cs" />
     <Compile Include="Modules\ScreenCapture.cs" />
     <Compile Include="WindowUI\ContentWindow\WikiContentControl.xaml.cs">

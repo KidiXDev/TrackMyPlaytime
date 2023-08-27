@@ -97,8 +97,8 @@
                 </Style>
             </ScrollViewer.Resources>
             <Grid>
-                <TextBlock Height="33" Margin="341,52,0,0" FontSize="24" TextWrapping="Wrap" Text="Description" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" Width="168"/>
-                <ScrollViewer Margin="341,85,65,0" VerticalScrollBarVisibility="Hidden" VirtualizingPanel.ScrollUnit="Pixel" Height="303" VerticalAlignment="Top" SnapsToDevicePixels="True" UseLayoutRounding="True">
+                <TextBlock Height="33" Margin="309,52,0,0" FontSize="24" TextWrapping="Wrap" Text="Description" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" Width="168"/>
+                <ScrollViewer Margin="309,85,68,0" VerticalScrollBarVisibility="Hidden" VirtualizingPanel.ScrollUnit="Pixel" Height="285" VerticalAlignment="Top" SnapsToDevicePixels="True" UseLayoutRounding="True">
                     <TextBlock x:Name="tblockDescription" TextWrapping="Wrap" TextAlignment="Left" Foreground="White" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light">
                     Those who live on the island of Kagamijima are used to the sight of the ‘large cherry blossom that floats in the sky’ rising out of the middle of the Mikagami lake. Such beautiful scenery had been the lone draw for the island, but lately a new sightseeing spot was born with the opening of a theme park based on Wonderland. The main character and humanoid AI Alice charms everyone with her lovely smile, while artificial faeries dance around the island like fireflies.
 <LineBreak/><LineBreak/>
@@ -115,7 +115,7 @@ As the sakura petals flutter and artificial faeries dance, a tender love story b
                 </ScrollViewer>
                 <TextBlock Margin="45,437,0,0" FontSize="24" TextWrapping="Wrap" Text="Tags:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Bold" HorizontalAlignment="Left" Width="157" Height="28" VerticalAlignment="Top"/>
                 <TextBlock x:Name="tblockTag" Margin="45,470,0,0" FontSize="14" TextWrapping="Wrap" Text="Visual Novel, Drama, Romance, Nakige" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" HorizontalAlignment="Left" Width="244" Height="50" VerticalAlignment="Top"/>
-                <Grid Margin="45,52,0,0" HorizontalAlignment="Left" Width="258" Height="363" VerticalAlignment="Top">
+                <Grid Margin="45,52,0,0" HorizontalAlignment="Left" Width="226" Height="318" VerticalAlignment="Top">
                     <Border>
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="20" Direction="330" ShadowDepth="10" Color="Black"/>

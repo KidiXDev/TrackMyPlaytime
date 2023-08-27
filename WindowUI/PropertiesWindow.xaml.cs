@@ -12,46 +12,51 @@ namespace TMP.NET.WindowUI
     /// </summary>
     public partial class PropertiesWindow : Window
     {
-        private GameList gameList { get; }
+        private GameList gl { get; }
+        public bool VnidChecker{ get { return (gl.VNID != 0); }
+        }
         public PropertiesWindow(GameList selected)
         {
             InitializeComponent();
+
+            this.DataContext = this;
 
             tblockSize.Text = "Calculating...";
             tblockGUID.Text = "Unknown...";
             tblockDate.Text = "Unknown";
             tblockTime.Text = "Unknown";
 
-            gameList = selected;
+            gl = selected;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ExecutableIcon.Source = gameList.IconPath;
-            labelGameTitle.Text = gameList.GameName;
-            labelGameDev.Text = gameList.GameDev;
-            tbGameDir.Text = gameList.GamePath;
-            tblockGUID.Text = gameList.GUID;
+            ExecutableIcon.Source = gl.IconPath;
+            labelGameTitle.Text = gl.GameName;
+            labelGameDev.Text = gl.GameDev;
+            tbGameDir.Text = gl.GamePath;
+            tblockGUID.Text = gl.GUID;
+            tblockVNID.Text = (gl.VNID == 0) ? null : gl.VNID.ToString();
 
-            if (gameList.DateCreated != DateTime.MinValue)
+            if (gl.DateCreated != DateTime.MinValue)
             {
-                tblockDate.Text = gameList.DateCreated.ToString("dd MMMM yyyy");
-                tblockTime.Text = gameList.DateCreated.ToString("HH.mm");
+                tblockDate.Text = gl.DateCreated.ToString("dd MMMM yyyy");
+                tblockTime.Text = gl.DateCreated.ToString("HH.mm");
             }
 
-            if (gameList.Tracker == DateTime.MinValue)
+            if (gl.Tracker == DateTime.MinValue)
                 tblockPlaytime.Text = "Never";
             else
             {
-                var totalHours = gameList.Playtime.TotalHours;
+                var totalHours = gl.Playtime.TotalHours;
                 var hours = (int)Math.Floor(totalHours);
                 string formattedHours = hours.ToString("0");
-                tblockPlaytime.Text = string.Format("{0}h {1}m {2}s", formattedHours, gameList.Playtime.Minutes, gameList.Playtime.Seconds);
+                tblockPlaytime.Text = string.Format("{0}h {1}m {2}s", formattedHours, gl.Playtime.Minutes, gl.Playtime.Seconds);
             }
 
             new Thread(() =>
             {
-                long totalSize = DirSize(Directory.GetParent(gameList.GamePath));
+                long totalSize = DirSize(Directory.GetParent(gl.GamePath));
                 if (totalSize <= -1)
                     return;
 

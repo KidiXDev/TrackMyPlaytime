@@ -148,7 +148,6 @@ using System.Media;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -170,15 +169,9 @@ namespace TMP.NET
 
         public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-#if DEBUG
-        private readonly string _ListData_n = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\Debug\\listdata.kdb");
-        private readonly string _Config = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\Debug\\config.cfg");
-#else
-        private readonly string _ListData_n = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\listdata.kdb");
-        private readonly string _Config = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\config.cfg");
-#endif
+        private readonly string GameLibraryDir = PathFinderManager.GameLibraryDir;
+        private readonly string ConfigFileDir = PathFinderManager.AppConfigDir;
 
-        //private ObservableCollection<GameListContentControl> _contentControll = new ObservableCollection<GameListContentControl>();
         private GameListContentControl _contentControl;
         private ObservableCollection<GameList> i_List;
         public GameListContentControl GetContentControl { get { return _contentControl; } }
@@ -535,7 +528,7 @@ namespace TMP.NET
                     item.DatabaseVersion = new Version(1, 0, 0);
                 }
             }
-            SerializeData(_ListData_n);
+            SerializeData(GameLibraryDir);
         }
 
         private void Window_SourceInitialized(object sender, EventArgs ea)
@@ -614,7 +607,7 @@ namespace TMP.NET
             }
 
             setting.SelectedIndex = LV_List.SelectedIndex;
-            SerializeSetting(_Config);
+            SerializeSetting(ConfigFileDir);
             ToastNotificationManagerCompat.Uninstall();
             Application.Current.Shutdown();
         }
@@ -903,7 +896,7 @@ namespace TMP.NET
                 UpdateTracker(list, selected);
 
                 // Save changes
-                SerializeData(_ListData_n);
+                SerializeData(GameLibraryDir);
             }).Start();
         }
 
@@ -998,7 +991,7 @@ namespace TMP.NET
                 UpdateTracker(l_gameList, selected);
 
                 // Save changes
-                SerializeData(_ListData_n);
+                SerializeData(GameLibraryDir);
             }).Start();
         }
 
@@ -1134,7 +1127,7 @@ namespace TMP.NET
                     btnEdit.IsEnabled = true;
 
                 // Save
-                SerializeData(_ListData_n);
+                SerializeData(GameLibraryDir);
 
                 if (form.cbCreateShortcut.IsChecked ?? false)
                     form.CreateShortcut(gl);
@@ -1205,7 +1198,7 @@ namespace TMP.NET
                     _contentControl.Init(_lastSelectedList);
 
                     // Save
-                    SerializeData(_ListData_n);
+                    SerializeData(GameLibraryDir);
 
                     // Clear memory
                     form.Close();
@@ -1245,7 +1238,7 @@ namespace TMP.NET
                         vc.SpoilerSetting = (SpoilerLevel)form.cboxSpoilerSetting.SelectedValue;
                         vc.ShowExplicitContent = form.cbShowExplicitContent.IsChecked ?? false;
 
-                        SerializeSetting(_Config);
+                        SerializeSetting(ConfigFileDir);
 
                         ProcessStartInfo Info = new ProcessStartInfo();
                         Info.Arguments = "/C choice /C Y /N /D Y /T 2 & START \"\" \"" + Assembly.GetEntryAssembly().Location + "\"";
@@ -1272,7 +1265,7 @@ namespace TMP.NET
                 setting.ScreenshotApiIndex = form.cboxScreenshotApiMethod.SelectedIndex;
                 vc.SpoilerSetting = (SpoilerLevel)form.cboxSpoilerSetting.SelectedValue;
                 vc.ShowExplicitContent = form.cbShowExplicitContent.IsChecked ?? false;
-                
+
 
                 if (!setting.EnabledRichPresence)
                     discord.Deinitialize();
@@ -1282,7 +1275,7 @@ namespace TMP.NET
                 else
                     SolidCommandBrush.Opacity = 0.6;
 
-                SerializeSetting(_Config);
+                SerializeSetting(ConfigFileDir);
             }
         }
 
@@ -1304,7 +1297,7 @@ namespace TMP.NET
                 items.GUID = _gen.GenerateGUID(6, i_List);
                 Console.WriteLine($"Game Title: {items.GameName}\nGUID: {items.GUID}\n");
             }
-            SerializeData(_ListData_n);
+            SerializeData(GameLibraryDir);
         }
 
         private void btnDebug3_Click(object sender, RoutedEventArgs e)
@@ -1402,7 +1395,7 @@ namespace TMP.NET
                     FilterSort();
 
                     MessageBox.Show("Import Successfully!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-                    SerializeData(_ListData_n);
+                    SerializeData(GameLibraryDir);
                 }
                 else
                 {
@@ -1556,7 +1549,7 @@ namespace TMP.NET
 
                 btnEdit.IsEnabled = false;
 
-                SerializeData(_ListData_n);
+                SerializeData(GameLibraryDir);
                 return;
             }
         }

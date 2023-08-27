@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -11,6 +13,8 @@ using System.Windows;
 using System.Windows.Media.Animation;
 using TMP.NET.Modules;
 using TMP.NET.Modules.Ext;
+using VndbSharp;
+using VndbSharp.Models.Dumps;
 
 namespace TMP.NET.WindowUI.SplashScreenWindow
 {
@@ -19,13 +23,8 @@ namespace TMP.NET.WindowUI.SplashScreenWindow
     /// </summary>
     public partial class SplashScreenUI : Window
     {
-#if DEBUG
-        private readonly string _ListData_n = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\Debug\\listdata.kdb");
-        private readonly string _Config = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\Debug\\config.cfg");
-#else
-        private readonly string _ListData_n = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\listdata.kdb");
-        private readonly string _Config = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidiXDev\\TrackMyPlaytime\\config.cfg");
-#endif
+        private readonly string GameLibraryDir = PathFinderManager.GameLibraryDir;
+        private readonly string ConfigFileDir = PathFinderManager.AppConfigDir;
 
         string[] args;
 
@@ -107,17 +106,18 @@ namespace TMP.NET.WindowUI.SplashScreenWindow
 
             Task.Run(async () =>
             {
-                this.Dispatcher.Invoke(() => labelProgress.Content = "Verifying file integrity...");
-                await VerifyFileIntegrity();
+                /*this.Dispatcher.Invoke(() => labelProgress.Content = "Verifying file integrity...");
+                await VerifyFileIntegrity();*/
 
                 this.Dispatcher.Invoke(() => labelProgress.Content = "Loading Configuration...");
                 await LoadingSetting();
 
                 this.Dispatcher.Invoke(() => labelProgress.Content = "Checking for updates...");
                 if (setting.AutoCheckUpdate)
-                {
                     await CheckForUpdate(); // Check for available update
-                }
+
+                this.Dispatcher.Invoke(() => labelProgress.Content = "Checking for trait dumps update...");
+                await CheckForTraitDumps(); // Check if trait dumps updates every 3 days after last file is modified
 
                 this.Dispatcher.Invoke(() => labelProgress.Content = "Loading Data...");
                 await LoadingData(); // Loading game library data
@@ -134,6 +134,71 @@ namespace TMP.NET.WindowUI.SplashScreenWindow
                     this.Close();
                 });
             });
+        }
+
+        private async Task CheckForTraitDumps()
+        {
+            var trait = await GetTraitDumps();
+            if (trait != null)
+                await SerializeTraitDumps(trait);
+        }
+
+        private async Task<List<Trait>> GetTraitDumps()
+        {
+            var traitDumpDir = PathFinderManager.TraitDumpsDir;
+
+            if (!File.Exists(traitDumpDir) || CheckTraitDumpOutOfDateStatus(traitDumpDir))
+            {
+                Console.WriteLine("Updating Trait Dumps...");
+                this.Dispatcher.Invoke(() => labelProgress.Content = "Updating trait dumps...");
+                return (await VndbUtils.GetTraitsDumpAsync()).ToList();
+            }
+
+            return null;
+        }
+
+        private bool CheckTraitDumpOutOfDateStatus(string filePath)
+        {
+            try
+            {
+                FileInfo fileInfo = new FileInfo(filePath);
+                DateTime lastModified = fileInfo.LastWriteTime;
+                DateTime currentDate = DateTime.Now;
+                TimeSpan difference = currentDate - lastModified;
+
+                // Checks whether the file has passed 3 days since it was last created
+                if (difference.TotalDays >= 3)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return true;
+            }
+        }
+
+        private async Task SerializeTraitDumps(List<Trait> traits)
+        {
+            string fileTraitDumps = PathFinderManager.TraitDumpsDir;
+
+            try
+            {
+                if(!Directory.Exists(Path.GetDirectoryName(fileTraitDumps)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(fileTraitDumps));
+
+                string jsonTraitsData = JsonConvert.SerializeObject(traits, Formatting.Indented);
+
+                using (StreamWriter file = new StreamWriter(fileTraitDumps))
+                {
+                    await file.WriteAsync(jsonTraitsData);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private async Task CheckForUpdate()
@@ -195,12 +260,12 @@ namespace TMP.NET.WindowUI.SplashScreenWindow
 
         private async Task LoadingData()
         {
-            await DeserializeData(_ListData_n);
+            await DeserializeData(GameLibraryDir);
         }
 
         private async Task LoadingSetting()
         {
-            await DeserializeSetting(_Config);
+            await DeserializeSetting(ConfigFileDir);
         }
 
         private async Task VerifyFileIntegrity()
