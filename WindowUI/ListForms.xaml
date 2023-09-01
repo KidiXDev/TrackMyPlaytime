@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TMP.NET.WindowUI"
         mc:Ignorable="d"
-        Title="Add Game" Height="1500" Width="650"
+        Title="Add Game" Height="1000" Width="650"
         MinWidth="650" MaxWidth="650" MaxHeight="1000" MinHeight="620"
         WindowStartupLocation="CenterScreen"
         SourceInitialized="Window_SourceInitialized"
@@ -49,131 +49,177 @@
     </Window.Resources>
     <!-- Title="Add Game" Height="1500" Width="450" -->
     <Grid>
-        <Grid Height="199" VerticalAlignment="Top" Margin="10,0,10,0">
-            <TextBox x:Name="tbGameTitle" ToolTip="Enter game title" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" FontSize="14" Margin="95,14,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="510" BorderThickness="0" Height="20"/>
-            <Label Content="Game Title:" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="tbDeveloper" ToolTip="Enter developer or publisher" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" FontSize="14" Margin="95,52,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="510" BorderThickness="0" Height="20"/>
-            <Label Content="Developer:" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="77"/>
-            <TextBox x:Name="tbGameDir" ToolTip="Enter game executable" Style="{StaticResource ResourceKey=TextBoxStyle}" FontSize="14" Margin="25,0,110,44" TextWrapping="NoWrap" BorderThickness="0" Height="20" VerticalAlignment="Bottom"/>
-            <Label Content="Executable Directory:" FontSize="14"  FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="12,104,0,0" VerticalAlignment="Top" Height="26" Width="150"/>
-            <Separator HorizontalAlignment="Center" Height="13" Margin="0,82,0,0" VerticalAlignment="Top" Width="580"/>
-            <Button x:Name="btnGameDir" ToolTip="Enter game executable" Click="btnGameDir_Click" Content="Browse" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="0,133,25,0" Padding="0,0,0,2" VerticalAlignment="Top" Height="24" HorizontalAlignment="Right" Width="80"/>
-            <Separator HorizontalAlignment="Center" Height="10" Margin="0,179,0,0" VerticalAlignment="Top" Width="580"/>
-        </Grid>
-        <Grid Margin="0,204,0,79">
-            <ScrollViewer VirtualizingPanel.ScrollUnit="Pixel" Margin="10,0,10,0" >
-                <ScrollViewer.Resources>
-                    <Style TargetType="{x:Type ScrollBar}">
-                        <Setter Property="Background" Value="#0A2647"/>
-                        <Setter Property="BorderBrush" Value="#0A2647"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type ScrollBar}">
-                                    <Grid x:Name="Bg" SnapsToDevicePixels="true">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
-                                            <RowDefinition Height="0.00001*"/>
-                                            <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
-                                        </Grid.RowDefinitions>
-                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
-                                        <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
-                                            <Track.DecreaseRepeatButton>
-                                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
-                                            </Track.DecreaseRepeatButton>
-                                            <Track.IncreaseRepeatButton>
-                                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                                            </Track.IncreaseRepeatButton>
-                                            <Track.Thumb>
-                                                <Thumb Style="{StaticResource ScrollBarThumbVertical}" Margin="2"/>
-                                            </Track.Thumb>
-                                        </Track>
-                                    </Grid>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ScrollViewer.Resources>
-                <Grid>
-                    <Label Content="Advanced Setting" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="18" HorizontalAlignment="Left" Margin="16,502,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Launch Parameter:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="25" Margin="16,602,0,0" VerticalAlignment="Top" Width="135"/>
-                    <Separator HorizontalAlignment="Left" Height="1" Margin="16,533,0,0" VerticalAlignment="Top" Width="160"/>
-                    <TextBox x:Name="tbLaunchParameter" ToolTip="You can enter launch argument here" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="16,636,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="268"/>
-                    <Label Content="Program Type:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="28" Margin="16,541,0,0" VerticalAlignment="Top" Width="135"/>
-                    <RadioButton x:Name="rbX64" Content="x64" GroupName="ProgramType" ToolTip="Usefull for launching specific Textractor architecture type &#10;Example: x64 = Will launch textractor on x64 architecture mode" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="0" HorizontalAlignment="Left" Height="14" Margin="22,574,0,0" VerticalAlignment="Top" Width="42"/>
-                    <RadioButton x:Name="rbX86" Content="x86" IsChecked="True" GroupName="ProgramType" ToolTip="Usefull for launching specific Textractor architecture type &#10;Example: x64 = Will launch textractor on x64 architecture mode" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="0" HorizontalAlignment="Left" Height="14" Margin="84,574,0,0" VerticalAlignment="Top" Width="42"/>
-                    <Label Content="Discord Rich Presence" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="18" HorizontalAlignment="Left" Margin="16,762,0,0" VerticalAlignment="Top"/>
-                    <Separator HorizontalAlignment="Left" Height="1" Margin="16,793,0,0" VerticalAlignment="Top" Width="198"/>
-                    <Label Content="Image Key:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="29" Margin="16,809,0,0" VerticalAlignment="Top" Width="135"/>
-                    <TextBox x:Name="tbImageKey" ToolTip="Enter your image key URL" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="16,843,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="293"/>
-                    <Button x:Name="btnValidate" ToolTip="Check your image url is valid or not" Click="btnValidate_Click" Content="Validate" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" HorizontalAlignment="Left" Margin="314,841,0,0" Padding="0,0,0,2" VerticalAlignment="Top" Width="80" Height="24"/>
-                    <CheckBox x:Name="cbDisableTextractor" ToolTip="Disable textractor only for this game" Content="Disable Textractor" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Height="15" Margin="16,674,0,0" VerticalAlignment="Top" Width="141"/>
-                    <CheckBox x:Name="cbHideGameTitle" Content="Hide game title from rich presence" ToolTip="Hide this title from discord rich presence" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Height="15" Margin="16,873,0,0" VerticalAlignment="Top" Width="248"/>
-                    <CheckBox x:Name="cbHideImageKey" Content="Hide image key from rich presence" ToolTip="Hide this image key from discord rich presence" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Height="15" Margin="16,894,0,0" VerticalAlignment="Top" Width="248"/>
-                    <CheckBox x:Name="cbRunAsAdmin" ToolTip="Run this game as administrator" Content="Run as administrator" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Height="15" Margin="16,694,0,0" VerticalAlignment="Top" Width="160"/>
-                    <CheckBox x:Name="cbUseLauncherHandler" ToolTip="If your game need third party program to launch,&#10;you can enable this feature to keep tracking your game" Content="Use Launcher Handler" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Height="15" Margin="16,714,0,0" VerticalAlignment="Top" Width="166"/>
-                    <CheckBox x:Name="cbCreateShortcut" ToolTip="Check this button to create shortcut to desktop" IsChecked="True" Content="Create Shortcut" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Height="15" Margin="16,734,0,0" VerticalAlignment="Top" Width="166"/>
-                    <Label Content="Metadata" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="18" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                    <Separator HorizontalAlignment="Left" Height="1" Margin="10,42,0,0" VerticalAlignment="Top" Width="89"/>
-                    <Label Content="Description:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="25" Margin="10,56,0,0" VerticalAlignment="Top" Width="135"/>
-                    <RichTextBox x:Name="rtbDescription" ToolTip="Enter game description" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="187" Margin="16,86,0,0" VerticalAlignment="Top" BorderThickness="0" FontSize="14" Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Width="357">
-                        <RichTextBox.Resources>
-                            <Style TargetType="{x:Type Paragraph}">
-                                <Setter Property="Margin" Value="0"/>
-                            </Style>
-                        </RichTextBox.Resources>
-                        <FlowDocument>
-                            <Paragraph>
-                                <Run Text=""/>
-                            </Paragraph>
-                        </FlowDocument>
-                    </RichTextBox>
-                    <Label Content="Tag:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="27" Margin="10,282,0,0" VerticalAlignment="Top" Width="48"/>
-                    <TextBox x:Name="tbTag" ToolTip="Enter game tag&#10;Separate with ," Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="42" Margin="16,314,299,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                    <Button x:Name="btnTagSelector" Visibility="Collapsed" ToolTip="Select game tag" Content="Select" Click="btnTagSelector_Click" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="0,331,218,0" Padding="0,0,0,2" VerticalAlignment="Top" Height="24" HorizontalAlignment="Right" Width="80"/>
-                    <Image x:Name="imgArtwork" Source="/TMP.NET;component/Resources/no-image.png" Height="184" Margin="432,89,0,0" VerticalAlignment="Top" Stretch="UniformToFill" StretchDirection="Both" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Left" Width="131"/>
-                    <Image x:Name="imgOverlay" Source="/TMP.NET;component/Resources/overlay.png" Stretch="UniformToFill" Height="184" Margin="432,89,0,0" VerticalAlignment="Top" MouseDown="Image_MouseDown" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" Opacity="0" HorizontalAlignment="Left" Width="131">
-                        <Image.Triggers>
-                            <EventTrigger RoutedEvent="UIElement.MouseEnter">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="imgOverlay" Storyboard.TargetProperty="Opacity" To="0.90" Duration="0:0:0.1"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="UIElement.MouseLeave">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="imgOverlay" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </Image.Triggers>
-                    </Image>
-                    <StackPanel Orientation="Horizontal" Margin="395,86,0,0" Height="187" VerticalAlignment="Top" HorizontalAlignment="Left" Width="9">
-                        <Separator Background="Gray" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <ScrollViewer VerticalAlignment="Top" VirtualizingPanel.ScrollUnit="Pixel">
+            <ScrollViewer.Resources>
+                <Style TargetType="{x:Type ScrollBar}">
+                    <Setter Property="Background" Value="#0A2647"/>
+                    <Setter Property="BorderBrush" Value="#0A2647"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                <Grid x:Name="Bg" SnapsToDevicePixels="true">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                        <RowDefinition Height="0.00001*"/>
+                                        <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                    </Grid.RowDefinitions>
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
+                                    <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
+                                        </Track.DecreaseRepeatButton>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
+                                        </Track.IncreaseRepeatButton>
+                                        <Track.Thumb>
+                                            <Thumb Style="{StaticResource ScrollBarThumbVertical}" Margin="2"/>
+                                        </Track.Thumb>
+                                    </Track>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ScrollViewer.Resources>
+            <Grid>
+                <StackPanel>
+                    <!--Basic Content-->
+                    <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                        <!--Game Title-->
+                        <TextBlock Text="Game Title:" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                        <TextBox x:Name="tbGameTitle" ToolTip="Enter game title" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" FontSize="14" Margin="15,0,0,0" TextWrapping="NoWrap" Width="510" BorderThickness="0" Height="20"/>
                     </StackPanel>
-                    <Separator HorizontalAlignment="Center" Height="10" Margin="0,478,0,0" VerticalAlignment="Top" Width="570"/>
-                    <DatePicker x:Name="datePickerReleaseDate" ToolTip="Game release date" Height="26" Style="{StaticResource RoundedBorder}" FontSize="12" Margin="0,330,53,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="230"/>
-                    <Label Content="Release Date:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" Height="24" Margin="0,306,153,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="134"/>
-                    <Label Content="Website:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="24" Margin="12,366,0,0" VerticalAlignment="Top" Width="68"/>
-                    <TextBox x:Name="tbWebName1" ToolTip="Web Name" TextChanged="tbWebName1_TextChanged" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="64,397,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="121"/>
-                    <TextBox x:Name="tbWeb1" ToolTip="Web URL" TextChanged="tbWeb1_TextChanged" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="239,397,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="324"/>
-                    <TextBox x:Name="tbWebName2" IsEnabled="False" ToolTip="Web Name" TextChanged="tbWebName2_TextChanged" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="64,424,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="121"/>
-                    <TextBox x:Name="tbWeb2" IsEnabled="False" ToolTip="Web URL" TextChanged="tbWeb2_TextChanged" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="239,424,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="324"/>
-                    <TextBox x:Name="tbWebName3" IsEnabled="False" ToolTip="Web Name" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="64,450,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="121"/>
-                    <TextBox x:Name="tbWeb3" IsEnabled="False" ToolTip="Web URL" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="239,450,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="324"/>
-                    <Label Content="Name:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="12,395,0,0" VerticalAlignment="Top" Width="48"/>
-                    <Label Content="Name:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="12,422,0,0" VerticalAlignment="Top" Width="48"/>
-                    <Label Content="Name:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="12,448,0,0" VerticalAlignment="Top" Width="48"/>
-                    <Label Content="URL:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="195,397,0,0" VerticalAlignment="Top" Width="38"/>
-                    <Label Content="URL:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="195,422,0,0" VerticalAlignment="Top" Width="38"/>
-                    <Label Content="URL:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="195,448,0,0" VerticalAlignment="Top" Width="38"/>
-                </Grid>
-            </ScrollViewer>
-        </Grid>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <!--Game Dev-->
+                        <TextBlock Text="Developer:" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,0,0,0" Width="77"/>
+                        <TextBox x:Name="tbDeveloper" ToolTip="Enter developer or publisher" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" FontSize="14" Margin="8,0,0,0" TextWrapping="NoWrap" Width="510" BorderThickness="0" Height="20"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <!--VNID-->
+                        <TextBlock Text="VNID:" FontSize="14" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,0,0,0" Width="77"/>
+                        <TextBox x:Name="tbVnid" IsReadOnly="True" ToolTip="Game VNID (Read Only) &#10;Only for VNDB game source and cannot be changes." Background="#dedcdc" Style="{StaticResource ResourceKey=TextBoxStyle}" FontSize="14" Margin="8,0,0,0" TextWrapping="NoWrap" Width="510" BorderThickness="0" Height="20"/>
+                    </StackPanel>
+                    <!--<Separator HorizontalAlignment="Center" Height="13" Margin="0,10,0,10" Width="600"/>-->
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <TextBlock Text="Executable Directory:" FontSize="14"  FontFamily="{StaticResource ResourceKey=GlobalFont}" FontWeight="Light" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        <TextBox x:Name="tbGameDir" ToolTip="Enter game executable" Style="{StaticResource ResourceKey=TextBoxStyle}" FontSize="14" Margin="8,0,0,0" TextWrapping="NoWrap" BorderThickness="0" Height="20" Width="363"/>
+                        <Button x:Name="btnGameDir" ToolTip="Enter game executable" Click="btnGameDir_Click" Content="Browse" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="10,0,0,0" Padding="0,0,0,2" Height="24" Width="80"/>
+                    </StackPanel>
+                    <Separator HorizontalAlignment="Center" Height="10" Margin="0,10,0,0" Width="600"/>
+                    <!--Metadata Content-->
+                    <TextBlock Text="Metadata" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="18" Margin="10,10,0,0"/>
+                    <Separator HorizontalAlignment="Left" Height="1" Margin="10,5,0,0" VerticalAlignment="Top" Width="80"/>
+
+                    <TextBlock Text="Description:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="25" Margin="10,15,0,0"/>
+                    <StackPanel Orientation="Horizontal">
+                        <RichTextBox x:Name="rtbDescription" ToolTip="Enter game description" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="187" Margin="10,0,0,0" BorderThickness="0" FontSize="14" Style="{StaticResource TextBoxStyle}" HorizontalAlignment="Left" Width="357">
+                            <RichTextBox.Resources>
+                                <Style TargetType="{x:Type Paragraph}">
+                                    <Setter Property="Margin" Value="0"/>
+                                </Style>
+                            </RichTextBox.Resources>
+                            <FlowDocument>
+                                <Paragraph>
+                                    <Run Text=""/>
+                                </Paragraph>
+                            </FlowDocument>
+                        </RichTextBox>
+
+                        <StackPanel Orientation="Horizontal" Margin="25,0,0,0" Height="187" HorizontalAlignment="Left" Width="9">
+                            <Separator Background="Gray" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                        </StackPanel>
+
+                        <Grid>
+                            <Image x:Name="imgArtwork" Source="/TMP.NET;component/Resources/no-image.png" Height="184" Margin="25,0,0,0" Stretch="UniformToFill" StretchDirection="Both" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Left" Width="131"/>
+                            <Image x:Name="imgOverlay" Source="/TMP.NET;component/Resources/overlay.png" Stretch="UniformToFill" Height="184" Margin="25,0,0,0" MouseDown="Image_MouseDown" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="Fant" RenderOptions.EdgeMode="Aliased" Opacity="0" HorizontalAlignment="Left" Width="131">
+                                <Image.Triggers>
+                                    <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="imgOverlay" Storyboard.TargetProperty="Opacity" To="0.90" Duration="0:0:0.1"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="imgOverlay" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Image.Triggers>
+                            </Image>
+                        </Grid>
+                    </StackPanel>
+
+                    <TextBlock Text="Tag:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="27" Margin="10,30,0,0" Width="48"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="tbTag" ToolTip="Enter game tag&#10;Separate with ," Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="45" HorizontalAlignment="Left" Width="300" Margin="10,0,0,0" TextWrapping="Wrap"/>
+                        <StackPanel>
+                            <TextBlock Text="Release Date:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" Height="24" Margin="15,0,0,0" HorizontalAlignment="Left"/>
+                            <DatePicker x:Name="datePickerReleaseDate" ToolTip="Game release date" Height="26" Style="{StaticResource RoundedBorder}" FontSize="12" Margin="15,-5,0,0" HorizontalAlignment="Left" Width="230"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <TextBlock Text="Website:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="24" Margin="10,15,0,0" VerticalAlignment="Top" Width="68"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Name:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        <TextBox x:Name="tbWebName1" ToolTip="Web Name" TextChanged="tbWebName1_TextChanged" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" VerticalAlignment="Center" BorderThickness="0" FontSize="14" Height="20" Margin="10,0,0,0" TextWrapping="NoWrap" Width="130"/>
+                        <TextBlock Text="URL:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        <TextBox x:Name="tbWeb1" ToolTip="Web URL" TextChanged="tbWeb1_TextChanged" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="10,0,0,0" TextWrapping="NoWrap" Width="324"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <TextBlock Text="Name:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        <TextBox x:Name="tbWebName2" IsEnabled="False" ToolTip="Web Name" TextChanged="tbWebName2_TextChanged" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="10,0,0,0" TextWrapping="NoWrap" Width="130"/>
+                        <TextBlock Text="URL:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        <TextBox x:Name="tbWeb2" IsEnabled="False" ToolTip="Web URL" TextChanged="tbWeb2_TextChanged" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="10,0,0,0" TextWrapping="NoWrap" HorizontalAlignment="Left" Width="324"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <TextBlock Text="Name:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        <TextBox x:Name="tbWebName3" IsEnabled="False" ToolTip="Web Name" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="10,0,0,0" TextWrapping="NoWrap" Width="130"/>
+                        <TextBlock Text="URL:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="12" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        <TextBox x:Name="tbWeb3" IsEnabled="False" ToolTip="Web URL" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="10,0,0,0" TextWrapping="NoWrap" HorizontalAlignment="Left" Width="324"/>
+                    </StackPanel>
+                    <Separator HorizontalAlignment="Center" Height="10" Margin="0,10,0,10" VerticalAlignment="Top" Width="600"/>
+
+                    <TextBlock Text="Advanced Setting" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="18" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                    <Separator HorizontalAlignment="Left" Height="1" Margin="10,5,0,0" Width="155"/>
+                    <TextBlock Text="Program Type:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Margin="10,10,0,0"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <RadioButton x:Name="rbX64" Content="x64" GroupName="ProgramType" ToolTip="Usefull for launching specific Textractor architecture type &#10;Example: x64 = Will launch textractor on x64 architecture mode" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="0" HorizontalAlignment="Left" Height="14" Margin="10,0,0,0"/>
+                        <RadioButton x:Name="rbX86" Content="x86" IsChecked="True" GroupName="ProgramType" ToolTip="Usefull for launching specific Textractor architecture type &#10;Example: x64 = Will launch textractor on x64 architecture mode" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="0" HorizontalAlignment="Left" Height="14" Margin="10,0,0,0"/>
+                    </StackPanel>
+                    <TextBlock Text="Launch Argument:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Center"/>
+                    <TextBox x:Name="tbLaunchParameter" ToolTip="You can enter launch argument here" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Height="20" Margin="10,5,0,0" TextWrapping="NoWrap" Width="268"/>
+
+                    <CheckBox x:Name="cbDisableTextractor" ToolTip="Disable textractor only for this game" Content="Disable Textractor" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Margin="10,10,0,0"/>
+                    <CheckBox x:Name="cbHideGameTitle" Content="Hide game title from rich presence" ToolTip="Hide this title from discord rich presence" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Margin="10,5,0,0"/>
+                    <CheckBox x:Name="cbHideImageKey" Content="Hide image key from rich presence" ToolTip="Hide this image key from discord rich presence" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Margin="10,5,0,0"/>
+                    <CheckBox x:Name="cbRunAsAdmin" ToolTip="Run this game as administrator" Content="Run as administrator" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="cbUseLauncherHandler" ToolTip="If your game need third party program to launch,&#10;you can enable this feature to keep tracking your game" Content="Use Launcher Handler" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Margin="10,5,0,0"/>
+                    <CheckBox x:Name="cbCreateShortcut" ToolTip="Check this button to create shortcut to desktop" IsChecked="True" Content="Create Shortcut" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" BorderThickness="1" BorderBrush="White" HorizontalAlignment="Left" Margin="10,5,0,0"/>
+
+                    <TextBlock Text="Discord Rich Presence" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="18" HorizontalAlignment="Left" Margin="10,10,0,0"/>
+                    <Separator HorizontalAlignment="Left" Height="1" Margin="10,5,0,0" Width="190"/>
+                    <TextBlock Text="Image Key:" Foreground="White" FontFamily="{StaticResource ResourceKey=GlobalFont}" FontSize="14" HorizontalAlignment="Left" Height="29" Margin="10,10,0,0" VerticalAlignment="Top" Width="135"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="tbImageKey" ToolTip="Enter your image key URL" HorizontalAlignment="Left" Style="{StaticResource ResourceKey=TextBoxStyle}" BorderThickness="0" FontSize="14" Margin="10,0,0,0" TextWrapping="NoWrap" Width="293"/>
+                        <Button x:Name="btnValidate" ToolTip="Check your image url is valid or not" Click="btnValidate_Click" Content="Validate" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" HorizontalAlignment="Left" Margin="7,0,0,0" Padding="0,0,0,2" Width="80"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
         <!-- Footer Menu -->
-        <Grid Height="74" VerticalAlignment="Bottom">
-            <Button Content="X" ToolTip="Cancel" Click="btnCancel_Click" Foreground="White" FontSize="32" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=CircleBorder}" Margin="0,13,81,13" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" HorizontalAlignment="Right" Width="48"/>
+        <Grid Grid.Row="1" Height="74" VerticalAlignment="Bottom">
+            <Button Content="X" ToolTip="Cancel" Click="btnCancel_Click" Foreground="White" FontSize="32" FontFamily="{StaticResource ResourceKey=GlobalFont}" Style="{StaticResource ResourceKey=CircleBorder}" Margin="0,13,81,13" Background="#2F6EA6" BorderThickness="0" HorizontalAlignment="Right" Width="48"/>
             <Button Content="{StaticResource ResourceKey=SaveIcon}" ToolTip="Save" Click="btnAdd_Click" Style="{StaticResource ResourceKey=CircleBorder}" Margin="0,13,19,13" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" HorizontalAlignment="Right" Width="48"/>
             <Button x:Name="btnDeleteImage" ToolTip="Remove artwork image" Content="{StaticResource ResourceKey=DeleteImage}" Click="btnDeleteImage_Click" Style="{StaticResource ResourceKey=CircleBorder}" Margin="0,13,145,13" RenderTransformOrigin="-0.237,0.596" Background="#2F6EA6" BorderThickness="0" HorizontalAlignment="Right" Width="48"/>
             <Button x:Name="btnMetadataDownload" ToolTip="Enter game executable" Click="btnMetadataDownload_Click" Content="Download Metadata" Style="{StaticResource ResourceKey=RoundedBorder}" Background="#1B4772" Foreground="White" FontSize="14" BorderThickness="0" Margin="10,0,0,10" Padding="0,0,0,2" HorizontalAlignment="Left" Width="151" Height="24" VerticalAlignment="Bottom"/>

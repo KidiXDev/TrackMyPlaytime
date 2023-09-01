@@ -306,7 +306,7 @@ namespace TMP.NET.WindowUI
             {
                 LoadValue();
                 this.Title = "Edit Game";
-                cbCreateShortcut.Visibility = Visibility.Hidden;
+                cbCreateShortcut.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -379,10 +379,12 @@ namespace TMP.NET.WindowUI
 
             DeInit();
 
-
-            var wd = new DownloadMetadataDlgWindow(vnid);
-            wd.Owner = this;
-            wd.ShowDialog();
+            if(vnid > 0)
+            {
+                var wd = new DownloadMetadataDlgWindow(vnid);
+                wd.Owner = this;
+                wd.ShowDialog();
+            }
 
             this.DialogResult = true;
         }
@@ -420,6 +422,7 @@ namespace TMP.NET.WindowUI
             tbDeveloper.Text = v_GL.GameDev;
             tbGameDir.Text = v_GL.GamePath;
             imgDir = v_GL.BackgroundDir;
+            tbVnid.Text = v_GL.VNID > 0 ? v_GL.VNID.ToString() : string.Empty;
 
             if (v_GL.BackgroundBase64 != null)
             {
@@ -686,13 +689,14 @@ namespace TMP.NET.WindowUI
                 imgOverlay.Source = new BitmapImage(new Uri("pack://application:,,,/TMP.NET;component/Resources/overlay2.png"));
                 imgArtwork.Source = imgBitmap;
                 DateTime rel = DateTime.Parse(form.ReleaseDate);
-                Console.WriteLine("RELEASE DATE: " + form.ReleaseDate);
                 datePickerReleaseDate.SelectedDate = rel;
                 tbWebName1.Text = "VNDB";
                 tbWeb1.Text = form.Web1;
                 tbWebName2.Text = "Official Web";
                 tbWeb2.Text = form.Web2;
                 vnid = form.VNID;
+                tbVnid.Text = vnid > 0 ? vnid.ToString() : string.Empty;
+                tbImageKey.Text = (string.IsNullOrEmpty(tbImageKey.Text) ? (string.IsNullOrEmpty(form.ImageURL) ? string.Empty : form.ImageURL) : tbImageKey.Text);
             }
         }
 
