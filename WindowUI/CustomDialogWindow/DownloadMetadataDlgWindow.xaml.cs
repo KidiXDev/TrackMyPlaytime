@@ -188,16 +188,15 @@ namespace TMP.NET.WindowUI.CustomDialogWindow
         {
             string dir = Path.Combine(PathFinderManager.VndbDataPath, $"{_vnid}\\character");
 
-            if (!Directory.Exists(dir))
+            if(!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
             _outDir = dir;
+            Console.WriteLine($"Character Count: {ch.Count}");
 
-            Console.WriteLine("Character Count: " + ch.Count);
-
-            foreach (var character in ch)
+            foreach(var character in ch)
             {
-                Console.WriteLine("\nDEBUG: Adding Character...\nName: " + character.Name + " ID: " + character.Id + " URL: " + character.Image + "\n");
+                Console.WriteLine($"\nDEBUG: Adding Character...\nName: {character.Name} ID: {character.Id} URL: {character.Image}");
                 charData.Add(new CharacterMetadata() { imgUrl = character.Image, charID = character.Id });
             }
 
