@@ -47,5 +47,5 @@ Or you can report bugs to the [Issue](https://github.com/KidiXDev/TrackMyPlaytim
 Thanks to [@StinkyOnion03](https://github.com/StinkyOnion03) for creating awesome Image Artwork and GUI Icon
 
 ## 📰 Update 16-03-2024
-> This project will no longer be maintained. After various considerations, I have decided to rewrite this project from scratch, to optimize and facilitate code readability.
-> And also to achieve that, it seems like it will take a very long time. I will maintain this condition until it's fully done, so just wait for it.
+> This project will no longer be maintained. After considering various factors, I have decided to rewrite the project from scratch to optimize and enhance code readability.
+> However, achieving this may take a considerable amount of time. I will maintain this status until completion, so please be patient.
